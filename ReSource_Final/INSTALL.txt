@@ -1,0 +1,57 @@
+ReSource: TIP Student Marketplace
+COMPLETE XAMPP INSTALLATION
+
+1. Copy the entire ReSource_Final folder to:
+   C:\xampp\htdocs\ReSource_Final
+
+2. Start Apache and MySQL in XAMPP.
+
+3. Open phpMyAdmin:
+   http://localhost/phpmyadmin/
+
+4. Import:
+   database/resource_marketplace.sql
+
+5. Open the website:
+   http://localhost/ReSource_Final/
+
+6. Database settings are in:
+   php/config/database.php
+
+   Default XAMPP:
+   host = localhost
+   database = resource_marketplace
+   user = root
+   password = empty
+
+7. Admin:
+   The imported SQL creates this local development account:
+   email: admin@tip.edu.ph
+   password: admin123
+
+   For a different admin, register an account using the website.
+   Then, in phpMyAdmin, run:
+   UPDATE users SET role='admin'
+   WHERE email='YOUR_TIP_EMAIL@tip.edu.ph';
+
+8. Listing images are physically stored in:
+   uploads/listings/
+
+   The database stores their relative paths in listing_images.
+
+9. Profile photos are stored in:
+   uploads/profiles/
+
+10. Do NOT open index.html using file://.
+    Use Apache through:
+    http://localhost/ReSource_Final/
+
+The frontend has been kept together with the backend. The PHP API is the
+persistent data layer for users, listings, images, favorites, cart, purchases,
+messages, reports, and admin functions.
+
+IMPORTANT:
+Your original frontend may contain UI-specific localStorage rendering logic.
+The included backend-integration.js bridges the main authentication/listing
+flows to PHP/MySQL. For a fully API-only frontend, replace remaining
+localStorage-only UI reads with the corresponding PHP endpoints.
