@@ -26,6 +26,16 @@ CREATE TABLE IF NOT EXISTS users (
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
+CREATE TABLE IF NOT EXISTS password_resets (
+    user_id INT UNSIGNED PRIMARY KEY,
+    code_hash VARCHAR(255) NOT NULL,
+    expires_at BIGINT UNSIGNED NOT NULL,
+    requested_at BIGINT UNSIGNED NOT NULL,
+    attempts TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_password_resets_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 CREATE TABLE IF NOT EXISTS listings (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     seller_id INT UNSIGNED NOT NULL,
@@ -113,6 +123,22 @@ CREATE TABLE IF NOT EXISTS purchases (
     CONSTRAINT fk_purchase_listing FOREIGN KEY (listing_id) REFERENCES listings(id) ON DELETE CASCADE,
     INDEX idx_purchase_buyer (buyer_id),
     INDEX idx_purchase_seller (seller_id)
+) ENGINE=InnoDB;
+
+CREATE TABLE IF NOT EXISTS user_ratings (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    purchase_id INT UNSIGNED NOT NULL,
+    reviewer_id INT UNSIGNED NOT NULL,
+    reviewee_id INT UNSIGNED NOT NULL,
+    rating TINYINT UNSIGNED NOT NULL,
+    review VARCHAR(500) NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY uq_rating_purchase_reviewer (purchase_id, reviewer_id),
+    INDEX idx_rating_reviewee (reviewee_id, created_at),
+    CONSTRAINT fk_rating_purchase FOREIGN KEY (purchase_id) REFERENCES purchases(id) ON DELETE CASCADE,
+    CONSTRAINT fk_rating_reviewer FOREIGN KEY (reviewer_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_rating_reviewee FOREIGN KEY (reviewee_id) REFERENCES users(id) ON DELETE CASCADE,
+    CHECK (rating BETWEEN 1 AND 5)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS reports (

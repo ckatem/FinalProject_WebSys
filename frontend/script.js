@@ -22,6 +22,11 @@ session: "resource_session_v2"
 
 const FALLBACK_IMAGE =
 "https://images.unsplash.com/photo-1503602642458-232111445657?w=900&auto=format&fit=crop&q=80";
+function mediaUrl(path) {
+    return typeof path === "string" && path.startsWith("uploads/")
+        ? `../backend/${path}`
+        : path;
+}
 
 const $ = (selector, parent = document) =>
 parent.querySelector(selector);
@@ -118,6 +123,40 @@ function saveListings(listings) {
 writeStorage(STORAGE.listings, listings);
 }
 
+function sanitizeBlockedListings() {
+
+const blockedNames = new Set([
+    "Kate Mendoza",
+    "Eunice Anne Mendoza",
+    "Charisse Kate Mendoza",
+    "Charisse Kate"
+]);
+
+const listings = readStorage(STORAGE.listings, []);
+const filtered = listings.filter(listing => {
+    const rawSeller = [
+        listing?.sellerName,
+        listing?.seller?.name,
+        listing?.seller?.firstName,
+        listing?.seller?.middleName,
+        listing?.seller?.lastName,
+        [listing?.seller?.firstName, listing?.seller?.middleName, listing?.seller?.lastName].filter(Boolean).join(" "),
+        [listing?.firstName, listing?.middleName, listing?.lastName].filter(Boolean).join(" "),
+        [listing?.sellerFirstName, listing?.sellerMiddleName, listing?.sellerLastName].filter(Boolean).join(" ")
+    ].filter(Boolean).map(value => String(value).trim()).filter(Boolean);
+
+    const sellerName = rawSeller.join(" ").trim();
+    const safeName = sellerName.replace(/\s+/g, " ");
+
+    return !blockedNames.has(safeName) && !blockedNames.has(safeName.replace(/\s+/g, " "));
+});
+
+if (filtered.length !== listings.length) {
+    saveListings(filtered);
+}
+
+}
+
 function saveMessages(messages) {
 writeStorage(STORAGE.messages, messages);
 }
@@ -194,6 +233,7 @@ return normalizeSavedEntries(getSaved(), userId)
 
 function escapeHTML(value = "") {
 
+value = mediaUrl(value);
 
 return String(value).replace(
     /[&<>"']/g,
@@ -578,7 +618,7 @@ const canShowPhoto =
 
 if (!canShowPhoto) return "👤";
 
-return `<img src="${escapeHTML(user.profilePhoto)}" alt="${escapeHTML(getUserFirstName(user))}'s profile photo">`;
+return `<img src="${escapeHTML(mediaUrl(user.profilePhoto))}" alt="${escapeHTML(getUserFirstName(user))}'s profile photo">`;
 
 }
 
@@ -655,7 +695,10 @@ if (user) {
     $("#top-profile-btn")
         .addEventListener(
             "click",
-            () => goToPage("profile")
+            () => {
+                localStorage.removeItem("resource_profile_user");
+                goToPage("profile");
+            }
         );
 
 
@@ -702,6 +745,7 @@ if (user) {
             "click",
             () => {
                 if (requireLogin()) {
+                    localStorage.removeItem("resource_profile_user");
                     goToPage("profile");
                 }
             }
@@ -739,6 +783,8 @@ if (user) {
 }
 
 function logout() {
+
+    if (!window.confirm("Are you sure you want to log out?")) return;
 
     localStorage.removeItem(
         STORAGE.session
@@ -1375,8 +1421,8 @@ if (!rows.length) {
 
 itemsArea.innerHTML = rows.map(({ entry, listing }) => `
     <article class="cart-row" data-listing-id="${escapeHTML(listing.id)}">
-        <button class="cart-image-button" type="button" data-cart-preview="${escapeHTML(listing.image || FALLBACK_IMAGE)}" data-cart-caption="${escapeHTML(listing.title)}">
-            <img src="${escapeHTML(listing.image || FALLBACK_IMAGE)}" alt="${escapeHTML(listing.title)}">
+        <button class="cart-image-button" type="button" data-cart-preview="${escapeHTML(mediaUrl(listing.image) || FALLBACK_IMAGE)}" data-cart-caption="${escapeHTML(listing.title)}">
+            <img src="${escapeHTML(mediaUrl(listing.image) || FALLBACK_IMAGE)}" alt="${escapeHTML(listing.title)}">
         </button>
         <div class="cart-item-info">
             <button class="cart-item-title" type="button" data-cart-open="${escapeHTML(listing.id)}">${escapeHTML(listing.title)}</button>
@@ -1422,7 +1468,7 @@ updateCartBadge();
 
 }
 
-function checkoutCart() {
+async function checkoutCart() {
 
 const user = getCurrentUser();
 
@@ -1438,13 +1484,50 @@ if (!rows.length) {
     return;
 }
 
-if (!confirm("Complete this demo purchase? Your purchases and sold items will be saved in this browser.")) return;
+if (!confirm("Complete this purchase? Completed purchases can be used to rate the other user.")) return;
+
+let purchasedRows = rows;
+const databaseBacked = /^\d+$/.test(String(user.id)) &&
+    rows.every(({ listing }) => /^\d+$/.test(String(listing.id)));
+
+if (databaseBacked) {
+    try {
+        const response = await fetch("../backend/php/purchases/checkout.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                items: JSON.stringify(rows.map(({ entry, listing }) => ({
+                    listing_id: listing.id,
+                    quantity: Number(entry.quantity || 1)
+                })))
+            })
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            toast(result.message || "Unable to complete this purchase.", "error");
+            return;
+        }
+
+        const purchasedIds = new Set(
+            (result.purchased_listing_ids || []).map(String)
+        );
+        if (!purchasedIds.size) {
+            toast("No cart items were recorded as purchases.", "error");
+            return;
+        }
+        purchasedRows = rows.filter(({ listing }) => purchasedIds.has(String(listing.id)));
+    } catch (error) {
+        toast("The server is unavailable. Please try again.", "error");
+        return;
+    }
+}
 
 const listings = getListings();
 const purchases = getPurchases();
 const purchasedAt = new Date().toISOString();
 
-rows.forEach(({ entry, listing }) => {
+purchasedRows.forEach(({ entry, listing }) => {
     const index = listings.findIndex(item => item.id === listing.id);
 
     if (index < 0 || listings[index].status === "sold") return;
@@ -1472,9 +1555,13 @@ rows.forEach(({ entry, listing }) => {
 
 saveListings(listings);
 savePurchases(purchases);
-saveCart(getCart().filter(item => item.userId !== user.id));
+const purchasedIds = new Set(purchasedRows.map(({ listing }) => String(listing.id)));
+saveCart(getCart().filter(item =>
+    item.userId !== user.id || !purchasedIds.has(String(item.listingId))
+));
 updateCartBadge();
 renderAll();
+localStorage.removeItem("resource_profile_user");
 goToPage("profile");
 showProfileTab("history");
 toast("Purchase completed. Your history and sold items are updated.");
@@ -1598,9 +1685,9 @@ grid.innerHTML = rows.map(({ listing }) => `
         <button
             class="saved-item-image"
             type="button"
-            data-saved-preview="${escapeHTML(listing.image || FALLBACK_IMAGE)}"
+            data-saved-preview="${escapeHTML(mediaUrl(listing.image) || FALLBACK_IMAGE)}"
             data-saved-caption="${escapeHTML(listing.title)}">
-            <img src="${escapeHTML(listing.image || FALLBACK_IMAGE)}" alt="${escapeHTML(listing.title)}">
+            <img src="${escapeHTML(mediaUrl(listing.image) || FALLBACK_IMAGE)}" alt="${escapeHTML(listing.title)}">
         </button>
         <div class="saved-item-content">
             <button class="saved-item-title" type="button" data-saved-open="${escapeHTML(listing.id)}">${escapeHTML(listing.title)}</button>
@@ -1631,7 +1718,7 @@ updateSavedBadge();
 
 }
 
-function markListingAsSold(listingId) {
+async function markListingAsSold(listingId) {
 
 const seller = getCurrentUser();
 const listings = getListings();
@@ -1641,21 +1728,59 @@ const listing = listings[index];
 if (!seller || !listing || listing.sellerId !== seller.id || listing.status === "sold") return;
 
 const buyerEmail = prompt(
-    "Enter the buyer's TIP email address to record this sale in their Purchase History:"
+    "After the handoff, enter the buyer's TIP email to record this exchange and enable ratings:"
 );
 
 if (buyerEmail === null) return;
 
-const buyer = getUsers().find(user =>
+let buyer = getUsers().find(user =>
     user.email?.toLowerCase() === buyerEmail.trim().toLowerCase()
 );
 
-if (!buyer || buyer.id === seller.id) {
+const databaseBacked = /^\d+$/.test(String(seller.id)) &&
+    /^\d+$/.test(String(listing.id));
+
+if ((!buyer && !databaseBacked) || buyer?.id === seller.id) {
     toast("Enter the email of another registered TIP buyer.", "error");
     return;
 }
 
-if (!confirm(`Mark \"${listing.title}\" as sold to ${getUserDisplayName(buyer)}?`)) return;
+if (!confirm(`Mark \"${listing.title}\" as sold to ${buyer ? getUserDisplayName(buyer) : buyerEmail.trim()}?`)) return;
+
+if (databaseBacked) {
+    try {
+        const response = await fetch("../backend/php/listings/mark-sold.php", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: new URLSearchParams({
+                listing_id: listing.id,
+                buyer_email: buyerEmail.trim().toLowerCase()
+            })
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            toast(result.message || "Could not record the sale.", "error");
+            return;
+        }
+
+        if (result.buyer) {
+            buyer = {
+                id: String(result.buyer.id),
+                firstName: result.buyer.first_name,
+                middleName: result.buyer.middle_name || "",
+                lastName: result.buyer.last_name,
+                email: buyerEmail.trim().toLowerCase()
+            };
+            if (!getUsers().some(account => account.id === buyer.id)) {
+                saveUsers([...getUsers(), buyer]);
+            }
+        }
+    } catch (error) {
+        toast("The server is unavailable. Please try again.", "error");
+        return;
+    }
+}
 
 const purchasedAt = new Date().toISOString();
 
@@ -1685,7 +1810,7 @@ savePurchases(purchases);
 renderAll();
 goToPage("profile");
 showProfileTab("sold");
-toast("Listing marked as sold and added to the buyer's Purchase History.");
+toast("Exchange recorded and added to the buyer's Purchase History.");
 
 }
 
@@ -1753,7 +1878,7 @@ const seller = getUsers().find(user => user.id === listing.sellerId);
 
 
 $("#detail-image").src =
-    listing.image ||
+    mediaUrl(listing.image) ||
     FALLBACK_IMAGE;
 
 
@@ -1884,6 +2009,11 @@ $("#delete-listing-btn")
     );
 
 
+    $("#report-listing-btn")
+        .classList.toggle("hidden", !!isOwner);
+    $("#report-listing-form").classList.add("hidden");
+
+
 $("#message-seller-btn").disabled =
     !!isOwner ||
     isSold;
@@ -1908,9 +2038,9 @@ $("#listing-thumbs").innerHTML =
             <div class="thumb">
 
                 <img
-                    src="${escapeHTML(src)}"
+                    src="${escapeHTML(mediaUrl(src))}"
                     alt="Thumbnail ${index + 1}"
-                    data-image="${escapeHTML(src)}">
+                    data-image="${escapeHTML(mediaUrl(src))}">
 
             </div>
 
@@ -2162,130 +2292,170 @@ $$(".photo-input")
 PROFILE
 ========================================================== */
 
-function renderProfile() {
+async function renderProfile() {
+    const sessionUser = getCurrentUser();
+    const requestedProfileId = localStorage.getItem("resource_profile_user");
+    const isOwnProfile = !requestedProfileId || requestedProfileId === String(sessionUser?.id);
+    const warning = $("#profile-login-warning");
+    const content = $("#profile-content");
+    const logoutBtn = $("#logout-btn");
 
+    if (!sessionUser) {
+        warning.classList.remove("hidden");
+        content.classList.add("hidden");
+        logoutBtn.classList.add("hidden");
+        return;
+    }
 
-const user =
-    getCurrentUser();
+    let user = sessionUser;
+    if (!isOwnProfile) {
+        try {
+            const response = await fetch(
+                `../backend/php/users/profile.php?id=${encodeURIComponent(requestedProfileId)}`,
+                { headers: { Accept: "application/json" } }
+            );
+            const result = await response.json();
+            if (!response.ok || !result.success || !result.user) {
+                throw new Error(result.message || "Unable to load this profile.");
+            }
 
+            const profile = result.user;
+            user = {
+                id: String(profile.id),
+                firstName: profile.first_name,
+                middleName: profile.middle_name || "",
+                lastName: profile.last_name,
+                studentId: profile.student_id || "",
+                course: profile.course || "",
+                campus: profile.campus || "",
+                role: profile.role,
+                profilePhoto: profile.profile_photo || "",
+                createdAt: profile.created_at
+            };
+        } catch (error) {
+            warning.classList.remove("hidden");
+            content.classList.add("hidden");
+            toast(error.message || "Unable to load this profile.", "error");
+            return;
+        }
+    }
 
-const warning =
-    $("#profile-login-warning");
+    if (localStorage.getItem("resource_profile_user") !== requestedProfileId) return;
 
+    warning.classList.add("hidden");
+    content.classList.remove("hidden");
+    logoutBtn.classList.toggle("hidden", !isOwnProfile);
 
-const content =
-    $("#profile-content");
+    $("#profile-avatar").innerHTML = avatarMarkup(user);
+    $("#profile-name").textContent = getUserDisplayName(user);
+    $("#profile-role").textContent = user.role === "admin" ? "Administrator" : "TIP Student";
+    $("#profile-course").textContent = `${user.course || "Course private"} • ReSource Member`;
+    $("#profile-campus").textContent = user.campus ? `📍 ${user.campus}` : "";
+    $("#profile-student-id").textContent = user.studentId ? `ID: ${user.studentId}` : "";
+    $("#profile-member-since").textContent = user.createdAt
+        ? `🗓 Member since ${formatDate(user.createdAt)}`
+        : "";
+    $("#profile-seller-rating").classList.add("hidden");
+    $("#profile-buyer-rating").classList.add("hidden");
 
+    $(".change-photo-label").classList.toggle("hidden", !isOwnProfile);
+    $("#profile-photo-input").disabled = !isOwnProfile;
+    $$(".ptab").forEach(tab => {
+        tab.classList.toggle("hidden", !isOwnProfile && tab.dataset.tab !== "listings");
+    });
+    const activeTab = $(".ptab.active")?.dataset.tab || "listings";
+    $$("#profile-content .profile-panel").forEach(panel => {
+        const visiblePanel = isOwnProfile ? `panel-${activeTab}` : "panel-listings";
+        panel.classList.toggle("hidden", panel.id !== visiblePanel);
+    });
 
-const logoutBtn =
-    $("#logout-btn");
+    if (isOwnProfile) {
+        const notifications = getNotificationSettings(user);
+        const privacy = getPrivacySettings(user);
+        $("#profile-first-name-input").value = user.firstName || "";
+        $("#profile-middle-name-input").value = user.middleName || "";
+        $("#profile-last-name-input").value = user.lastName || "";
+        $("#profile-course-input").value = user.course || "";
+        $("#profile-campus-input").value = user.campus || "Manila";
+        $("#notify-messages").checked = notifications.messages;
+        $("#notify-listings").checked = notifications.listingActivity;
+        $("#privacy-photo").checked = privacy.showProfilePhoto;
+        $("#privacy-course").checked = privacy.showCourse;
+    } else {
+        showProfileTab("listings");
+    }
 
+    const profileListings = getListings()
+        .filter(listing =>
+            String(listing.sellerId) === String(user.id) &&
+            listing.status !== "sold"
+        )
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    renderProfileListings(profileListings);
 
-if (!user) {
+    if (isOwnProfile) {
+        renderProfileSoldItems(
+            getListings()
+                .filter(listing =>
+                    String(listing.sellerId) === String(user.id) && listing.status === "sold"
+                )
+                .sort((a, b) => new Date(b.soldAt || b.createdAt) - new Date(a.soldAt || a.createdAt))
+        );
+        renderPurchaseHistory(user);
+    } else {
+        renderProfileSoldItems([]);
+        $("#purchase-history-list").innerHTML = "";
+    }
 
-    warning.classList.remove("hidden");
-
-    content.classList.add("hidden");
-
-    logoutBtn.classList.add("hidden");
-
-    return;
-
+    renderProfileRatings(user.id, isOwnProfile);
 }
 
+async function renderProfileRatings(profileUserId, isOwnProfile) {
+    const summary = $("#profile-rating-summary");
+    const form = $("#profile-rating-form");
+    const eligibilityMessage = $("#rating-eligibility-message");
 
-warning.classList.add("hidden");
-
-content.classList.remove("hidden");
-
-logoutBtn.classList.remove("hidden");
-
-
-$("#profile-avatar").innerHTML =
-    avatarMarkup(user);
-
-
-$("#profile-name").textContent =
-    getUserDisplayName(user);
-
-
-$("#profile-role").textContent =
-    "TIP Student";
-
-
-$("#profile-course").textContent =
-    `${user.course || "Student"} • ReSource Member`;
-
-
-$("#profile-campus").textContent =
-    `📍 ${user.campus}`;
-
-
-$("#profile-student-id").textContent =
-    `ID: ${user.studentId}`;
-
-
-$("#profile-member-since").textContent =
-    `🗓 Member since ${formatDate(
-        user.createdAt
-    )}`;
-
-
-$("#profile-seller-rating").textContent =
-    formatRating(user, "seller", true);
-
-
-$("#profile-buyer-rating").textContent =
-    formatRating(user, "buyer", true);
-
-
-const notifications = getNotificationSettings(user);
-const privacy = getPrivacySettings(user);
-
-$("#profile-course-input").value = user.course || "";
-$("#notify-messages").checked = notifications.messages;
-$("#notify-listings").checked = notifications.listingActivity;
-$("#privacy-photo").checked = privacy.showProfilePhoto;
-$("#privacy-course").checked = privacy.showCourse;
-
-
-const myListings =
-    getListings()
-
-        .filter(
-            listing =>
-                listing.sellerId === user.id &&
-                listing.status !== "sold"
-        )
-
-        .sort(
-            (a, b) =>
-                new Date(b.createdAt) -
-                new Date(a.createdAt)
+    try {
+        const response = await fetch(
+            `../backend/php/users/ratings.php?user_id=${encodeURIComponent(profileUserId)}`,
+            { headers: { Accept: "application/json" } }
         );
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || "Unable to load ratings.");
+        }
 
+        summary.textContent = result.rating_count
+            ? `★ ${Number(result.average_rating).toFixed(1)} / 5 · ${result.rating_count} ${result.rating_count === 1 ? "rating" : "ratings"}`
+            : "No ratings yet";
 
-renderProfileListings(
-    myListings
-);
+        const eligiblePurchases = result.eligible_purchases || [];
+        const canRate = eligiblePurchases.length > 0;
+        form.classList.toggle("hidden", isOwnProfile);
+        eligibilityMessage.classList.toggle("hidden", canRate || isOwnProfile);
+        eligibilityMessage.textContent = canRate
+            ? ""
+            : "After you complete the handoff, ask the seller to mark the listing sold and enter your TIP email. This records the exchange; payment happens outside ReSource.";
+        $$("select, input[type=radio], button", form).forEach(control => {
+            control.disabled = !canRate;
+        });
+        $("#profile-rating-stars").dataset.rating = "0";
+        $("#rating-purchase-select").innerHTML = eligiblePurchases.length
+            ? '<option value="" selected disabled>Choose a recorded exchange</option>' +
+                eligiblePurchases.map(purchase =>
+                    `<option value="${Number(purchase.id)}">${escapeHTML(purchase.title)} · ${escapeHTML(formatDate(purchase.purchased_at))}</option>`
+                ).join("")
+            : '<option value="">No exchange recorded yet</option>';
 
-
-renderProfileSoldItems(
-    getListings()
-        .filter(listing =>
-            listing.sellerId === user.id &&
-            listing.status === "sold"
-        )
-        .sort((a, b) =>
-            new Date(b.soldAt || b.createdAt) -
-            new Date(a.soldAt || a.createdAt)
-        )
-);
-
-
-renderPurchaseHistory(user);
-
-
+    } catch (error) {
+        summary.textContent = "Ratings are temporarily unavailable.";
+        form.classList.toggle("hidden", isOwnProfile);
+        eligibilityMessage.classList.toggle("hidden", isOwnProfile);
+        eligibilityMessage.textContent = "Ratings could not be loaded. Try again later.";
+        $$("select, input[type=radio], button", form).forEach(control => {
+            control.disabled = true;
+        });
+    }
 }
 
 function renderProfileListings(listings) {
@@ -2358,7 +2528,7 @@ listings.forEach(listing => {
 
         <img
             src="${escapeHTML(
-                listing.image ||
+                mediaUrl(listing.image) ||
                 FALLBACK_IMAGE
             )}"
             alt="${escapeHTML(
@@ -2446,7 +2616,7 @@ listings.forEach(listing => {
 
     card.className = "listing-card";
     card.innerHTML = `
-        <img src="${escapeHTML(listing.image || FALLBACK_IMAGE)}" alt="${escapeHTML(listing.title)}">
+        <img src="${escapeHTML(mediaUrl(listing.image) || FALLBACK_IMAGE)}" alt="${escapeHTML(listing.title)}">
         <div class="lc-title">${escapeHTML(listing.title)}</div>
         <div class="lc-bottom">
             <span>${peso(listing.price)}</span>
@@ -2496,9 +2666,9 @@ area.innerHTML = purchases.map(purchase => `
         <button
             class="purchase-image-button"
             type="button"
-            data-purchase-preview="${escapeHTML(purchase.image || FALLBACK_IMAGE)}"
+            data-purchase-preview="${escapeHTML(mediaUrl(purchase.image) || FALLBACK_IMAGE)}"
             data-purchase-caption="${escapeHTML(purchase.title)}">
-            <img src="${escapeHTML(purchase.image || FALLBACK_IMAGE)}" alt="${escapeHTML(purchase.title)}">
+                <img src="${escapeHTML(mediaUrl(purchase.image) || FALLBACK_IMAGE)}" alt="${escapeHTML(purchase.title)}">
         </button>
         <div class="purchase-history-info">
             <button type="button" class="purchase-title" data-purchase-open="${escapeHTML(purchase.listingId)}">${escapeHTML(purchase.title)}</button>
@@ -3063,6 +3233,7 @@ document.addEventListener(
 
 
     /* INITIAL RENDER */
+    sanitizeBlockedListings();
     renderAll();
     const requestedPage = new URLSearchParams(window.location.search).get("page");
     if (["dashboard", "browse", "saved", "listing", "create", "messaging", "profile"].includes(requestedPage)) {
@@ -3110,6 +3281,18 @@ document.addEventListener(
 
                     const page =
                         link.dataset.page;
+
+
+                    if (page === "admin-reports") {
+
+                        if (getCurrentUser()?.role !== "admin") {
+                            toast("Administrator access required.", "error");
+                            return;
+                        }
+
+                        window.location.href = "admin-dashboard.php#reports";
+                        return;
+                    }
 
 
                     if (
@@ -3181,6 +3364,11 @@ document.addEventListener(
 
                     const page =
                         el.dataset.goto;
+
+
+                    if (page === "profile") {
+                        localStorage.removeItem("resource_profile_user");
+                    }
 
 
                     if (
@@ -3381,7 +3569,7 @@ document.addEventListener(
 
     try {
 
-        response = await fetch("php/auth/login.php", {
+        response = await fetch("../backend/php/auth/login.php", {
             method: "POST",
             headers: {
                 "Content-Type": "application/x-www-form-urlencoded"
@@ -3418,18 +3606,304 @@ document.addEventListener(
      * We wait for the Gmail verification code.
      */
 
-    if (result.requires_2fa) {
+   if (result.requires_2fa) {
 
-        $("#login-form").classList.add("hidden");
+    $("#login-form").classList.add("hidden");
 
-        $("#login-verification-box").classList.remove("hidden");
+    $("#login-verification-box").classList.remove("hidden");
 
-        $("#verification-code").value = "";
+    $("#verification-code").value = "";
 
-        $("#verification-code").focus();
+    $("#verification-code").focus();
+
+    toast(
+        "Verification code is being sent to your TIP email."
+    );
+
+    return;
+}
+
+
+/*
+ * Admin accounts do not require 2FA.
+ */
+if (result.user) {
+
+    const user = {
+
+        id: String(result.user.id),
+
+        firstName: result.user.first_name,
+
+        middleName:
+            result.user.middle_name || "",
+
+        lastName:
+            result.user.last_name,
+
+        name: [
+            result.user.first_name,
+            result.user.middle_name,
+            result.user.last_name
+        ]
+            .filter(Boolean)
+            .join(" "),
+
+        studentId:
+            result.user.student_id,
+
+        email:
+            result.user.email,
+
+        course:
+            result.user.course,
+
+        campus:
+            result.user.campus,
+
+        role:
+            result.user.role,
+
+        profilePhoto:
+            result.user.profile_photo || ""
+
+    };
+
+    const users =
+        getUsers().filter(
+            account => account.id !== user.id
+        );
+
+    users.push(user);
+
+    saveUsers(users);
+
+    localStorage.setItem(
+        STORAGE.session,
+        user.id
+    );
+
+    toast(
+        `Welcome back, ${getUserFirstName(user)}!`
+    );
+
+    renderAll();
+
+    if (user.role === "admin") {
+
+        window.location.href =
+            "admin-dashboard.php";
+
+    } else {
+
+        goToPage("dashboard");
+
+    }
+
+    return;
+}
+
+});
+
+
+    /* SIGNUP */
+
+   $("#signup-form").addEventListener("submit", async event => {
+
+    event.preventDefault();
+
+    const firstName =
+        $("#signup-first-name").value.trim();
+
+    const middleName =
+        $("#signup-middle-name").value.trim();
+
+    const lastName =
+        $("#signup-last-name").value.trim();
+
+    const studentId =
+        $("#signup-student-id").value.trim();
+
+    const email =
+        $("#signup-email")
+            .value
+            .trim()
+            .toLowerCase();
+
+    const password =
+        $("#signup-password").value;
+
+    const password2 =
+        $("#signup-password2").value;
+
+    const course =
+        $("#signup-course").value.trim();
+
+    const campus =
+        $("#signup-campus").value;
+
+    const terms =
+        $("#signup-terms").checked;
+
+
+    /* =========================
+       VALIDATION
+       ========================= */
+
+    if (
+        !firstName ||
+        !lastName ||
+        !studentId ||
+        !email ||
+        !password ||
+        !password2 ||
+        !course ||
+        !campus
+    ) {
 
         toast(
-            "Verification code sent to your TIP email."
+            "Please complete all required fields.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!validateStudentId(studentId)) {
+
+        toast(
+            "Please enter a valid Student ID.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!validateTipEmail(email)) {
+
+        toast(
+            "Only @tip.edu.ph emails are allowed.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (password.length < 6) {
+
+        toast(
+            "Password must be at least 6 characters.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (password !== password2) {
+
+        toast(
+            "Passwords do not match.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    if (!terms) {
+
+        toast(
+            "Please agree to the Terms and Conditions.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       CREATE ACCOUNT
+       ========================= */
+
+    let response;
+    let result;
+
+    try {
+
+        response = await fetch(
+            "../backend/php/auth/register.php",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+                },
+
+                body: new URLSearchParams({
+                    first_name: firstName,
+                    middle_name: middleName,
+                    last_name: lastName,
+                    student_id: studentId,
+                    email,
+                    password,
+                    password2,
+                    course,
+                    campus
+                })
+            }
+        );
+
+        result = await response.json();
+
+    } catch (error) {
+
+        toast(
+            "The server is unavailable. Please try again.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       CHECK RESULT
+       ========================= */
+
+    if (!response.ok || !result.success) {
+
+        toast(
+            result.message ||
+            "Unable to create the account.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       WAIT FOR EMAIL VERIFICATION
+       ========================= */
+
+    if (result.requires_2fa) {
+
+        $("#signup-form").classList.add("hidden");
+
+        $("#signup-verification-box")
+            .classList.remove("hidden");
+
+        $("#signup-verification-code").value = "";
+
+        $("#signup-verification-code").focus();
+
+        toast(
+            "Verification code is being sent to your TIP email."
         );
 
         return;
@@ -3438,241 +3912,120 @@ document.addEventListener(
 });
 
 
-    /* SIGNUP */
-
-    $("#signup-form")
-        .addEventListener(
-            "submit",
-            async event => {
-
-                event.preventDefault();
-
-
-                const firstName =
-                    $("#signup-first-name")
-                        .value
-                        .trim();
-
-
-                const middleName =
-                    $("#signup-middle-name")
-                        .value
-                        .trim();
-
-
-                const lastName =
-                    $("#signup-last-name")
-                        .value
-                        .trim();
-
-
-                const studentId =
-                    $("#signup-student-id")
-                        .value
-                        .trim();
-
-
-                const email =
-                    $("#signup-email")
-                        .value
-                        .trim()
-                        .toLowerCase();
-
-
-                const password =
-                    $("#signup-password")
-                        .value;
-
-
-                const password2 =
-                    $("#signup-password2")
-                        .value;
-
-
-                const course =
-                    $("#signup-course")
-                        .value
-                        .trim();
-
-
-                const campus =
-                    $("#signup-campus")
-                        .value;
-
-
-                const terms =
-                    $("#signup-terms")
-                        .checked;
-
-
-                if (
-                    !firstName ||
-                    !lastName ||
-                    !studentId ||
-                    !email ||
-                    !password ||
-                    !password2 ||
-                    !course ||
-                    !campus
-                ) {
-
-                    toast(
-                        "Please complete all required fields.",
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-
-                if (!validateStudentId(studentId)) {
-
-                    toast(
-                        "Please enter a valid Student ID.",
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-
-                if (!validateTipEmail(email)) {
-
-                    toast(
-                        "Only @tip.edu.ph emails are allowed.",
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-
-                if (password.length < 6) {
-
-                    toast(
-                        "Password must be at least 6 characters.",
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-
-                if (password !== password2) {
-
-                    toast(
-                        "Passwords do not match.",
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-
-                if (!terms) {
-
-                    toast(
-                        "Please agree to the Terms and Conditions.",
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-
-                let response;
-                let result;
-
-                try {
-                    response = await fetch("php/auth/register.php", {
-                        method: "POST",
-                        headers: {
-                            "Content-Type": "application/x-www-form-urlencoded"
-                        },
-                        body: new URLSearchParams({
-                            first_name: firstName,
-                            middle_name: middleName,
-                            last_name: lastName,
-                            student_id: studentId,
-                            email,
-                            password,
-                            password2,
-                            course,
-                            campus
-                        })
-                    });
-                    result = await response.json();
-                } catch (error) {
-                    toast("The server is unavailable. Please try again.", "error");
-                    return;
-                }
-
-                if (!response.ok || !result.success || !result.user) {
-                    toast(result.message || "Unable to create the account.", "error");
-                    return;
-                }
-
-                const user = {
-                    id: String(result.user.id),
-                    firstName: result.user.first_name,
-                    middleName: result.user.middle_name || "",
-                    lastName: result.user.last_name,
-                    name: [result.user.first_name, result.user.middle_name, result.user.last_name]
-                        .filter(Boolean)
-                        .join(" "),
-                    studentId: result.user.student_id,
-                    email: result.user.email,
-                    course: result.user.course,
-                    campus: result.user.campus,
-                    role: result.user.role,
-                    profilePhoto: result.user.profile_photo || ""
-                };
-
-                const users = getUsers().filter(account => account.id !== user.id);
-                users.push(user);
-                saveUsers(users);
-                localStorage.setItem(STORAGE.session, user.id);
-
-
-                toast(
-                    "Account created successfully!"
-                );
-
-
-                event.target.reset();
-
-
-                renderAll();
-
-                goToPage("dashboard");
-
+    /* PASSWORD RESET */
+
+    $("#forgot-password-link").addEventListener("click", event => {
+        event.preventDefault();
+        $("#login-form").classList.add("hidden");
+        $("#login-verification-box").classList.add("hidden");
+        $("#reset-password-box").classList.add("hidden");
+        $("#reset-request-email").value = $("#login-email").value.trim();
+        $("#forgot-password-box").classList.remove("hidden");
+        $("#reset-request-email").focus();
+    });
+
+    $("#back-to-login-from-reset-btn").addEventListener("click", () => {
+        $("#forgot-password-box").classList.add("hidden");
+        $("#login-form").classList.remove("hidden");
+    });
+
+    $("#back-to-reset-request-btn").addEventListener("click", () => {
+        $("#reset-password-box").classList.add("hidden");
+        $("#forgot-password-box").classList.remove("hidden");
+    });
+
+    $("#forgot-password-form").addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const email = $("#reset-request-email").value.trim().toLowerCase();
+        if (!validateTipEmail(email)) {
+            toast("Please use your TIP institutional email.", "error");
+            return;
+        }
+
+        const button = $("#request-reset-code-btn");
+        button.disabled = true;
+        button.textContent = "Sending...";
+
+        try {
+            const response = await fetch("../backend/php/auth/request-password-reset.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ email })
+            });
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                toast(result.message || "Unable to request a reset code.", "error");
+                return;
             }
-        );
 
+            $("#reset-confirm-email").value = email;
+            $("#password-reset-code").value = "";
+            $("#reset-new-password").value = "";
+            $("#reset-confirm-password").value = "";
+            $("#forgot-password-box").classList.add("hidden");
+            $("#reset-password-box").classList.remove("hidden");
+            $("#password-reset-code").focus();
+            toast(result.message);
+        } catch (error) {
+            toast("The server is unavailable. Please try again.", "error");
+        } finally {
+            button.disabled = false;
+            button.textContent = "Send Reset Code";
+        }
+    });
 
-    /* FORGOT PASSWORD */
+    $("#reset-password-form").addEventListener("submit", async event => {
+        event.preventDefault();
 
-    $("#forgot-password-link")
-        .addEventListener(
-            "click",
-            event => {
+        const email = $("#reset-confirm-email").value;
+        const code = $("#password-reset-code").value.trim();
+        const password = $("#reset-new-password").value;
+        const confirmPassword = $("#reset-confirm-password").value;
 
-                event.preventDefault();
+        if (!/^\d{6}$/.test(code)) {
+            toast("Please enter the 6-digit reset code.", "error");
+            return;
+        }
+        if (password.length < 6) {
+            toast("Password must be at least 6 characters.", "error");
+            return;
+        }
+        if (password !== confirmPassword) {
+            toast("Passwords do not match.", "error");
+            return;
+        }
 
+        const button = $("#reset-password-btn");
+        button.disabled = true;
+        button.textContent = "Resetting...";
 
-                toast(
-                    "Password reset will be connected to PHP later.",
-                    "error"
-                );
+        try {
+            const response = await fetch("../backend/php/auth/reset-password.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ email, code, password, confirm_password: confirmPassword })
+            });
+            const result = await response.json();
 
+            if (!response.ok || !result.success) {
+                toast(result.message || "Unable to reset your password.", "error");
+                return;
             }
-        );
+
+            $("#reset-password-form").reset();
+            $("#reset-password-box").classList.add("hidden");
+            $("#login-form").classList.remove("hidden");
+            $("#login-email").value = email;
+            toast(result.message);
+        } catch (error) {
+            toast("The server is unavailable. Please try again.", "error");
+        } finally {
+            button.disabled = false;
+            button.textContent = "Reset Password";
+        }
+    });
 
 
     /* DASHBOARD SEARCH */
@@ -3807,6 +4160,50 @@ document.addEventListener(
 
             }
         );
+
+
+    $("#report-listing-btn").addEventListener("click", () => {
+        if (!requireLogin()) return;
+        $("#report-listing-form").classList.remove("hidden");
+        $("#listing-report-reason").focus();
+    });
+
+    $("#cancel-listing-report-btn").addEventListener("click", () => {
+        $("#report-listing-form").reset();
+        $("#report-listing-form").classList.add("hidden");
+    });
+
+    $("#report-listing-form").addEventListener("submit", async event => {
+        event.preventDefault();
+        if (!requireLogin()) return;
+
+        const listingId = localStorage.getItem("resource_selected_listing");
+        const reason = $("#listing-report-reason").value;
+        const description = $("#listing-report-description").value.trim();
+        const button = $("#submit-listing-report-btn");
+        button.disabled = true;
+
+        try {
+            const response = await fetch("../backend/php/reports/create.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({ listing_id: listingId, reason, description })
+            });
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                toast(result.message || "Unable to submit this report.", "error");
+                return;
+            }
+
+            event.target.reset();
+            event.target.classList.add("hidden");
+            toast(result.message || "Report submitted.");
+        } catch (error) {
+            toast("The server is unavailable. Please try again.", "error");
+        } finally {
+            button.disabled = false;
+        }
+    });
 
 
     $("#save-item-btn")
@@ -4015,7 +4412,7 @@ document.addEventListener(
                 let result;
 
                 try {
-                    response = await fetch("php/listings/create.php", {
+                    response = await fetch("../backend/php/listings/create.php", {
                         method: "POST",
                         body: formData
                     });
@@ -4060,12 +4457,12 @@ document.addEventListener(
                     campus,
 
                     image:
-                        result.images?.[0] ||
+                        mediaUrl(result.images?.[0]) ||
                         FALLBACK_IMAGE,
 
                     images:
                         result.images?.length
-                            ? result.images.slice(0, 3)
+                            ? result.images.slice(0, 3).map(mediaUrl)
                             : [FALLBACK_IMAGE],
 
                     status: "active",
@@ -4219,37 +4616,131 @@ document.addEventListener(
                 }
 
                 try {
-                    const profilePhoto = await readImageAsDataURL(file);
-                    updateCurrentUser({ profilePhoto });
+                    const formData = new FormData();
+                    formData.append("photo", file);
+
+                    const response = await fetch("../backend/php/users/upload-photo.php", {
+                        method: "POST",
+                        headers: { Accept: "application/json" },
+                        body: formData
+                    });
+                    const result = await response.json();
+
+                    if (!response.ok || !result.success) {
+                        throw new Error(result.message || "Could not save that photo.");
+                    }
+
+                    updateCurrentUser({ profilePhoto: result.profile_photo });
+                                        updateCurrentUser({ profilePhoto: mediaUrl(result.profile_photo) });
                     renderAll();
                     goToPage("profile");
-                    toast("Profile photo updated.");
-                } catch {
-                    toast("Could not read that photo.", "error");
+                    toast(result.message || "Profile photo updated.");
+                } catch (error) {
+                    toast(error.message || "Could not save that photo.", "error");
+                } finally {
+                    event.target.value = "";
                 }
             }
         );
 
 
-    $("#course-update-form")
+    $("#profile-update-form")
         .addEventListener(
             "submit",
-            event => {
+            async event => {
                 event.preventDefault();
 
-                const course = $("#profile-course-input").value.trim();
+                const profile = {
+                    first_name: $("#profile-first-name-input").value.trim(),
+                    middle_name: $("#profile-middle-name-input").value.trim(),
+                    last_name: $("#profile-last-name-input").value.trim(),
+                    course: $("#profile-course-input").value.trim(),
+                    campus: $("#profile-campus-input").value
+                };
 
-                if (!course) {
-                    toast("Please enter your course or program.", "error");
+                if (!profile.first_name || !profile.last_name || !profile.course) {
+                    toast("First name, last name, and course are required.", "error");
                     return;
                 }
 
-                updateCurrentUser({ course });
-                renderProfile();
-                showProfileTab("settings");
-                toast("Course updated.");
+                try {
+                    const response = await fetch("../backend/php/users/update.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: new URLSearchParams(profile)
+                    });
+                    const result = await response.json();
+
+                    if (!response.ok || !result.success) {
+                        toast(result.message || "Unable to update your profile.", "error");
+                        return;
+                    }
+
+                    updateCurrentUser({
+                        firstName: profile.first_name,
+                        middleName: profile.middle_name,
+                        lastName: profile.last_name,
+                        name: [profile.first_name, profile.middle_name, profile.last_name].filter(Boolean).join(" "),
+                        course: profile.course,
+                        campus: profile.campus
+                    });
+                    renderAll();
+                    showProfileTab("settings");
+                    toast(result.message || "Profile updated.");
+                } catch (error) {
+                    toast("The server is unavailable. Please try again.", "error");
+                }
             }
         );
+
+
+    $("#profile-rating-form").addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const revieweeId = localStorage.getItem("resource_profile_user");
+        const purchaseId = $("#rating-purchase-select").value;
+        const rating = $("input[name='profile-rating-value']:checked", event.target)?.value;
+
+        if (!revieweeId || !purchaseId || !rating) {
+            toast("Choose a completed purchase and a rating.", "error");
+            return;
+        }
+
+        const button = $("#submit-profile-rating-btn");
+        button.disabled = true;
+        try {
+            const response = await fetch("../backend/php/users/rate.php", {
+                method: "POST",
+                headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                body: new URLSearchParams({
+                    reviewee_id: revieweeId,
+                    purchase_id: purchaseId,
+                    rating
+                })
+            });
+            const result = await response.json();
+
+            if (!response.ok || !result.success) {
+                toast(result.message || "Unable to submit rating.", "error");
+                return;
+            }
+
+            event.target.reset();
+            $("#profile-rating-stars").dataset.rating = "0";
+            await renderProfileRatings(revieweeId, false);
+            toast(result.message || "Rating submitted.");
+        } catch (error) {
+            toast("The server is unavailable. Please try again.", "error");
+        } finally {
+            button.disabled = false;
+        }
+    });
+
+    $("#profile-rating-stars").addEventListener("change", event => {
+        if (event.target.matches("input[type=radio]")) {
+            event.currentTarget.dataset.rating = event.target.value;
+        }
+    });
 
 
     $("#password-update-form")
@@ -4273,7 +4764,7 @@ document.addEventListener(
                 }
 
                 try {
-                    const response = await fetch("php/users/change-password.php", {
+                    const response = await fetch("../backend/php/users/change-password.php", {
                         method: "POST",
                         headers: {
                             "Content-Type": "application/x-www-form-urlencoded"
@@ -4304,17 +4795,32 @@ document.addEventListener(
     $("#notification-settings-form")
         .addEventListener(
             "submit",
-            event => {
+            async event => {
                 event.preventDefault();
 
-                updateCurrentUser({
-                    notifications: {
-                        messages: $("#notify-messages").checked,
-                        listingActivity: $("#notify-listings").checked
+                const settings = {
+                    notify_messages: Number($("#notify-messages").checked),
+                    notify_listings: Number($("#notify-listings").checked)
+                };
+                try {
+                    const response = await fetch("../backend/php/users/update.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: new URLSearchParams(settings)
+                    });
+                    const result = await response.json();
+                    if (!response.ok || !result.success) {
+                        toast(result.message || "Unable to save notification settings.", "error");
+                        return;
                     }
-                });
-
-                toast("Notification settings saved.");
+                    updateCurrentUser({ notifications: {
+                        messages: !!settings.notify_messages,
+                        listingActivity: !!settings.notify_listings
+                    } });
+                    toast("Notification settings saved.");
+                } catch (error) {
+                    toast("The server is unavailable. Please try again.", "error");
+                }
             }
         );
 
@@ -4322,18 +4828,33 @@ document.addEventListener(
     $("#privacy-settings-form")
         .addEventListener(
             "submit",
-            event => {
+            async event => {
                 event.preventDefault();
 
-                updateCurrentUser({
-                    privacy: {
-                        showProfilePhoto: $("#privacy-photo").checked,
-                        showCourse: $("#privacy-course").checked
+                const settings = {
+                    privacy_photo: Number($("#privacy-photo").checked),
+                    privacy_course: Number($("#privacy-course").checked)
+                };
+                try {
+                    const response = await fetch("../backend/php/users/update.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                        body: new URLSearchParams(settings)
+                    });
+                    const result = await response.json();
+                    if (!response.ok || !result.success) {
+                        toast(result.message || "Unable to save privacy settings.", "error");
+                        return;
                     }
-                });
-
-                renderTopHeader();
-                toast("Privacy settings saved.");
+                    updateCurrentUser({ privacy: {
+                        showProfilePhoto: !!settings.privacy_photo,
+                        showCourse: !!settings.privacy_course
+                    } });
+                    renderTopHeader();
+                    toast("Privacy settings saved.");
+                } catch (error) {
+                    toast("The server is unavailable. Please try again.", "error");
+                }
             }
         );
 
@@ -4485,6 +5006,16 @@ RENDER ALL
 ========================================================== */
 
 function renderAll() {
+
+
+const reportsNav = $("#admin-reports-nav");
+
+if (reportsNav) {
+    reportsNav.classList.toggle(
+        "hidden",
+        getCurrentUser()?.role !== "admin"
+    );
+}
 
 
 renderTopHeader();
@@ -4659,7 +5190,7 @@ $("#verification-form").addEventListener("submit", async event => {
     try {
 
         response = await fetch(
-            "php/auth/verify-code.php",
+            "../backend/php/auth/verify-code.php",
             {
                 method: "POST",
                 headers: {
@@ -4796,4 +5327,284 @@ $("#verification-form").addEventListener("submit", async event => {
 
     }
 
+<<<<<<< Updated upstream
+=======
+});
+
+$("#signup-verification-form").addEventListener("submit", async event => {
+
+    event.preventDefault();
+
+    const code =
+        $("#signup-verification-code")
+            .value
+            .trim();
+
+
+    /* =========================
+       CHECK CODE FORMAT
+       ========================= */
+
+    if (!/^\d{6}$/.test(code)) {
+
+        toast(
+            "Please enter the 6-digit verification code.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       SEND CODE TO PHP
+       ========================= */
+
+    const formData =
+        new URLSearchParams({
+            code
+        });
+
+
+    let response;
+    let result;
+
+
+    try {
+
+        response = await fetch(
+            "../backend/php/auth/verify-code.php",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type":
+                        "application/x-www-form-urlencoded"
+                },
+
+                body: formData
+            }
+        );
+
+        result = await response.json();
+
+    } catch (error) {
+
+        toast(
+            "The server is unavailable. Please try again.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       CHECK VERIFICATION
+       ========================= */
+
+    if (
+        !response.ok ||
+        !result.success ||
+        !result.user
+    ) {
+
+        toast(
+            result.message ||
+            "Verification failed.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    /* =========================
+       VERIFICATION SUCCESSFUL
+       ========================= */
+
+    const user = {
+
+        id: String(result.user.id),
+
+        firstName:
+            result.user.first_name,
+
+        middleName:
+            result.user.middle_name || "",
+
+        lastName:
+            result.user.last_name,
+
+        name: [
+            result.user.first_name,
+            result.user.middle_name,
+            result.user.last_name
+        ]
+            .filter(Boolean)
+            .join(" "),
+
+        studentId:
+            result.user.student_id,
+
+        email:
+            result.user.email,
+
+        course:
+            result.user.course,
+
+        campus:
+            result.user.campus,
+
+        role:
+            result.user.role,
+
+        profilePhoto:
+            result.user.profile_photo || ""
+
+    };
+
+
+    /* =========================
+       SAVE USER LOCALLY
+       ========================= */
+
+    const users =
+        getUsers()
+            .filter(
+                account =>
+                    account.id !== user.id
+            );
+
+    users.push(user);
+
+    saveUsers(users);
+
+
+    /* =========================
+       NOW LOG THEM IN
+       ========================= */
+
+    localStorage.setItem(
+        STORAGE.session,
+        user.id
+    );
+
+
+    toast(
+        `Welcome to ReSource, ${getUserFirstName(user)}!`
+    );
+
+
+    /* =========================
+       CLEAN UP
+       ========================= */
+
+    $("#signup-verification-form")
+        .reset();
+
+    $("#signup-verification-box")
+        .classList.add("hidden");
+
+
+    renderAll();
+
+
+    /* =========================
+       GO TO DASHBOARD
+       ========================= */
+
+    goToPage("dashboard");
+
+});
+
+$("#delete-account-btn").addEventListener("click", async () => {
+
+    const confirmed = confirm(
+        "Are you sure you want to permanently delete your ReSource account?\n\n" +
+        "This action cannot be undone."
+    );
+
+    if (!confirmed) {
+        return;
+    }
+
+    const confirmation = prompt(
+        'Type DELETE to confirm account deletion.'
+    );
+
+    if (confirmation !== "DELETE") {
+
+        toast(
+            "Account deletion cancelled.",
+            "error"
+        );
+
+        return;
+    }
+
+    let response;
+    let result;
+
+    try {
+
+        response = await fetch(
+            "../backend/php/auth/delete-account.php",
+            {
+                method: "POST"
+            }
+        );
+
+        result = await response.json();
+
+    } catch (error) {
+
+        toast(
+            "The server is unavailable. Please try again.",
+            "error"
+        );
+
+        return;
+    }
+
+    if (!response.ok || !result.success) {
+
+        toast(
+            result.message ||
+            "Unable to delete account.",
+            "error"
+        );
+
+        return;
+    }
+
+    /*
+     * Remove the deleted account
+     * from the browser's stored users.
+     */
+
+    const currentSession =
+        localStorage.getItem(STORAGE.session);
+
+    if (currentSession) {
+
+        const users =
+            getUsers().filter(
+                user => user.id !== currentSession
+            );
+
+        saveUsers(users);
+    }
+
+    localStorage.removeItem(STORAGE.session);
+
+    toast(
+        "Your account has been deleted."
+    );
+
+    renderAll();
+
+    goToPage("login");
+
+>>>>>>> Stashed changes
 });

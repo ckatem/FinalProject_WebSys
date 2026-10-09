@@ -144,6 +144,14 @@ $_SESSION['pending_2fa_expires'] =
 |--------------------------------------------------------------------------
 */
 
+jsonResponseAndContinue(
+    true,
+    'Verification code is being sent.',
+    [
+        'requires_2fa' => true
+    ]
+);
+
 $mail = new PHPMailer(true);
 
 try {
@@ -230,38 +238,5 @@ try {
 
 
 } catch (Exception $e) {
-
-    unset(
-        $_SESSION['pending_2fa_user_id'],
-        $_SESSION['pending_2fa_email'],
-        $_SESSION['pending_2fa_code_hash'],
-        $_SESSION['pending_2fa_expires']
-    );
-
-    jsonResponse(
-        false,
-        'Email error: ' . $mail->ErrorInfo,
-        [],
-        500
-    );
+    error_log('Login verification email failed: ' . $mail->ErrorInfo);
 }
-
-
-/*
-|--------------------------------------------------------------------------
-| DO NOT LOG THE USER IN YET
-|--------------------------------------------------------------------------
-|
-| The actual $_SESSION['user_id'] will only be created
-| after the verification code is entered correctly.
-|
-|--------------------------------------------------------------------------
-*/
-
-jsonResponse(
-    true,
-    'Verification code sent.',
-    [
-        'requires_2fa' => true
-    ]
-);

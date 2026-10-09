@@ -12,7 +12,7 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 </head>
 
 <body>
@@ -156,6 +156,14 @@
            data-page="messaging">
             <span class="nav-icon" aria-hidden="true">💬</span>
             Messaging
+        </a>
+
+        <a href="admin-dashboard.php#reports"
+           class="nav-item hidden"
+           id="admin-reports-nav"
+           data-page="admin-reports">
+            <span class="nav-icon" aria-hidden="true">🚨</span>
+            Reports
         </a>
 
     </nav>
@@ -619,6 +627,109 @@
 </div>
 
 
+<div id="forgot-password-box" class="hidden">
+
+    <h3>Reset Your Password</h3>
+
+    <p>Enter your TIP email. If an account exists, we will send a reset code.</p>
+
+    <form id="forgot-password-form">
+
+        <label class="field-label" for="reset-request-email">
+            Institutional Email <span>*</span>
+        </label>
+
+        <div class="input-with-icon">
+            <span class="icon" aria-hidden="true">✉</span>
+            <input
+                type="email"
+                id="reset-request-email"
+                placeholder="you@tip.edu.ph"
+                autocomplete="email"
+                required>
+        </div>
+
+        <button type="submit" class="btn btn-block btn-black" id="request-reset-code-btn">
+            Send Reset Code
+        </button>
+
+    </form>
+
+    <button type="button" id="back-to-login-from-reset-btn" class="btn btn-secondary">
+        Back to Login
+    </button>
+
+</div>
+
+<div id="reset-password-box" class="hidden">
+
+    <h3>Choose a New Password</h3>
+
+    <p>Enter the 6-digit code sent to your TIP email, then choose a new password.</p>
+
+    <form id="reset-password-form">
+
+        <input type="hidden" id="reset-confirm-email">
+
+        <label class="field-label" for="password-reset-code">
+            Reset Code <span>*</span>
+        </label>
+
+        <div class="input-with-icon">
+            <span class="icon" aria-hidden="true">✓</span>
+            <input
+                type="text"
+                id="password-reset-code"
+                placeholder="Enter 6-digit code"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                maxlength="6"
+                required>
+        </div>
+
+        <label class="field-label" for="reset-new-password">
+            New Password <span>*</span>
+        </label>
+
+        <div class="input-with-icon">
+            <span class="icon" aria-hidden="true">🔒</span>
+            <input
+                type="password"
+                id="reset-new-password"
+                placeholder="At least 6 characters"
+                autocomplete="new-password"
+                minlength="6"
+                required>
+        </div>
+
+        <label class="field-label" for="reset-confirm-password">
+            Confirm New Password <span>*</span>
+        </label>
+
+        <div class="input-with-icon">
+            <span class="icon" aria-hidden="true">🔒</span>
+            <input
+                type="password"
+                id="reset-confirm-password"
+                placeholder="Re-enter new password"
+                autocomplete="new-password"
+                minlength="6"
+                required>
+        </div>
+
+        <button type="submit" class="btn btn-block btn-black" id="reset-password-btn">
+            Reset Password
+        </button>
+
+    </form>
+
+    <button type="button" id="back-to-reset-request-btn" class="btn btn-secondary">
+        Request Another Code
+    </button>
+
+</div>
+
+
 
                 <!-- SIGNUP FORM -->
                 <form
@@ -830,6 +941,62 @@
                     </p>
 
                 </form>
+                <!-- SIGN UP EMAIL VERIFICATION -->
+
+<div id="signup-verification-box" class="hidden">
+
+    <h3>Verify Your Email</h3>
+
+    <p>
+        We sent a 6-digit verification code to your TIP email.
+        Please enter it below to complete your registration.
+    </p>
+
+    <form id="signup-verification-form">
+
+        <label
+            class="field-label"
+            for="signup-verification-code">
+
+            Verification Code <span>*</span>
+
+        </label>
+
+        <div class="input-with-icon">
+
+            <span class="icon">✓</span>
+
+            <input
+                type="text"
+                id="signup-verification-code"
+                placeholder="Enter 6-digit code"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+                maxlength="6"
+                required>
+
+        </div>
+
+        <button
+            type="submit"
+            class="btn btn-primary">
+
+            Verify Code
+
+        </button>
+
+    </form>
+
+    <button
+        type="button"
+        id="signup-back-to-login-btn"
+        class="btn btn-secondary">
+
+        Back to Login
+
+    </button>
+
+</div>
 
             </div>
 
@@ -1299,7 +1466,34 @@
                             Delete Listing
                         </button>
 
+                        <button
+                            class="btn btn-outline"
+                            id="report-listing-btn"
+                            type="button">
+                            Report Listing
+                        </button>
+
                     </div>
+
+                    <form id="report-listing-form" class="settings-card hidden">
+                        <h3>Report this listing</h3>
+                        <label for="listing-report-reason">Reason</label>
+                        <select id="listing-report-reason" required>
+                            <option value="">Choose a reason</option>
+                            <option>Prohibited item</option>
+                            <option>Fraud or scam</option>
+                            <option>Misleading or inaccurate listing</option>
+                            <option>Harassment or hateful content</option>
+                            <option>Spam or duplicate listing</option>
+                            <option>Other platform-rule violation</option>
+                        </select>
+                        <label for="listing-report-description">Details (optional)</label>
+                        <textarea id="listing-report-description" maxlength="1000" rows="4"></textarea>
+                        <div class="btn-row">
+                            <button class="btn btn-black" type="submit" id="submit-listing-report-btn">Submit Report</button>
+                            <button class="btn btn-gray" type="button" id="cancel-listing-report-btn">Cancel</button>
+                        </div>
+                    </form>
 
                 </div>
 
@@ -1746,6 +1940,43 @@
 
                 </div>
 
+                <section class="profile-ratings" id="profile-ratings-section">
+                    <div class="profile-ratings-header">
+                        <h3>User Ratings</h3>
+                        <p id="profile-rating-summary">Loading ratings...</p>
+                    </div>
+                    <form id="profile-rating-form" class="settings-card profile-rating-form hidden">
+                        <h4>Rate this user</h4>
+                        <p id="rating-eligibility-message" class="rating-eligibility-message hidden"></p>
+                        <label for="rating-purchase-select">Recorded exchange</label>
+                        <select id="rating-purchase-select" required></select>
+                        <fieldset id="profile-rating-stars" class="rating-stars" data-rating="0">
+                            <legend>Rating</legend>
+                            <label title="1 star">
+                                <input type="radio" name="profile-rating-value" value="1" aria-label="1 star" required>
+                                <span aria-hidden="true">★</span>
+                            </label>
+                            <label title="2 stars">
+                                <input type="radio" name="profile-rating-value" value="2" aria-label="2 stars" required>
+                                <span aria-hidden="true">★</span>
+                            </label>
+                            <label title="3 stars">
+                                <input type="radio" name="profile-rating-value" value="3" aria-label="3 stars" required>
+                                <span aria-hidden="true">★</span>
+                            </label>
+                            <label title="4 stars">
+                                <input type="radio" name="profile-rating-value" value="4" aria-label="4 stars" required>
+                                <span aria-hidden="true">★</span>
+                            </label>
+                            <label title="5 stars">
+                                <input type="radio" name="profile-rating-value" value="5" aria-label="5 stars" required>
+                                <span aria-hidden="true">★</span>
+                            </label>
+                        </fieldset>
+                        <button class="btn btn-yellow" type="submit" id="submit-profile-rating-btn">Submit Rating</button>
+                    </form>
+                </section>
+
 
                 <div class="profile-tabs">
 
@@ -1815,16 +2046,23 @@
 
                     <div class="settings-grid">
 
-                        <form class="settings-card" id="course-update-form">
-                            <span class="results-eyebrow">ACADEMIC DETAILS</span>
-                            <h3>Update your course</h3>
-                            <p>Keep the course shown on your ReSource profile current.</p>
+                        <form class="settings-card" id="profile-update-form">
+                            <span class="results-eyebrow">PROFILE DETAILS</span>
+                            <h3>Edit your profile</h3>
+                            <label for="profile-first-name-input">First name</label>
+                            <input type="text" id="profile-first-name-input" maxlength="80" required>
+                            <label for="profile-middle-name-input">Middle name (optional)</label>
+                            <input type="text" id="profile-middle-name-input" maxlength="80">
+                            <label for="profile-last-name-input">Last name</label>
+                            <input type="text" id="profile-last-name-input" maxlength="80" required>
                             <label for="profile-course-input">Course / Program</label>
-                            <input
-                                type="text"
-                                id="profile-course-input"
-                                placeholder="e.g. BSIT">
-                            <button class="btn btn-yellow" type="submit">Save Course</button>
+                            <input type="text" id="profile-course-input" maxlength="100" required>
+                            <label for="profile-campus-input">Campus</label>
+                            <select id="profile-campus-input" required>
+                                <option value="Manila">Manila</option>
+                                <option value="Quezon City">Quezon City</option>
+                            </select>
+                            <button class="btn btn-yellow" type="submit" id="save-profile-btn">Save Profile</button>
                         </form>
 
                         <form class="settings-card" id="password-update-form">
@@ -1857,6 +2095,32 @@
                             <label class="setting-check"><input type="checkbox" id="privacy-course"> Show my course</label>
                             <button class="btn btn-gray" type="submit">Save Privacy</button>
                         </form>
+
+                        <!-- DELETE ACCOUNT -->
+
+<div class="settings-card delete-account-card">
+
+    <span class="results-eyebrow">
+        DANGER ZONE
+    </span>
+
+    <h3>Delete Account</h3>
+
+    <p>
+        Permanently delete your ReSource account and its account data.
+        This action cannot be undone.
+    </p>
+
+    <button
+        type="button"
+        class="btn btn-outline"
+        id="delete-account-btn">
+
+        Delete My Account
+
+    </button>
+
+</div>
 
                     </div>
 
@@ -2139,7 +2403,7 @@
             class="image-lightbox-close"
             id="image-lightbox-close"
             aria-label="Close image preview">
-            ×
+            
         </button>
         <img id="image-lightbox-image" src="" alt="">
         <p id="image-lightbox-caption"></p>
@@ -2157,7 +2421,7 @@
     class="toast-container">
 </div>
 
-<script src="script.js"></script>
+<script src="script.js?v=<?= filemtime(__DIR__ . '/script.js') ?>"></script>
 
 </body>
 </html>

@@ -177,6 +177,14 @@ $_SESSION['pending_2fa_expires'] =
  * SEND VERIFICATION EMAIL
  */
 
+jsonResponseAndContinue(
+    true,
+    'Verification code is being sent.',
+    [
+        'requires_2fa' => true
+    ]
+);
+
 $mail = new PHPMailer(true);
 
 try {
@@ -250,25 +258,5 @@ try {
     $mail->send();
 
 } catch (Exception $e) {
-
-    jsonResponse(
-        false,
-        'Account was created, but we could not send the verification email. Please try again.',
-        [],
-        500
-    );
+    error_log('Registration verification email failed: ' . $mail->ErrorInfo);
 }
-
-/*
- * DO NOT LOG THE USER IN YET.
- *
- * The user must verify their email first.
- */
-
-jsonResponse(
-    true,
-    'Verification code sent.',
-    [
-        'requires_2fa' => true
-    ]
-);

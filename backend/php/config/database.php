@@ -41,6 +41,40 @@ function jsonResponse(bool $success, string $message = '', array $data = [], int
     exit;
 }
 
+function jsonResponseAndContinue(bool $success, string $message = '', array $data = [], int $status = 200): void {
+    http_response_code($status);
+    header('Content-Type: application/json; charset=utf-8');
+
+    $body = json_encode(array_merge([
+        'success' => $success,
+        'message' => $message
+    ], $data));
+
+    if ($body === false) {
+        $body = '{}';
+    }
+
+    header('Content-Length: ' . strlen($body));
+
+    if (session_status() === PHP_SESSION_ACTIVE) {
+        session_write_close();
+    }
+
+    ignore_user_abort(true);
+    echo $body;
+
+    if (function_exists('fastcgi_finish_request')) {
+        fastcgi_finish_request();
+        return;
+    }
+
+    while (ob_get_level() > 0) {
+        ob_end_flush();
+    }
+
+    flush();
+}
+
 function requireLogin(): int {
     if (empty($_SESSION['user_id'])) {
         jsonResponse(false, 'Please log in first.', [], 401);

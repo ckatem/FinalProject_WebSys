@@ -2652,6 +2652,90 @@ PROFILE
     display: none;
 }
 
+.profile-ratings {
+    margin: 20px 0;
+    padding-top: 16px;
+    border-top: 1px solid #ddd;
+}
+
+.profile-ratings-header h3,
+.profile-rating-form h4 {
+    margin: 0 0 6px;
+}
+
+.profile-ratings-header p {
+    margin: 0 0 14px;
+    color: #666;
+    font-size: 13px;
+}
+
+.rating-stars {
+    display: flex;
+    gap: 7px;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.rating-stars legend {
+    margin-bottom: 7px;
+    color: #3b3b3b;
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.rating-stars label {
+    position: relative;
+    cursor: pointer;
+}
+
+.profile-rating-form .rating-stars input[type="radio"] {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+}
+
+.rating-stars span {
+    display: block;
+    color: #aaa;
+    font-size: 28px;
+    line-height: 1;
+}
+
+.rating-stars[data-rating="1"] label:nth-of-type(-n+1) span,
+.rating-stars[data-rating="2"] label:nth-of-type(-n+2) span,
+.rating-stars[data-rating="3"] label:nth-of-type(-n+3) span,
+.rating-stars[data-rating="4"] label:nth-of-type(-n+4) span,
+.rating-stars[data-rating="5"] label:nth-of-type(-n+5) span {
+    color: var(--yellow-dark);
+}
+
+.rating-stars label:hover span {
+    color: var(--yellow-dark);
+}
+
+.rating-stars input:focus-visible + span {
+    outline: 2px solid var(--black);
+    outline-offset: 3px;
+}
+
+.rating-eligibility-message {
+    margin: 0;
+    padding: 10px 12px;
+    border-left: 3px solid var(--yellow-dark);
+    background: #fff8e7;
+    color: #5c4a20;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
 .four-col {
     grid-template-columns:
         repeat(4, 1fr);
@@ -4339,6 +4423,27 @@ PROFILE, CART, AND IMAGE PREVIEW
     background: #fafafa;
 }
 
+.profile-rating-form {
+    width: min(100%, 560px);
+    box-sizing: border-box;
+    align-items: stretch;
+}
+
+.profile-rating-form h4 {
+    margin: 0;
+}
+
+.profile-rating-form select,
+.profile-rating-form textarea {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.profile-rating-form button {
+    align-self: flex-start;
+}
+
 .settings-card h3 {
     margin: 0;
     font-size: 16px;
@@ -4367,6 +4472,24 @@ PROFILE, CART, AND IMAGE PREVIEW
     color: var(--black);
     font: inherit;
     outline: none;
+}
+
+.settings-card select,
+.settings-card textarea {
+    width: 100%;
+    min-height: 42px;
+    padding: 10px 12px;
+    border: 1px solid #d7d7d7;
+    border-radius: 9px;
+    background: #fff;
+    color: var(--black);
+    font: inherit;
+    outline: none;
+}
+
+.settings-card textarea {
+    min-height: 88px;
+    resize: vertical;
 }
 
 .settings-card input:not([type="checkbox"]):focus {

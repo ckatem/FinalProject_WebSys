@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/../backend/php/config/database.php';
+require_once __DIR__ . '/php/config/database.php';
 
 if (empty($_SESSION['user_id'])) {
     header('Location: index.php');
@@ -48,10 +48,6 @@ function dashboardDate(string $date): string {
 
 function dashboardMoney(string|float $price): string {
     return 'PHP ' . number_format((float) $price, 2);
-}
-
-function dashboardMedia(string $path): string {
-    return str_starts_with($path, 'uploads/') ? '../backend/' . $path : $path;
 }
 ?>
 <!DOCTYPE html>
@@ -139,17 +135,13 @@ function dashboardMedia(string $path): string {
         .top-title small { display: block; color: #bbb; font-size: 9px; font-weight: 700; }
         h1 { font: 700 20px Merriweather, serif; margin: 4px 0 0; }
         .search { width: min(100%, 350px); height: 38px; border: 1px solid #555; border-radius: 999px; background: #292929; padding: 0 14px; color: #fff; outline: none; }
-        .admin-account { margin-left: auto; display: flex; align-items: center; gap: 10px; flex: 0 0 auto; }
-        .admin-logout-button { min-height: 40px; padding: 9px 16px; border: 1px solid #555; border-radius: 999px; background: transparent; color: #fff; font-size: 12px; font-weight: 700; transition: background .2s ease, border-color .2s ease, transform .2s ease; }
-        .admin-logout-button:hover { border-color: #777; background: #292929; transform: translateY(-1px); }
-        .account-profile { min-height: 42px; display: flex; align-items: center; gap: 9px; padding: 4px 14px 4px 5px; border: 1px solid #4b4b4b; border-radius: 999px; background: linear-gradient(135deg, #343434, #202020); }
-        .account-icon { width: 34px; height: 34px; flex: 0 0 34px; display: grid; place-items: center; border-radius: 50%; background: var(--yellow); color: #111; font-size: 17px; }
-        .account-name { max-width: 170px; overflow: hidden; color: #fff; font-size: 12px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+        .admin-account { margin-left: auto; display: flex; align-items: center; gap: 10px; }
+        .account-icon { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 50%; background: var(--yellow); color: #111; font-size: 18px; }
+        .account-name { font-size: 11px; font-weight: 700; line-height: 1.35; }
+        .account-name span { display: block; font-size: 9px; font-weight: 400; color: #bbb; }
         main { flex: 1; min-width: 0; padding: 28px 34px 50px; max-width: none; }
         .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-bottom: 32px; }
-        .stat { min-height: 65px; border: 1px solid #e1e1e1; border-radius: 19px; background: white; color: inherit; text-decoration: none; text-align: left; display: flex; align-items: center; gap: 10px; padding: 10px 14px; box-shadow: var(--shadow); transition: transform .16s ease, box-shadow .16s ease; }
-        .stat:hover { transform: translateY(-2px); box-shadow: 0 15px 32px rgba(0, 0, 0, .12); }
-        .stat:focus-visible { outline: 3px solid var(--yellow-dark); outline-offset: 3px; }
+        .stat { min-height: 65px; border: 1px solid #e1e1e1; border-radius: 19px; background: white; display: flex; align-items: center; gap: 10px; padding: 10px 14px; box-shadow: var(--shadow); }
         .stat-icon { width: 32px; height: 32px; flex: 0 0 32px; display: grid; place-items: center; border-radius: 50%; background: #050505; color: white; font-size: 17px; }
         .stat:nth-child(2) .stat-icon { background: var(--green); }
         .stat:nth-child(3) .stat-icon { background: var(--red); border-radius: 4px; }
@@ -241,11 +233,9 @@ function dashboardMedia(string $path): string {
     <div class="top-title"><small>TIP CAMPUS MARKETPLACE</small><h1 id="admin-page-title">Admin Dashboard</h1></div>
     <input class="search" type="search" placeholder="Search books, courses, tools..." aria-label="Search dashboard">
     <div class="admin-account">
-        <button class="admin-logout-button" type="button" data-admin-logout>Log Out</button>
-        <div class="account-profile">
-            <div class="account-icon" aria-hidden="true">&#128100;</div>
-            <div class="account-name"><?= htmlspecialchars($adminUser['first_name'] . ' ' . $adminUser['last_name'], ENT_QUOTES, 'UTF-8') ?></div>
-        </div>
+        <div class="account-icon" aria-hidden="true">&#128276;</div>
+        <div class="account-icon" aria-hidden="true">&#128100;</div>
+        <div class="account-name"><?= htmlspecialchars($adminUser['first_name'] . ' ' . $adminUser['last_name'], ENT_QUOTES, 'UTF-8') ?><span>Administrator</span></div>
     </div>
 </header>
 <div class="admin-shell">
@@ -270,8 +260,7 @@ function dashboardMedia(string $path): string {
        <a
     class="logout"
     href="#"
-    id="admin-logout-btn"
-    data-admin-logout>
+    id="admin-logout-btn">
 
     <span aria-hidden="true">&#8594;</span>
     Log-out
@@ -282,18 +271,10 @@ function dashboardMedia(string $path): string {
 
     <main>
         <section class="stats" aria-label="Dashboard statistics">
-            <a class="stat" href="#dashboard" data-section="dashboard" data-queue-status="pending" aria-label="View pending listings">
-                <div class="stat-icon">&#9203;</div><div><h2>Pending Listing</h2><p id="pending-count"><?= $stats['pending'] ?></p></div>
-            </a>
-            <a class="stat" href="#listings" data-section="listings" aria-label="View approved listings">
-                <div class="stat-icon">&#10003;</div><div><h2>Approved Listing</h2><p id="approved-count"><?= $stats['approved'] ?></p></div>
-            </a>
-            <a class="stat" href="#reports" data-section="reports" aria-label="Review reported items">
-                <div class="stat-icon">!</div><div><h2>Reported Items</h2><p id="reported-count"><?= $stats['reported'] ?></p></div>
-            </a>
-            <a class="stat" href="#users" data-section="users" aria-label="Manage users">
-                <div class="stat-icon">&#128100;</div><div><h2>Total Users</h2><p><?= $stats['users'] ?></p></div>
-            </a>
+            <article class="stat"><div class="stat-icon">&#9203;</div><div><h2>Pending Listing</h2><p id="pending-count"><?= $stats['pending'] ?></p></div></article>
+            <article class="stat"><div class="stat-icon">&#10003;</div><div><h2>Approved Listing</h2><p id="approved-count"><?= $stats['approved'] ?></p></div></article>
+            <article class="stat"><div class="stat-icon">!</div><div><h2>Reported Items</h2><p id="reported-count"><?= $stats['reported'] ?></p></div></article>
+            <article class="stat"><div class="stat-icon">&#128100;</div><div><h2>Total Users</h2><p><?= $stats['users'] ?></p></div></article>
         </section>
 
         <section class="admin-section active" id="dashboard">
@@ -313,7 +294,7 @@ function dashboardMedia(string $path): string {
                     <?php else: foreach ($pending as $listing): ?>
                         <?php $queueStatus = $listing['status'] === 'draft' ? 'pending' : ($listing['status'] === 'active' ? 'approved' : 'rejected'); ?>
                         <tr data-listing-id="<?= (int) $listing['id'] ?>" data-queue-status="<?= $queueStatus ?>">
-                            <td><div class="item-cell"><?php if (!empty($listing['image_path'])): ?><img class="item-thumb" src="<?= htmlspecialchars(dashboardMedia($listing['image_path']), ENT_QUOTES, 'UTF-8') ?>" alt=""><?php else: ?><span class="item-thumb" aria-hidden="true"></span><?php endif; ?><span class="item-title"><?= htmlspecialchars($listing['title'], ENT_QUOTES, 'UTF-8') ?><span class="item-price"><?= dashboardMoney($listing['price']) ?></span></span></div></td>
+                            <td><div class="item-cell"><?php if (!empty($listing['image_path'])): ?><img class="item-thumb" src="<?= htmlspecialchars($listing['image_path'], ENT_QUOTES, 'UTF-8') ?>" alt=""><?php else: ?><span class="item-thumb" aria-hidden="true"></span><?php endif; ?><span class="item-title"><?= htmlspecialchars($listing['title'], ENT_QUOTES, 'UTF-8') ?><span class="item-price"><?= dashboardMoney($listing['price']) ?></span></span></div></td>
                             <td><?= htmlspecialchars($listing['seller_name'], ENT_QUOTES, 'UTF-8') ?></td>
                             <td><?= dashboardDate($listing['created_at']) ?></td>
                             <td><span class="status <?= htmlspecialchars($listing['status'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($listing['status'], ENT_QUOTES, 'UTF-8') ?></span></td>
@@ -430,10 +411,6 @@ const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, character 
     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;'
 }[character]));
 
-const mediaUrl = (path) => typeof path === 'string' && path.startsWith('uploads/')
-    ? `../backend/${path}`
-    : path;
-
 const formatDate = (value) => {
     const date = new Date(String(value).replace(' ', 'T'));
     return Number.isNaN(date.getTime()) ? escapeHtml(value) : date.toLocaleDateString(undefined, {
@@ -458,7 +435,7 @@ async function loadAdminData(endpoint, tableId, renderRow, emptyMessage, columnC
 }
 
 function loadListings() {
-    return loadAdminData('../backend/php/admin/listings.php', 'listings-table', listing => `<tr data-listing-id="${escapeHtml(listing.id)}">
+    return loadAdminData('php/admin/listings.php', 'listings-table', listing => `<tr data-listing-id="${escapeHtml(listing.id)}">
         <td>${escapeHtml(listing.title)}</td>
         <td>${escapeHtml(listing.seller_name)}</td>
         <td>${escapeHtml(listing.category)}</td>
@@ -477,7 +454,7 @@ function loadListings() {
 
 function loadReports() {
     const body = document.querySelector('#reports-table tbody');
-    return fetch('../backend/php/admin/reports.php', { headers: { Accept: 'application/json' } })
+    return fetch('php/admin/reports.php', { headers: { Accept: 'application/json' } })
         .then(async response => {
             const result = await response.json();
             if (!response.ok || !result.success) throw new Error(result.message || 'Unable to load reports.');
@@ -504,7 +481,7 @@ function loadReports() {
 }
 
 function loadUsers() {
-    return loadAdminData('../backend/php/admin/users.php', 'users-table', user => `<tr data-user-id="${escapeHtml(user.id)}">
+    return loadAdminData('php/admin/users.php', 'users-table', user => `<tr data-user-id="${escapeHtml(user.id)}">
         <td>${escapeHtml([user.first_name, user.middle_name, user.last_name].filter(Boolean).join(' '))}</td>
         <td>${escapeHtml(user.student_id)}</td>
         <td>${escapeHtml(user.email)}</td>
@@ -522,7 +499,7 @@ function loadUsers() {
 async function loadAuditLogs() {
     const body = document.querySelector('#audit-table tbody');
     try {
-        const response = await fetch('../backend/php/admin/audit-logs.php', { headers: { Accept: 'application/json' } });
+        const response = await fetch('php/admin/audit-logs.php', { headers: { Accept: 'application/json' } });
         const result = await response.json();
         if (!response.ok || !result.success) throw new Error(result.message || 'Unable to load the audit log.');
         const rows = result.audit_logs || [];
@@ -558,11 +535,6 @@ document.querySelectorAll('[data-section]').forEach(link => link.addEventListene
     event.preventDefault();
     document.body.classList.remove('menu-open');
     showSection(link.dataset.section);
-    if (link.dataset.queueStatus) {
-        document.getElementById('queue-status-filter').value = link.dataset.queueStatus;
-        applyQueueFilters();
-        document.getElementById('pending-queue-table').scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
 }));
 
 function applyQueueFilters() {
@@ -617,7 +589,7 @@ async function handleUserAction(userId, action) {
         return;
     }
     try {
-        const result = await postAdmin('../backend/php/admin/update-user-status.php', { user_id: userId, action, reason: reason || '' });
+        const result = await postAdmin('php/admin/update-user-status.php', { user_id: userId, action, reason: reason || '' });
         showToast(result.message);
         loadUsers();
     } catch (error) {
@@ -639,7 +611,7 @@ document.querySelector('#pending-queue-table tbody').addEventListener('click', a
     if (viewButton) {
         viewButton.disabled = true;
         try {
-            const response = await fetch(`../backend/php/listings/detail.php?id=${encodeURIComponent(viewButton.dataset.listingView)}`, {
+            const response = await fetch(`php/listings/detail.php?id=${encodeURIComponent(viewButton.dataset.listingView)}`, {
                 headers: { Accept: 'application/json' }
             });
             const result = await response.json();
@@ -686,10 +658,10 @@ document.querySelector('#pending-queue-table tbody').addEventListener('click', a
     buttons.forEach(button => { button.disabled = true; });
     try {
         const action = actionButton.dataset.listingAction;
-            const approve = action === 'approve';
+        const approve = action === 'approve';
         const hidden = action === 'hide';
         const result = await postAdmin(
-            approve ? '../backend/php/admin/update-listing-status.php' : (hidden ? '../backend/php/admin/update-listing-status.php' : '../backend/php/admin/delete-listing.php'),
+            approve ? 'php/admin/update-listing-status.php' : (hidden ? 'php/admin/update-listing-status.php' : 'php/admin/delete-listing.php'),
             approve ? { listing_id: row.dataset.listingId, status: 'active' } : (hidden ? { listing_id: row.dataset.listingId, status: 'hidden', rejection_reason: 'Hidden by moderator after review.' } : { listing_id: row.dataset.listingId })
         );
         row.remove();
@@ -719,7 +691,7 @@ document.getElementById('reject-form').addEventListener('submit', async event =>
     buttons.forEach(button => { button.disabled = true; });
     submit.disabled = true;
     try {
-        const result = await postAdmin('../backend/php/admin/update-listing-status.php', {
+        const result = await postAdmin('php/admin/update-listing-status.php', {
             listing_id: rejectingRow.dataset.listingId,
             status: 'hidden',
             rejection_reason: reason
@@ -743,7 +715,7 @@ function openReport(reportId) {
     if (!report) return;
     activeReportId = String(report.id);
     const previewImage = report.listing_image
-        ? `<img src="${escapeHtml(mediaUrl(report.listing_image))}" alt="${escapeHtml(report.title)}">`
+        ? `<img src="${escapeHtml(report.listing_image)}" alt="${escapeHtml(report.title)}">`
         : '<span class="item-thumb" aria-hidden="true"></span>';
     document.getElementById('report-modal-body').innerHTML = `
         <div class="detail-grid">
@@ -772,14 +744,14 @@ document.querySelector('#listings-table tbody').addEventListener('click', async 
     const viewButton = event.target.closest('[data-listing-view]');
     const actionButton = event.target.closest('[data-listing-action]');
     if (viewButton) {
-        const response = await fetch(`../backend/php/listings/detail.php?id=${encodeURIComponent(viewButton.dataset.listingView)}`, { headers: { Accept: 'application/json' } });
+        const response = await fetch(`php/listings/detail.php?id=${encodeURIComponent(viewButton.dataset.listingView)}`, { headers: { Accept: 'application/json' } });
         const result = await response.json();
         if (!response.ok || !result.success) {
             showToast(result.message || 'Unable to open listing.');
             return;
         }
         const listing = result.listing;
-        const images = (listing.images || []).map(path => `<img src="${escapeHtml(mediaUrl(path))}" alt="${escapeHtml(listing.title)}">`).join('');
+        const images = (listing.images || []).map(path => `<img src="${escapeHtml(path)}" alt="${escapeHtml(listing.title)}">`).join('');
         document.getElementById('listing-modal-body').innerHTML = `
             <div class="modal-images">${images || '<p>No images provided.</p>'}</div>
             <div class="detail-grid">
@@ -800,7 +772,7 @@ document.querySelector('#listings-table tbody').addEventListener('click', async 
     if (actionButton.dataset.listingAction === 'hide') {
         if (!window.confirm('Hide this active listing from the marketplace?')) return;
         try {
-            const result = await postAdmin('../backend/php/admin/update-listing-status.php', {
+            const result = await postAdmin('php/admin/update-listing-status.php', {
                 listing_id: row.dataset.listingId,
                 status: 'hidden',
                 rejection_reason: 'Hidden by administrator after review.'
@@ -814,7 +786,7 @@ document.querySelector('#listings-table tbody').addEventListener('click', async 
     if (actionButton.dataset.listingAction === 'delete') {
         if (!window.confirm('Permanently delete this listing and its images?')) return;
         try {
-            const result = await postAdmin('../backend/php/admin/delete-listing.php', { listing_id: row.dataset.listingId });
+            const result = await postAdmin('php/admin/delete-listing.php', { listing_id: row.dataset.listingId });
             row.remove();
             showToast(result.message);
         } catch (error) {
@@ -838,7 +810,7 @@ async function handleReportAction(button) {
     const buttons = [...row.querySelectorAll('button'), ...document.querySelectorAll('#report-modal-actions button')];
     buttons.forEach(item => { item.disabled = true; });
     try {
-        const result = await postAdmin('../backend/php/admin/update-report-status.php', {
+        const result = await postAdmin('php/admin/update-report-status.php', {
             report_id: reportId, action, admin_note: note
         });
         const affectedRows = action === 'resolve_hide'
@@ -891,28 +863,46 @@ showSection(window.location.hash.slice(1) || 'dashboard');
 </main>
 
 <script>
-document.querySelectorAll("[data-admin-logout]").forEach(button => {
-    button.addEventListener("click", async event => {
+document
+    .getElementById("admin-logout-btn")
+    .addEventListener("click", async function (event) {
+
         event.preventDefault();
-        if (!window.confirm("Are you sure you want to log out?")) return;
 
         try {
-            const response = await fetch("../backend/php/auth/logout.php", {
-                method: "POST",
-                headers: { "X-CSRF-Token": csrfToken }
-            });
+
+            const response = await fetch(
+                "php/auth/logout.php",
+                {
+                    method: "POST",
+                    headers: { "X-CSRF-Token": csrfToken }
+                }
+            );
+
             const result = await response.json();
 
-            if (!response.ok || !result.success) {
-                throw new Error(result.message || "Unable to log out.");
+            if (result.success) {
+
+                window.location.href = "index.php";
+
+            } else {
+
+                alert(
+                    result.message ||
+                    "Unable to log out."
+                );
+
             }
 
-            window.location.href = "index.php";
         } catch (error) {
-            alert(error.message || "The server is unavailable.");
+
+            alert(
+                "The server is unavailable."
+            );
+
         }
+
     });
-});
 </script>
 
 </body>
