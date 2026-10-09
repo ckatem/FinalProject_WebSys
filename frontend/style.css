@@ -1029,11 +1029,18 @@ BUTTONS
 }
 
 .btn-dark,
-.btn-black {
+.btn-black,
+.btn-primary {
     background:
         var(--black);
 
     color: white;
+}
+
+.btn-secondary {
+    background: #ececec;
+    color: var(--black);
+    border: 1px solid #d7d7d7;
 }
 
 .btn-outline {
@@ -1450,6 +1457,31 @@ EMPTY STATES
 AUTH
 ========================= */
 
+#page-login {
+    position: relative;
+    padding-top: 0;
+}
+
+#page-login::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 34px;
+    background: rgba(246, 168, 180, .72);
+    border-bottom: 1px solid rgba(0, 0, 0, .06);
+    margin-bottom: 18px;
+}
+
+#page-login::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 34px;
+    background: rgba(218, 218, 218, .8);
+    border-top: 1px solid rgba(0, 0, 0, .08);
+    margin-top: 18px;
+}
+
 .split-card {
     display: flex;
 
@@ -1458,6 +1490,10 @@ AUTH
     padding: 0;
 
     overflow: hidden;
+
+    max-width: 1280px;
+    width: min(100%, 1280px);
+    margin: 0 auto;
 }
 
 .split-left,
@@ -1652,6 +1688,12 @@ AUTH
     background: white;
 
     overflow-y: auto;
+    align-items: center;
+}
+
+#page-login .split-right > * {
+    width: 100%;
+    max-width: 470px;
 }
 
 .brand-lockup-box {
@@ -1703,6 +1745,88 @@ AUTH
         #f2f2f2;
 
     border-radius: 999px;
+}
+
+#login-form,
+#signup-form,
+#login-verification-box,
+#signup-verification-box,
+#forgot-password-box,
+#reset-password-box {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin: 0 auto;
+}
+
+#login-verification-box,
+#signup-verification-box,
+#forgot-password-box,
+#reset-password-box {
+    padding: 26px 24px 22px;
+    background: linear-gradient(180deg, #ffffff 0%, #faf8f4 100%);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    border-radius: 18px;
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.08);
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: min(100%, 470px);
+}
+
+#login-verification-box form,
+#signup-verification-box form,
+#forgot-password-box form,
+#reset-password-box form {
+    width: 100%;
+    text-align: left;
+}
+
+.verification-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.verification-actions .btn {
+    flex: 1;
+    min-width: 0;
+}
+
+#login-verification-box h3,
+#signup-verification-box h3,
+#forgot-password-box h3,
+#reset-password-box h3 {
+    margin: 0;
+    font-size: 31px;
+    letter-spacing: -.5px;
+    color: var(--black);
+}
+
+#login-verification-box p,
+#signup-verification-box p,
+#forgot-password-box p,
+#reset-password-box p {
+    margin: 0;
+    color: #666;
+    font-size: 12px;
+    line-height: 1.7;
+}
+
+#login-verification-box .btn,
+#signup-verification-box .btn,
+#forgot-password-box .btn,
+#reset-password-box .btn {
+    width: auto;
+}
+
+#login-verification-box .btn-primary,
+#signup-verification-box .btn-primary,
+#forgot-password-box .btn-black,
+#reset-password-box .btn-black {
+    margin-top: 4px;
 }
 
 .toggle-btn {

@@ -611,18 +611,20 @@
                 required>
         </div>
 
-        <button type="submit" class="btn btn-primary">
-            Verify Code
-        </button>
+        <div class="verification-actions">
+            <button type="submit" class="btn btn-primary">
+                Verify Code
+            </button>
+
+            <button
+                type="button"
+                id="back-to-login-btn"
+                class="btn btn-secondary">
+                Back to Login
+            </button>
+        </div>
 
     </form>
-
-    <button
-        type="button"
-        id="back-to-login-btn"
-        class="btn btn-secondary">
-        Back to Login
-    </button>
 
 </div>
 
@@ -977,24 +979,26 @@
 
         </div>
 
-        <button
-            type="submit"
-            class="btn btn-primary">
+        <div class="verification-actions">
+            <button
+                type="submit"
+                class="btn btn-primary">
 
-            Verify Code
+                Verify Code
 
-        </button>
+            </button>
+
+            <button
+                type="button"
+                id="signup-back-to-login-btn"
+                class="btn btn-secondary">
+
+                Back to Login
+
+            </button>
+        </div>
 
     </form>
-
-    <button
-        type="button"
-        id="signup-back-to-login-btn"
-        class="btn btn-secondary">
-
-        Back to Login
-
-    </button>
 
 </div>
 

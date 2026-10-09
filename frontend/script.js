@@ -487,6 +487,19 @@ const loginForm =
 const signupForm =
     $("#signup-form");
 
+const loginVerificationBox =
+    $("#login-verification-box");
+
+const signupVerificationBox =
+    $("#signup-verification-box");
+
+if (loginVerificationBox) {
+    loginVerificationBox.classList.add("hidden");
+}
+
+if (signupVerificationBox) {
+    signupVerificationBox.classList.add("hidden");
+}
 
 if (tab === "signup") {
 
@@ -510,6 +523,70 @@ if (tab === "signup") {
 
 }
 
+
+}
+
+function showLoginVerificationState() {
+
+    const pageLogin = $("#page-login");
+    const loginForm = $("#login-form");
+    const loginVerificationBox = $("#login-verification-box");
+
+    if (pageLogin) {
+        pageLogin.classList.add("active");
+    }
+
+    if (loginForm) {
+        loginForm.classList.add("hidden");
+    }
+
+    if (loginVerificationBox) {
+        loginVerificationBox.classList.remove("hidden");
+    }
+
+    $("#signup-form")?.classList.add("hidden");
+    $("#signup-verification-box")?.classList.add("hidden");
+    $("#forgot-password-box")?.classList.add("hidden");
+    $("#reset-password-box")?.classList.add("hidden");
+
+    const verificationCode = $("#verification-code");
+
+    if (verificationCode) {
+        verificationCode.value = "";
+        verificationCode.focus();
+    }
+
+}
+
+function showSignupVerificationState() {
+
+    const pageLogin = $("#page-login");
+    const signupForm = $("#signup-form");
+    const signupVerificationBox = $("#signup-verification-box");
+
+    if (pageLogin) {
+        pageLogin.classList.add("active");
+    }
+
+    if (signupForm) {
+        signupForm.classList.add("hidden");
+    }
+
+    if (signupVerificationBox) {
+        signupVerificationBox.classList.remove("hidden");
+    }
+
+    $("#login-form")?.classList.add("hidden");
+    $("#login-verification-box")?.classList.add("hidden");
+    $("#forgot-password-box")?.classList.add("hidden");
+    $("#reset-password-box")?.classList.add("hidden");
+
+    const verificationCode = $("#signup-verification-code");
+
+    if (verificationCode) {
+        verificationCode.value = "";
+        verificationCode.focus();
+    }
 
 }
 
@@ -3608,13 +3685,7 @@ document.addEventListener(
 
    if (result.requires_2fa) {
 
-    $("#login-form").classList.add("hidden");
-
-    $("#login-verification-box").classList.remove("hidden");
-
-    $("#verification-code").value = "";
-
-    $("#verification-code").focus();
+    showLoginVerificationState();
 
     toast(
         "Verification code is being sent to your TIP email."
@@ -3893,14 +3964,7 @@ if (result.user) {
 
     if (result.requires_2fa) {
 
-        $("#signup-form").classList.add("hidden");
-
-        $("#signup-verification-box")
-            .classList.remove("hidden");
-
-        $("#signup-verification-code").value = "";
-
-        $("#signup-verification-code").focus();
+        showSignupVerificationState();
 
         toast(
             "Verification code is being sent to your TIP email."
@@ -3924,9 +3988,25 @@ if (result.user) {
         $("#reset-request-email").focus();
     });
 
+    $("#back-to-login-btn").addEventListener("click", () => {
+        $("#login-verification-box").classList.add("hidden");
+        $("#login-form").classList.remove("hidden");
+        $("#page-login").classList.add("active");
+        switchAuthTab("login");
+    });
+
+    $("#signup-back-to-login-btn").addEventListener("click", () => {
+        $("#signup-verification-box").classList.add("hidden");
+        $("#signup-form").classList.add("hidden");
+        $("#login-form").classList.remove("hidden");
+        $("#page-login").classList.add("active");
+        switchAuthTab("login");
+    });
+
     $("#back-to-login-from-reset-btn").addEventListener("click", () => {
         $("#forgot-password-box").classList.add("hidden");
         $("#login-form").classList.remove("hidden");
+        $("#page-login").classList.add("active");
     });
 
     $("#back-to-reset-request-btn").addEventListener("click", () => {
@@ -5327,8 +5407,6 @@ $("#verification-form").addEventListener("submit", async event => {
 
     }
 
-<<<<<<< Updated upstream
-=======
 });
 
 $("#signup-verification-form").addEventListener("submit", async event => {
@@ -5606,5 +5684,4 @@ $("#delete-account-btn").addEventListener("click", async () => {
 
     goToPage("login");
 
->>>>>>> Stashed changes
 });
