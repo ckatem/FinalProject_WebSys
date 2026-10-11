@@ -5122,3 +5122,29 @@ body.image-viewer-open {
 .hidden {
     display: none !important;
 }
+
+@media (min-width: 701px) {
+    .menu-toggle-btn,
+    .sidebar-close-btn {
+        display: none;
+    }
+
+    .sidebar {
+        position: relative;
+        top: auto;
+        bottom: auto;
+        left: auto;
+        z-index: auto;
+        width: 230px;
+        overflow: hidden;
+        border-right: 1px solid rgba(0, 0, 0, .09);
+        box-shadow: none;
+        transform: none;
+        visibility: visible;
+        transition: none;
+    }
+
+    .sidebar-overlay {
+        display: none;
+    }
+}

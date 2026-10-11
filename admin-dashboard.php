@@ -122,7 +122,7 @@ function dashboardMoney(string|float $price): string {
         .sidebar-info { margin: 12px 2px; padding: 14px; border-radius: 12px; background: linear-gradient(135deg, #191919, #292929); color: white; position: relative; z-index: 2; }
         .sidebar-info strong { display: block; color: var(--yellow); font-size: 9px; letter-spacing: 1px; }
         .sidebar-info p { margin: 7px 0 0; color: #cfcfcf; font-size: 10px; line-height: 1.55; }
-        .site-header { height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 30px; background: #1c1c1c; border-bottom: 1px solid #303030; box-shadow: 0 4px 25px rgba(0,0,0,.18); }
+        .site-header { position: sticky; top: 0; z-index: 1000; height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 0 30px; background: #1c1c1c; border-bottom: 1px solid #303030; box-shadow: 0 4px 25px rgba(0,0,0,.18); }
         .menu-toggle-btn { border: 1px solid #555; background: transparent; color: #fff; border-radius: 999px; padding: 9px 13px; font-size: 12px; font-weight: 700; cursor: pointer; }
         .header-brand { display: flex; align-items: center; gap: 11px; min-width: 230px; color: #fff; text-decoration: none; }
         .header-logo { width: 43px; height: 43px; display: grid; place-items: center; overflow: hidden; border-radius: 9px; background: #252525; border: 1px solid #3a3a3a; }
@@ -206,6 +206,17 @@ function dashboardMoney(string|float $price): string {
         @keyframes sectionIn { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
         .toast { position: fixed; right: 20px; bottom: 20px; background: #222; color: white; padding: 12px 15px; border-radius: 6px; font-size: 12px; opacity: 0; transform: translateY(10px); transition: .2s; pointer-events: none; }
         .toast.show { opacity: 1; transform: translateY(0); }
+        .marketplace-footer { color: #fff; background: linear-gradient(135deg, #151515, #242424); border-top: 4px solid var(--yellow); }
+        .marketplace-footer-main { max-width: 1450px; margin: auto; padding: 38px 34px; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 36px; }
+        .marketplace-footer-brand { max-width: 380px; }
+        .marketplace-footer-logo { margin-bottom: 12px; font-size: 23px; font-weight: 800; }
+        .marketplace-footer-logo span { color: var(--yellow); }
+        .marketplace-footer-brand p { margin: 0; color: #aaa; font-size: 10px; line-height: 1.7; }
+        .marketplace-footer-badge { display: inline-block; margin-top: 16px; padding: 6px 10px; border: 1px solid #555; border-radius: 999px; color: var(--yellow); font-size: 8px; font-weight: 800; }
+        .marketplace-footer-links h2 { margin: 0 0 12px; color: #fff; font-size: 11px; text-transform: uppercase; }
+        .marketplace-footer-links a { display: block; width: fit-content; padding: 4px 0; color: #aaa; font-size: 10px; text-decoration: none; }
+        .marketplace-footer-links a:hover { color: var(--yellow); }
+        .marketplace-footer-bottom { max-width: 1450px; margin: auto; padding: 17px 34px; display: flex; justify-content: space-between; gap: 20px; border-top: 1px solid #393939; color: #777; font-size: 8px; }
         @media (max-width: 800px) {
             .site-header { height: auto; min-height: 76px; padding: 12px 16px; flex-wrap: wrap; gap: 10px; }
             .menu-toggle-btn { order: 0; }
@@ -219,8 +230,16 @@ function dashboardMoney(string|float $price): string {
             body.menu-open .sidebar { left: 0; }
             main { padding: 24px 16px 35px; }
             .stats { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+            .marketplace-footer-main { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; padding: 32px 20px; }
+            .marketplace-footer-brand { grid-column: 1 / -1; }
+            .marketplace-footer-bottom { flex-direction: column; padding: 16px 20px; }
         }
-        @media (max-width: 440px) { .stats { grid-template-columns: 1fr; } .account-name { display: none; } .detail-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 440px) { .stats { grid-template-columns: 1fr; } .account-name { display: none; } .detail-grid { grid-template-columns: 1fr; } .marketplace-footer-main { grid-template-columns: 1fr; } .marketplace-footer-brand { grid-column: auto; } }
+        @media (min-width: 701px) {
+            .menu-toggle-btn { display: none; }
+            .admin-shell { display: flex; }
+            .sidebar { position: relative; top: auto; bottom: auto; left: auto; width: 230px; box-shadow: none; }
+        }
     </style>
 </head>
 <body>
@@ -345,6 +364,30 @@ function dashboardMoney(string|float $price): string {
 
     </main>
 </div>
+    <footer class="marketplace-footer">
+        <div class="marketplace-footer-main">
+            <div class="marketplace-footer-brand">
+                <div class="marketplace-footer-logo"><span>RE</span>SOURCE</div>
+                <p>A campus marketplace for TIP students to buy, sell, exchange, and connect.</p>
+                <span class="marketplace-footer-badge">TIP STUDENT COMMUNITY</span>
+            </div>
+            <nav class="marketplace-footer-links" aria-label="Marketplace links">
+                <h2>Marketplace</h2>
+                <a href="frontend/index.php">Home</a>
+                <a href="frontend/index.php?page=browse">Browse Listings</a>
+                <a href="frontend/index.php?page=create">Sell an Item</a>
+            </nav>
+            <nav class="marketplace-footer-links" aria-label="Account links">
+                <h2>Account</h2>
+                <a href="frontend/index.php?page=profile">My Profile</a>
+                <a href="frontend/index.php?page=messaging">Messages</a>
+            </nav>
+        </div>
+        <div class="marketplace-footer-bottom">
+            <span>&copy; 2026 ReSource. All rights reserved.</span>
+            <span>Made for TIPians - A Secure Student Marketplace</span>
+        </div>
+    </footer>
 <dialog id="listing-modal" aria-labelledby="listing-modal-title">
     <div class="modal-head"><h2 id="listing-modal-title">Listing details</h2><button class="modal-close" type="button" data-close-modal aria-label="Close">&times;</button></div>
     <div class="modal-body" id="listing-modal-body"></div>

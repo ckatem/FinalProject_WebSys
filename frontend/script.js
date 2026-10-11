@@ -468,6 +468,14 @@ window.scrollTo({
 
 }
 
+function showAuthenticatedDashboard() {
+    const dashboardUrl = new URL(window.location.href);
+    dashboardUrl.searchParams.set("page", "dashboard");
+    window.history.replaceState(null, "", dashboardUrl);
+    renderTopHeader();
+    goToPage("dashboard");
+}
+
 /* ==========================================================
 AUTHENTICATION
 ========================================================== */
@@ -3767,7 +3775,7 @@ if (result.user) {
 
     } else {
 
-        goToPage("dashboard");
+        showAuthenticatedDashboard();
 
     }
 
@@ -5403,7 +5411,7 @@ $("#verification-form").addEventListener("submit", async event => {
 
     } else {
 
-        goToPage("dashboard");
+        showAuthenticatedDashboard();
 
     }
 
@@ -5592,7 +5600,7 @@ $("#signup-verification-form").addEventListener("submit", async event => {
        GO TO DASHBOARD
        ========================= */
 
-    goToPage("dashboard");
+    showAuthenticatedDashboard();
 
 });
 
