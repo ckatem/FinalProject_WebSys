@@ -126,58 +126,33 @@
             <nav class="nav">
 
                 <a href="#" class="nav-item" data-page="dashboard">
-                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
-                            <path d="m3.5 10 8.5-7 8.5 7v10.5h-6v-6h-5v6h-6z"></path>
-                        </svg></span>
                     Homepage / Dashboard
                 </a>
 
 
                 <a href="#" class="nav-item" data-page="browse">
-                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
-                            <circle cx="10.8" cy="10.8" r="6.8"></circle>
-                            <path d="m16 16 5 5"></path>
-                        </svg></span>
                     Browse / Search
                 </a>
 
                 <a href="#" class="nav-item" data-page="saved">
-                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
-                            <path d="M6 3.5h12v17l-6-4-6 4z"></path>
-                        </svg></span>
                     Saved Items
                     <span class="nav-count hidden" id="nav-saved-count">0</span>
                 </a>
 
                 <a href="#" class="nav-item" data-page="listing">
-                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
-                            <path d="M3.5 12V5.5h6.7L20.5 15.8l-4.7 4.7z"></path>
-                            <circle cx="8" cy="9" r="1"></circle>
-                        </svg></span>
                     Listings
                 </a>
 
                 <a href="#" class="nav-item" data-page="create">
-                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
-                            <path d="M12 5v14M5 12h14"></path>
-                        </svg></span>
                     Create Listing
                 </a>
 
                 <a href="#" class="nav-item" data-page="messaging">
-                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
-                            <path d="M4 5.5h16v11H11l-5.5 4v-4H4z"></path>
-                            <path d="M8 10h8M8 13h5"></path>
-                        </svg></span>
                     Messaging
                 </a>
 
                 <a href="admin-dashboard.php#reports" class="nav-item hidden" id="admin-reports-nav"
                     data-page="admin-reports">
-                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
-                            <path d="M12 3 22 20H2z"></path>
-                            <path d="M12 9v5M12 17.5v.1"></path>
-                        </svg></span>
                     Reports
                 </a>
 
