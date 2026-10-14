@@ -1,1215 +1,1073 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>ReSource | TIP Campus Marketplace</title>
+    <title>ReSource | TIP Campus Marketplace</title>
 
-<meta name="description" content="ReSource is a campus marketplace for TIP students to buy, sell, save, and connect.">
-<meta name="theme-color" content="#f6b429">
+    <meta name="description"
+        content="ReSource is a campus marketplace for TIP students to buy, sell, save, and connect.">
+    <meta name="theme-color" content="#f6b429">
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@300;400;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@300;400;700&display=swap"
+        rel="stylesheet">
 
-<link rel="stylesheet" href="style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
+    <link rel="stylesheet" href="style.css?v=<?= filemtime(__DIR__ . '/style.css') ?>">
 </head>
 
 <body>
 
-<!-- =========================
+    <!-- =========================
      PRELOADER
 ========================= -->
 
-<div id="preloader" class="preloader">
-    <div class="loader-content">
-        <div class="loader-logo">
-            <img src="tiplogo.png" alt="TIP Logo">
+    <div id="preloader" class="preloader">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <img src="tiplogo.png" alt="TIP Logo">
+            </div>
+
+            <div class="loader-line"></div>
+
+            <p>Loading ReSource...</p>
         </div>
-
-        <div class="loader-line"></div>
-
-        <p>Loading ReSource...</p>
     </div>
-</div>
 
-<!-- =========================
+    <!-- =========================
      TOP HEADER
 ========================= -->
 
-<header class="site-header">
+    <header class="site-header">
 
-<button class="menu-toggle-btn header-control-btn" id="menu-toggle-btn" type="button" aria-label="Open navigation menu" aria-controls="site-sidebar" aria-expanded="false">
-    <span class="menu-toggle-icon" aria-hidden="true">
-        <i></i>
-        <i></i>
-        <i></i>
-    </span>
-    <span class="menu-toggle-label">Menu</span>
-</button>
+        <button class="menu-toggle-btn header-control-btn" id="menu-toggle-btn" type="button"
+            aria-label="Open navigation menu" aria-controls="site-sidebar" aria-expanded="false">
+            <span class="menu-toggle-icon" aria-hidden="true">
+                <i></i>
+                <i></i>
+                <i></i>
+            </span>
+            <span class="menu-toggle-label">Menu</span>
+        </button>
 
-<div class="header-brand" data-goto="dashboard">
+        <div class="header-brand" data-goto="dashboard">
 
-    <div class="header-logo">
-        <img src="tiplogo.png" alt="TIP Logo">
-    </div>
+            <div class="header-logo">
+                <img src="tiplogo.png" alt="TIP Logo">
+            </div>
 
-    <div class="header-brand-text">
-        <div class="header-title">
-            <span>RE</span>SOURCE
+            <div class="header-brand-text">
+                <div class="header-title">
+                    <span>RE</span>SOURCE
+                </div>
+                <div class="header-subtitle">
+                    TIP CAMPUS MARKETPLACE
+                </div>
+            </div>
+
         </div>
-        <div class="header-subtitle">
-            TIP CAMPUS MARKETPLACE
+
+
+
+
+        <div id="top-header-actions" class="top-header-actions">
+
+            <button class="header-login-btn header-control-btn" id="top-login-btn">
+                Log In
+            </button>
+
+            <button class="header-signup-btn header-control-btn" id="top-signup-btn">
+                Sign Up
+            </button>
+
+            <button class="header-profile-btn header-control-btn" id="top-profile-btn" type="button">
+                <span class="profile-button-avatar" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                        <circle cx="12" cy="8" r="3.5"></circle>
+                        <path d="M5.5 20c.5-3.7 2.7-5.5 6.5-5.5s6 1.8 6.5 5.5"></path>
+                    </svg>
+                </span>
+                <span>Profile</span>
+            </button>
+
         </div>
-    </div>
-
-</div>
 
 
+    </header>
 
-
-<div id="top-header-actions" class="top-header-actions">
-
-    <button class="header-login-btn header-control-btn" id="top-login-btn">
-        Log In
-    </button>
-
-    <button class="header-signup-btn header-control-btn" id="top-signup-btn">
-        Sign Up
-    </button>
-
-    <button class="header-profile-btn header-control-btn" id="top-profile-btn" type="button">
-        <span class="profile-button-avatar" aria-hidden="true">👤</span>
-        <span>Profile</span>
-    </button>
-
-</div>
-
-
-</header>
-
-<!-- =========================
+    <!-- =========================
      APPLICATION
 ========================= -->
 
-<div class="app">
+    <div class="app">
 
 
-<!-- =========================
+        <!-- =========================
      SIDEBAR
 ========================= -->
-<div class="sidebar-overlay" id="sidebar-overlay"></div>
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-<aside class="sidebar" id="site-sidebar" aria-label="Main navigation">
+        <aside class="sidebar" id="site-sidebar" aria-label="Main navigation">
 
-    <div class="sidebar-menu-header">
-        <div>
-            <span class="sidebar-menu-eyebrow">RESOURCE</span>
-            <strong>Navigation Menu</strong>
-        </div>
-        <button class="sidebar-close-btn" id="sidebar-close-btn" type="button" aria-label="Close navigation menu">×</button>
-    </div>
-
-   
-
-    <nav class="nav">
-
-        <a href="#"
-           class="nav-item"
-           data-page="dashboard">
-            <span class="nav-icon" aria-hidden="true">🏠</span>
-            Homepage / Dashboard
-        </a>
-
-
-        <a href="#"
-           class="nav-item"
-           data-page="browse">
-            <span class="nav-icon" aria-hidden="true">🔎</span>
-            Browse / Search
-        </a>
-
-        <a href="#"
-           class="nav-item"
-           data-page="saved">
-            <span class="nav-icon" aria-hidden="true">🔖</span>
-            Saved Items
-            <span class="nav-count hidden" id="nav-saved-count">0</span>
-        </a>
-
-        <a href="#"
-           class="nav-item"
-           data-page="listing">
-            <span class="nav-icon" aria-hidden="true">🏷️</span>
-            Listings
-        </a>
-
-        <a href="#"
-           class="nav-item"
-           data-page="create">
-            <span class="nav-icon" aria-hidden="true">➕</span>
-            Create Listing
-        </a>
-
-        <a href="#"
-           class="nav-item"
-           data-page="messaging">
-            <span class="nav-icon" aria-hidden="true">💬</span>
-            Messaging
-        </a>
-
-        <a href="admin-dashboard.php#reports"
-           class="nav-item hidden"
-           id="admin-reports-nav"
-           data-page="admin-reports">
-            <span class="nav-icon" aria-hidden="true">🚨</span>
-            Reports
-        </a>
-
-    </nav>
-
-
-    <div class="sidebar-info">
-
-        <div class="sidebar-info-title">
-            TIP STUDENTS ONLY
-        </div>
-
-        <p>
-            A safer and simpler way for TIPians
-            to buy, sell, and exchange campus resources.
-        </p>
-
-    </div>
-
-
-    <div class="sidebar-decoration" aria-hidden="true">
-        <div class="tri tri-gray"></div>
-        <div class="tri tri-yellow"></div>
-        <div class="tri tri-black"></div>
-    </div>
-
-</aside>
+            <div class="sidebar-menu-header">
+                <div>
+                    <span class="sidebar-menu-eyebrow">RESOURCE</span>
+                    <strong>Navigation Menu</strong>
+                </div>
+                <button class="sidebar-close-btn" id="sidebar-close-btn" type="button"
+                    aria-label="Close navigation menu">×</button>
+            </div>
 
 
 
-<!-- =========================
+            <nav class="nav">
+
+                <a href="#" class="nav-item" data-page="dashboard">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
+                            <path d="m3.5 10 8.5-7 8.5 7v10.5h-6v-6h-5v6h-6z"></path>
+                        </svg></span>
+                    Homepage / Dashboard
+                </a>
+
+
+                <a href="#" class="nav-item" data-page="browse">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
+                            <circle cx="10.8" cy="10.8" r="6.8"></circle>
+                            <path d="m16 16 5 5"></path>
+                        </svg></span>
+                    Browse / Search
+                </a>
+
+                <a href="#" class="nav-item" data-page="saved">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
+                            <path d="M6 3.5h12v17l-6-4-6 4z"></path>
+                        </svg></span>
+                    Saved Items
+                    <span class="nav-count hidden" id="nav-saved-count">0</span>
+                </a>
+
+                <a href="#" class="nav-item" data-page="listing">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
+                            <path d="M3.5 12V5.5h6.7L20.5 15.8l-4.7 4.7z"></path>
+                            <circle cx="8" cy="9" r="1"></circle>
+                        </svg></span>
+                    Listings
+                </a>
+
+                <a href="#" class="nav-item" data-page="create">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
+                            <path d="M12 5v14M5 12h14"></path>
+                        </svg></span>
+                    Create Listing
+                </a>
+
+                <a href="#" class="nav-item" data-page="messaging">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
+                            <path d="M4 5.5h16v11H11l-5.5 4v-4H4z"></path>
+                            <path d="M8 10h8M8 13h5"></path>
+                        </svg></span>
+                    Messaging
+                </a>
+
+                <a href="admin-dashboard.php#reports" class="nav-item hidden" id="admin-reports-nav"
+                    data-page="admin-reports">
+                    <span class="nav-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">
+                            <path d="M12 3 22 20H2z"></path>
+                            <path d="M12 9v5M12 17.5v.1"></path>
+                        </svg></span>
+                    Reports
+                </a>
+
+            </nav>
+
+
+            <div class="sidebar-info">
+
+                <div class="sidebar-info-title">
+                    TIP STUDENTS ONLY
+                </div>
+
+                <p>
+                    A safer and simpler way for TIPians
+                    to buy, sell, and exchange campus resources.
+                </p>
+
+            </div>
+
+
+            <div class="sidebar-decoration" aria-hidden="true">
+                <div class="tri tri-gray"></div>
+                <div class="tri tri-yellow"></div>
+                <div class="tri tri-black"></div>
+            </div>
+
+        </aside>
+
+
+
+        <!-- =========================
      MAIN CONTENT
 ========================= -->
-<main class="main">
+        <main class="main">
 
 
-    <!-- =========================
+            <!-- =========================
          DASHBOARD
     ========================= -->
-<section class="page" id="page-dashboard">
-        <div class="breadcrumb">
-            HOMEPAGE / DASHBOARD
-        </div>
-
-
-        <div class="card dashboard-card">
-
-            <div class="topbar">
-
-                <div class="pill-badge">
-                    RESOURCE
-                </div>
-
-                <div class="searchbar">
-                    <span class="search-icon">⌕</span>
-                    <input
-                        type="text"
-                        id="dashboard-search-input"
-                        placeholder="Search books, electronics, uniforms, tools..."
-                    >
-                </div>
-
-            </div>
-
-
-            <hr class="divider">
-
-
-            <div class="hero-section">
-
-                <div class="hero-copy">
-
-                    <div class="hero-eyebrow">
-                        TIP CAMPUS MARKETPLACE
-                    </div>
-
-                    <h1 class="welcome-title" id="welcome-title">
-                        Welcome to ReSource!
-                    </h1>
-
-                    <p class="welcome-sub" id="welcome-sub">
-                        Find what you need, list what you have,
-                        and connect with fellow TIPians.
-                    </p>
-
-
-                    <div class="btn-row">
-
-                        <button
-                            class="btn btn-dark"
-                            data-goto="browse">
-                            Browse Products
-                        </button>
-
-                        <button
-                            class="btn btn-outline"
-                            data-goto="create">
-                            Sell an Item
-                        </button>
-
-                    </div>
-
+            <section class="page" id="page-dashboard">
+                <div class="breadcrumb">
+                    HOMEPAGE / DASHBOARD
                 </div>
 
 
-                <div class="hero-visual">
+                <div class="card dashboard-card">
 
-                    <div class="hero-card hero-card-back"></div>
+                    <div class="topbar">
 
-                    <div class="hero-card hero-card-main">
-
-                        <div class="hero-card-top">
-                            <span>RESOURCE</span>
-                            <span>TIP</span>
+                        <div class="pill-badge">
+                            RESOURCE
                         </div>
 
-                        <div class="hero-card-icon">
-                            ↗
-                        </div>
-
-                        <div class="hero-card-title">
-                            Buy. Sell.
-                            <br>
-                            Connect.
-                        </div>
-
-                        <div class="hero-card-footer">
-                            Built for TIPians.
+                        <div class="searchbar">
+                            <span class="search-icon">⌕</span>
+                            <input type="text" id="dashboard-search-input"
+                                placeholder="Search books, electronics, uniforms, tools...">
                         </div>
 
                     </div>
 
-                </div>
 
-            </div>
-
-
-            <h2 class="section-title">
-                Categories
-            </h2>
+                    <hr class="divider">
 
 
-            <div class="categories">
+                    <div class="hero-section">
 
-                <div class="category-item"
-                     data-category="Books"
-                     data-goto="browse">
+                        <div class="hero-copy">
 
-                    <div class="cat-icon">📖</div>
+                            <div class="hero-eyebrow">
+                                TIP CAMPUS MARKETPLACE
+                            </div>
 
-                    <div class="cat-text">
-                        <div class="cat-name">Books</div>
-                        <div class="cat-sub">
-                            Textbooks & References
+                            <h1 class="welcome-title" id="welcome-title">
+                                Welcome to ReSource!
+                            </h1>
+
+                            <p class="welcome-sub" id="welcome-sub">
+                                Find what you need, list what you have,
+                                and connect with fellow TIPians.
+                            </p>
+
+
+                            <div class="btn-row">
+
+                                <button class="btn btn-dark" data-goto="browse">
+                                    Browse Products
+                                </button>
+
+                                <button class="btn btn-outline" data-goto="create">
+                                    Sell an Item
+                                </button>
+
+                            </div>
+
                         </div>
+
+
+                        <div class="hero-visual">
+
+                            <div class="hero-card hero-card-back"></div>
+
+                            <div class="hero-card hero-card-main">
+
+                                <div class="hero-card-top">
+                                    <span>RESOURCE</span>
+                                    <span>TIP</span>
+                                </div>
+
+                                <div class="hero-card-icon">
+                                    ↗
+                                </div>
+
+                                <div class="hero-card-title">
+                                    Buy. Sell.
+                                    <br>
+                                    Connect.
+                                </div>
+
+                                <div class="hero-card-footer">
+                                    Built for TIPians.
+                                </div>
+
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <span class="chevron">›</span>
 
-                </div>
-
-
-                <div class="category-item"
-                     data-category="Electronics"
-                     data-goto="browse">
-
-                    <div class="cat-icon">💻</div>
-
-                    <div class="cat-text">
-                        <div class="cat-name">Electronics</div>
-                        <div class="cat-sub">
-                            Devices & Accessories
-                        </div>
-                    </div>
-
-                    <span class="chevron">›</span>
-
-                </div>
-
-
-                <div class="category-item"
-                     data-category="Laboratory"
-                     data-goto="browse">
-
-                    <div class="cat-icon">🔧</div>
-
-                    <div class="cat-text">
-                        <div class="cat-name">Laboratory</div>
-                        <div class="cat-sub">
-                            Equipment & Tools
-                        </div>
-                    </div>
-
-                    <span class="chevron">›</span>
-
-                </div>
-
-
-                <div class="category-item"
-                     data-category="Uniforms"
-                     data-goto="browse">
-
-                    <div class="cat-icon">👕</div>
-
-                    <div class="cat-text">
-                        <div class="cat-name">Uniforms</div>
-                        <div class="cat-sub">
-                            Uniforms & PE
-                        </div>
-                    </div>
-
-                    <span class="chevron">›</span>
-
-                </div>
-
-            </div>
-
-
-            <div class="section-heading-row">
-
-                <div>
                     <h2 class="section-title">
-                        Recently Listed
+                        Categories
                     </h2>
 
-                    <p class="section-description">
-                        Fresh listings from the ReSource community.
-                    </p>
+
+                    <div class="categories">
+
+                        <div class="category-item" data-category="Books" data-goto="browse">
+
+                            <div class="cat-icon">📖</div>
+
+                            <div class="cat-text">
+                                <div class="cat-name">Books</div>
+                                <div class="cat-sub">
+                                    Textbooks & References
+                                </div>
+                            </div>
+
+                            <span class="chevron">›</span>
+
+                        </div>
+
+
+                        <div class="category-item" data-category="Electronics" data-goto="browse">
+
+                            <div class="cat-icon">💻</div>
+
+                            <div class="cat-text">
+                                <div class="cat-name">Electronics</div>
+                                <div class="cat-sub">
+                                    Devices & Accessories
+                                </div>
+                            </div>
+
+                            <span class="chevron">›</span>
+
+                        </div>
+
+
+                        <div class="category-item" data-category="Laboratory" data-goto="browse">
+
+                            <div class="cat-icon">🔧</div>
+
+                            <div class="cat-text">
+                                <div class="cat-name">Laboratory</div>
+                                <div class="cat-sub">
+                                    Equipment & Tools
+                                </div>
+                            </div>
+
+                            <span class="chevron">›</span>
+
+                        </div>
+
+
+                        <div class="category-item" data-category="Uniforms" data-goto="browse">
+
+                            <div class="cat-icon">👕</div>
+
+                            <div class="cat-text">
+                                <div class="cat-name">Uniforms</div>
+                                <div class="cat-sub">
+                                    Uniforms & PE
+                                </div>
+                            </div>
+
+                            <span class="chevron">›</span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="section-heading-row">
+
+                        <div>
+                            <h2 class="section-title">
+                                Recently Listed
+                            </h2>
+
+                            <p class="section-description">
+                                Fresh listings from the ReSource community.
+                            </p>
+                        </div>
+
+                        <button class="text-button" data-goto="browse">
+                            View all →
+                        </button>
+
+                    </div>
+
+
+                    <div class="item-grid" id="recently-listed-grid">
+                    </div>
+
                 </div>
 
-                <button
-                    class="text-button"
-                    data-goto="browse">
-                    View all →
-                </button>
-
-            </div>
-
-
-            <div
-                class="item-grid"
-                id="recently-listed-grid">
-            </div>
-
-        </div>
-
-    </section>
+            </section>
 
 
 
-    <!-- =========================
+            <!-- =========================
          LOGIN / SIGNUP
     ========================= -->
-<section class="page active" id="page-login">
+            <section class="page active" id="page-login">
 
-        <div class="breadcrumb">
-            ACCOUNT / LOG-IN & SIGN-UP
-        </div>
-
-
-        <div class="card split-card">
-
-            <div class="split-left">
-
-               
-                <h1 class="brand-lockup">
-                    <span class="brand-re">RE</span><span class="brand-source">SOURCE</span>
-                </h1>
-
-                <div class="brand-bar bar-black"></div>
-                <div class="brand-bar bar-yellow"></div>
-
-                <p class="tagline">
-                    Your campus marketplace.
-                </p>
-
-                <p class="auth-description">
-                    A dedicated marketplace for TIP students
-                    to discover useful resources, sell pre-loved
-                    items, and connect with fellow students.
-                </p>
+                <div class="breadcrumb">
+                    ACCOUNT / LOG-IN & SIGN-UP
+                </div>
 
 
-                <div class="auth-benefits">
+                <div class="card split-card">
 
-                    <div>
-                        <span>✓</span>
-                        TIP student-focused marketplace
+                    <div class="split-left">
+
+
+                        <h1 class="brand-lockup">
+                            <span class="brand-re">RE</span><span class="brand-source">SOURCE</span>
+                        </h1>
+
+                        <div class="brand-bar bar-black"></div>
+                        <div class="brand-bar bar-yellow"></div>
+
+                        <p class="tagline">
+                            Your campus marketplace.
+                        </p>
+
+                        <p class="auth-description">
+                            A dedicated marketplace for TIP students
+                            to discover useful resources, sell pre-loved
+                            items, and connect with fellow students.
+                        </p>
+
+
+                        <div class="auth-benefits">
+
+                            <div>
+                                <span>✓</span>
+                                TIP student-focused marketplace
+                            </div>
+
+                            <div>
+                                <span>✓</span>
+                                Search and browse listings
+                            </div>
+
+                            <div>
+                                <span>✓</span>
+                                Message other students
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <div>
-                        <span>✓</span>
-                        Search and browse listings
-                    </div>
 
-                    <div>
-                        <span>✓</span>
-                        Message other students
+                    <div class="split-right">
+
+                        <div class="brand-lockup-box">
+
+                            <div class="auth-form-eyebrow">
+                                WELCOME TO RESOURCE
+                            </div>
+
+                            <h2>
+                                Access your account
+                            </h2>
+
+                            <p>
+                                Log in or create your TIP student account.
+                            </p>
+
+                        </div>
+
+
+                        <div class="toggle-row">
+
+                            <button class="toggle-btn active" id="tab-login">
+                                Log In
+                            </button>
+
+                            <button class="toggle-btn" id="tab-signup">
+                                Sign Up
+                            </button>
+
+                        </div>
+
+
+
+                        <!-- LOGIN FORM -->
+                        <form id="login-form">
+
+                            <label class="field-label" for="login-role">
+                                Account Type <span>*</span>
+                            </label>
+
+                            <div class="input-with-icon">
+                                <span class="icon" aria-hidden="true">◇</span>
+                                <select id="login-role" required>
+                                    <option value="student">Student</option>
+                                    <option value="admin">Administrator</option>
+                                </select>
+                            </div>
+
+                            <label class="field-label" for="login-email">
+                                Institutional Email <span>*</span>
+                            </label>
+
+                            <div class="input-with-icon">
+                                <span class="icon" aria-hidden="true">✉</span>
+                                <input type="email" id="login-email" placeholder="you@tip.edu.ph" autocomplete="email"
+                                    required>
+                            </div>
+
+
+                            <label class="field-label" for="login-role">Role <span>*</span></label>
+                            <div class="input-with-icon">
+                                <span class="icon" aria-hidden="true">◇</span>
+                                <select id="login-role" required>
+                                    <option value="student">Student</option>
+                                    <option value="admin">Administrator</option>
+                                </select>
+                            </div>
+
+                            <!-- ...existing code... -->
+
+                            <label class="field-label" for="login-password">
+                                Password <span>*</span>
+                            </label>
+                            <div class="input-with-icon">
+                                <!-- ...existing code... -->
+                                <input type="password" id="login-password" autocomplete="current-password" required>
+                            </div>
+
+
+                            <a href="#" class="forgot-link" id="forgot-password-link">
+                                Forgot Password?
+                            </a>
+
+
+                            <button type="submit" class="btn btn-block btn-black">
+                                Log In
+                            </button>
+
+
+                            <p class="fineprint">
+                                Only TIP institutional email addresses are accepted.
+                            </p>
+
+                        </form>
+
+                        <!-- EMAIL VERIFICATION -->
+                        <div id="login-verification-box" class="hidden">
+
+                            <h3>Verify Your Email</h3>
+
+                            <p>
+                                We sent a 6-digit verification code to your TIP email.
+                                Please enter it below to continue.
+                            </p>
+
+                            <form id="verification-form">
+
+                                <label class="field-label" for="verification-code">
+                                    Verification Code <span>*</span>
+                                </label>
+
+                                <div class="input-with-icon">
+                                    <span class="icon">✓</span>
+
+                                    <input type="text" id="verification-code" placeholder="Enter 6-digit code"
+                                        inputmode="numeric" autocomplete="one-time-code" maxlength="6" required>
+                                </div>
+
+                                <div class="verification-actions">
+                                    <button type="submit" class="btn btn-primary">
+                                        Verify Code
+                                    </button>
+
+                                    <button type="button" id="back-to-login-btn" class="btn btn-secondary">
+                                        Back to Login
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
+
+                        <div id="forgot-password-box" class="hidden">
+
+                            <h3>Reset Your Password</h3>
+
+                            <p>Enter your TIP email. If an account exists, we will send a reset code.</p>
+
+                            <form id="forgot-password-form">
+
+                                <label class="field-label" for="reset-request-email">
+                                    Institutional Email <span>*</span>
+                                </label>
+
+                                <div class="input-with-icon">
+                                    <span class="icon" aria-hidden="true">✉</span>
+                                    <input type="email" id="reset-request-email" placeholder="you@tip.edu.ph"
+                                        autocomplete="email" required>
+                                </div>
+
+                                <button type="submit" class="btn btn-block btn-black" id="request-reset-code-btn">
+                                    Send Reset Code
+                                </button>
+
+                            </form>
+
+                            <button type="button" id="back-to-login-from-reset-btn" class="btn btn-secondary">
+                                Back to Login
+                            </button>
+
+                        </div>
+
+                        <div id="reset-password-box" class="hidden">
+
+                            <h3>Choose a New Password</h3>
+
+                            <p>Enter the 6-digit code sent to your TIP email, then choose a new password.</p>
+
+                            <form id="reset-password-form">
+
+                                <input type="hidden" id="reset-confirm-email">
+
+                                <label class="field-label" for="password-reset-code">
+                                    Reset Code <span>*</span>
+                                </label>
+
+                                <div class="input-with-icon">
+                                    <span class="icon" aria-hidden="true">✓</span>
+                                    <input type="text" id="password-reset-code" placeholder="Enter 6-digit code"
+                                        inputmode="numeric" autocomplete="one-time-code" maxlength="6" required>
+                                </div>
+
+                                <label class="field-label" for="reset-new-password">
+                                    New Password <span>*</span>
+                                </label>
+
+                                <div class="input-with-icon">
+                                    <span class="icon" aria-hidden="true">🔒</span>
+                                    <input type="password" id="reset-new-password" placeholder="At least 6 characters"
+                                        autocomplete="new-password" minlength="6" required>
+                                </div>
+
+                                <label class="field-label" for="reset-confirm-password">
+                                    Confirm New Password <span>*</span>
+                                </label>
+
+                                <div class="input-with-icon">
+                                    <span class="icon" aria-hidden="true">🔒</span>
+                                    <input type="password" id="reset-confirm-password"
+                                        placeholder="Re-enter new password" autocomplete="new-password" minlength="6"
+                                        required>
+                                </div>
+
+                                <button type="submit" class="btn btn-block btn-black" id="reset-password-btn">
+                                    Reset Password
+                                </button>
+
+                            </form>
+
+                            <button type="button" id="back-to-reset-request-btn" class="btn btn-secondary">
+                                Request Another Code
+                            </button>
+
+                        </div>
+
+
+
+                        <!-- SIGNUP FORM -->
+                        <form id="signup-form" class="hidden">
+
+                            <div class="form-section-heading">
+                                Personal Information
+                            </div>
+
+
+                            <div class="field-row">
+
+                                <div class="field-col">
+
+                                    <label class="field-label">
+                                        First Name <span>*</span>
+                                    </label>
+
+                                    <input class="text-input" id="signup-first-name" type="text" placeholder="Juan"
+                                        autocomplete="given-name" required>
+
+                                </div>
+
+
+                                <div class="field-col">
+
+                                    <label class="field-label">
+                                        Middle Name <span class="optional-label">(Optional)</span>
+                                    </label>
+
+                                    <label class="field-label" for="signup-first-name">
+                                        First Name <span>*</span>
+                                    </label>
+                                    <input class="text-input" id="signup-first-name" type="text" placeholder="Juan"
+                                        autocomplete="given-name" required>
+
+                                    <div class="field-col">
+                                        <label class="field-label" for="signup-middle-name">
+                                            Middle Name <span class="optional-label">(Optional)</span>
+                                        </label>
+                                        <input class="text-input" id="signup-middle-name" type="text" placeholder="Dela"
+                                            autocomplete="additional-name">
+                                    </div>
+
+
+                                    <label class="field-label" for="signup-last-name">
+                                        Last Name <span>*</span>
+                                    </label>
+                                    <input class="text-input" id="signup-last-name" type="text" placeholder="Cruz"
+                                        autocomplete="family-name" required>
+
+                                    <label class="field-label" for="signup-student-id">
+                                        Student ID <span>*</span>
+                                    </label>
+                                    <input class="text-input" id="signup-student-id" type="text"
+                                        placeholder="Enter your TIP Student ID" autocomplete="off" minlength="5"
+                                        maxlength="20" required>
+
+                                    <p class="input-help">
+                                        Enter the student ID assigned to you by TIP.
+                                    </p>
+
+
+                                    <div class="form-section-heading account-heading">
+                                        Account Information
+                                    </div>
+
+
+                                    <label class="field-label">
+                                        Institutional Email <span>*</span>
+                                    </label>
+
+                                    <div class="input-with-icon">
+
+                                        <span class="icon">✉</span>
+
+                                        <input id="signup-email" class="text-input" type="email"
+                                            placeholder="you@tip.edu.ph" autocomplete="email" required>
+
+                                    </div>
+
+
+                                    <label class="field-label" for="signup-email">
+                                        Institutional Email <span>*</span>
+                                    </label>
+
+                                    <div class="input-with-icon">
+                                        <span class="icon" aria-hidden="true">✉</span>
+                                        <input id="signup-email" class="text-input" type="email"
+                                            placeholder="you@tip.edu.ph" autocomplete="email" required>
+                                    </div>
+
+
+                                    <label class="field-label">
+                                        Confirm Password <span>*</span>
+                                    </label>
+
+                                    <div class="input-with-icon">
+
+                                        <span class="icon">🔒</span>
+
+                                        <input id="signup-password2" class="text-input" type="password"
+                                            placeholder="Confirm your password" autocomplete="new-password" required>
+
+                                    </div>
+
+
+                                    <div class="form-section-heading">
+                                        Student Information
+                                    </div>
+
+
+                                    <label class="field-label">
+                                        Course / Department <span>*</span>
+                                    </label>
+
+                                    <input id="signup-course" class="text-input" type="text" placeholder="e.g. BSIT"
+                                        required>
+
+
+                                    <label class="field-label">
+                                        Campus <span>*</span>
+                                    </label>
+
+                                    <select id="signup-campus" class="text-input" required>
+
+                                        <option value="">
+                                            Select your campus
+                                        </option>
+
+                                        <option value="Manila">
+                                            Manila
+                                        </option>
+
+                                        <option value="Quezon City">
+                                            Quezon City
+                                        </option>
+
+                                    </select>
+
+
+                                    <label class="terms-check">
+
+                                        <input type="checkbox" id="signup-terms" required>
+
+                                        <span>
+                                            I confirm that the information provided is accurate, that I am a TIP
+                                            student,
+                                            and
+                                            that I agree to the
+                                            <button type="button" class="terms-link" id="open-terms-btn">Terms and
+                                                Conditions</button>.
+                                        </span>
+
+                                    </label>
+
+
+                                    <button type="submit" class="btn btn-block btn-black">
+                                        Create Account
+                                    </button>
+
+
+                                    <p class="fineprint">
+                                        All fields marked with * are required.
+                                    </p>
+
+                        </form>
+                        <!-- SIGN UP EMAIL VERIFICATION -->
+
+                        <div id="signup-verification-box" class="hidden">
+
+                            <h3>Verify Your Email</h3>
+
+                            <p>
+                                We sent a 6-digit verification code to your TIP email.
+                                Please enter it below to complete your registration.
+                            </p>
+
+                            <form id="signup-verification-form">
+
+                                <label class="field-label" for="signup-verification-code">
+
+                                    Verification Code <span>*</span>
+
+                                </label>
+
+                                <div class="input-with-icon">
+
+                                    <span class="icon">✓</span>
+
+                                    <input type="text" id="signup-verification-code" placeholder="Enter 6-digit code"
+                                        inputmode="numeric" autocomplete="one-time-code" maxlength="6" required>
+
+                                </div>
+
+                                <div class="verification-actions">
+                                    <button type="submit" class="btn btn-primary">
+
+                                        Verify Code
+
+                                    </button>
+
+                                    <button type="button" id="signup-back-to-login-btn" class="btn btn-secondary">
+
+                                        Back to Login
+
+                                    </button>
+                                </div>
+
+                            </form>
+
+                        </div>
+
                     </div>
 
                 </div>
 
-            </div>
+            </section>
 
 
-            <div class="split-right">
 
-                <div class="brand-lockup-box">
+            <!-- =========================
+         BROWSE
+    ========================= -->
+            <section class="page" id="page-browse">
 
-                    <div class="auth-form-eyebrow">
-                        WELCOME TO RESOURCE
-                    </div>
-
-                    <h2>
-                        Access your account
-                    </h2>
-
-                    <p>
-                        Log in or create your TIP student account.
-                    </p>
-
+                <div class="breadcrumb">
+                    MARKETPLACE / BROWSE & SEARCH
                 </div>
 
 
-                <div class="toggle-row">
+                <div class="card">
 
-                    <button
-                        class="toggle-btn active"
-                        id="tab-login">
-                        Log In
-                    </button>
+                    <div class="topbar">
 
-                    <button
-                        class="toggle-btn"
-                        id="tab-signup">
-                        Sign Up
-                    </button>
+                        <div class="pill-badge">
+                            MARKETPLACE
+                        </div>
 
-                </div>
+                        <div class="searchbar">
 
+                            <span class="search-icon">⌕</span>
 
+                            <input type="text" id="browse-search-input"
+                                placeholder="Search for books, courses, tools...">
 
-                <!-- LOGIN FORM -->
-                <form id="login-form">
+                        </div>
 
-                    <label class="field-label" for="login-role">
-                        Account Type <span>*</span>
-                    </label>
-
-                    <div class="input-with-icon">
-                        <span class="icon" aria-hidden="true">◇</span>
-                        <select id="login-role" required>
-                            <option value="student">Student</option>
-                            <option value="admin">Administrator</option>
-                        </select>
-                    </div>
-
-                    <label class="field-label">
-                        Institutional Email <span>*</span>
-                    </label>
-
-                    <div class="input-with-icon">
-                        <span class="icon">✉</span>
-
-                        <input
-                            type="email"
-                            id="login-email"
-                            placeholder="you@tip.edu.ph"
-                            autocomplete="email"
-                            required>
-                    </div>
-
-
-                    <label class="field-label">
-                        Password <span>*</span>
-                    </label>
-
-                    <div class="input-with-icon">
-
-                        <span class="icon">🔒</span>
-
-                        <input
-                            type="password"
-                            id="login-password"
-                            placeholder="Enter your password"
-                            autocomplete="current-password"
-                            required>
-
-                        <button
-                            type="button"
-                            class="icon-toggle"
-                            id="toggle-password">
-                            👁
+                        <button class="filter-toggle-btn" id="toggle-filters-btn" type="button"
+                            aria-controls="listing-filters" aria-expanded="false">
+                            <span aria-hidden="true">⚙</span>
+                            Filters
                         </button>
 
                     </div>
 
 
-                    <a
-                        href="#"
-                        class="forgot-link"
-                        id="forgot-password-link">
-                        Forgot Password?
-                    </a>
+                    <hr class="divider">
 
 
-                    <button
-                        type="submit"
-                        class="btn btn-block btn-black">
-                        Log In
-                    </button>
+                    <div class="browse-layout">
 
+                        <aside class="filter-panel is-collapsed" id="listing-filters"
+                            aria-labelledby="listing-filter-title">
 
-                    <p class="fineprint">
-                        Only TIP institutional email addresses are accepted.
-                    </p>
-
-                </form>
-
-                <!-- EMAIL VERIFICATION -->
-<div id="login-verification-box" class="hidden">
-
-    <h3>Verify Your Email</h3>
-
-    <p>
-        We sent a 6-digit verification code to your TIP email.
-        Please enter it below to continue.
-    </p>
-
-    <form id="verification-form">
-
-        <label class="field-label" for="verification-code">
-            Verification Code <span>*</span>
-        </label>
-
-        <div class="input-with-icon">
-            <span class="icon">✓</span>
-
-            <input
-                type="text"
-                id="verification-code"
-                placeholder="Enter 6-digit code"
-                inputmode="numeric"
-                autocomplete="one-time-code"
-                maxlength="6"
-                required>
-        </div>
-
-        <div class="verification-actions">
-            <button type="submit" class="btn btn-primary">
-                Verify Code
-            </button>
-
-            <button
-                type="button"
-                id="back-to-login-btn"
-                class="btn btn-secondary">
-                Back to Login
-            </button>
-        </div>
-
-    </form>
-
-</div>
-
-
-<div id="forgot-password-box" class="hidden">
-
-    <h3>Reset Your Password</h3>
-
-    <p>Enter your TIP email. If an account exists, we will send a reset code.</p>
-
-    <form id="forgot-password-form">
-
-        <label class="field-label" for="reset-request-email">
-            Institutional Email <span>*</span>
-        </label>
-
-        <div class="input-with-icon">
-            <span class="icon" aria-hidden="true">✉</span>
-            <input
-                type="email"
-                id="reset-request-email"
-                placeholder="you@tip.edu.ph"
-                autocomplete="email"
-                required>
-        </div>
-
-        <button type="submit" class="btn btn-block btn-black" id="request-reset-code-btn">
-            Send Reset Code
-        </button>
-
-    </form>
-
-    <button type="button" id="back-to-login-from-reset-btn" class="btn btn-secondary">
-        Back to Login
-    </button>
-
-</div>
-
-<div id="reset-password-box" class="hidden">
-
-    <h3>Choose a New Password</h3>
-
-    <p>Enter the 6-digit code sent to your TIP email, then choose a new password.</p>
-
-    <form id="reset-password-form">
-
-        <input type="hidden" id="reset-confirm-email">
-
-        <label class="field-label" for="password-reset-code">
-            Reset Code <span>*</span>
-        </label>
-
-        <div class="input-with-icon">
-            <span class="icon" aria-hidden="true">✓</span>
-            <input
-                type="text"
-                id="password-reset-code"
-                placeholder="Enter 6-digit code"
-                inputmode="numeric"
-                autocomplete="one-time-code"
-                maxlength="6"
-                required>
-        </div>
-
-        <label class="field-label" for="reset-new-password">
-            New Password <span>*</span>
-        </label>
-
-        <div class="input-with-icon">
-            <span class="icon" aria-hidden="true">🔒</span>
-            <input
-                type="password"
-                id="reset-new-password"
-                placeholder="At least 6 characters"
-                autocomplete="new-password"
-                minlength="6"
-                required>
-        </div>
-
-        <label class="field-label" for="reset-confirm-password">
-            Confirm New Password <span>*</span>
-        </label>
-
-        <div class="input-with-icon">
-            <span class="icon" aria-hidden="true">🔒</span>
-            <input
-                type="password"
-                id="reset-confirm-password"
-                placeholder="Re-enter new password"
-                autocomplete="new-password"
-                minlength="6"
-                required>
-        </div>
-
-        <button type="submit" class="btn btn-block btn-black" id="reset-password-btn">
-            Reset Password
-        </button>
-
-    </form>
-
-    <button type="button" id="back-to-reset-request-btn" class="btn btn-secondary">
-        Request Another Code
-    </button>
-
-</div>
-
-
-
-                <!-- SIGNUP FORM -->
-                <form
-                    id="signup-form"
-                    class="hidden">
-
-                    <div class="form-section-heading">
-                        Personal Information
-                    </div>
-
-
-                    <div class="field-row">
-
-                        <div class="field-col">
-
-                            <label class="field-label">
-                                First Name <span>*</span>
-                            </label>
-
-                            <input
-                                class="text-input"
-                                id="signup-first-name"
-                                type="text"
-                                placeholder="Juan"
-                                autocomplete="given-name"
-                                required>
-
-                        </div>
-
-
-                        <div class="field-col">
-
-                            <label class="field-label">
-                                Middle Name <span class="optional-label">(Optional)</span>
-                            </label>
-
-                            <input
-                                class="text-input"
-                                id="signup-middle-name"
-                                type="text"
-                                placeholder="Dela"
-                                autocomplete="additional-name">
-
-                        </div>
-
-                    </div>
-
-
-                    <label class="field-label">
-                        Last Name <span>*</span>
-                    </label>
-
-                    <input
-                        class="text-input"
-                        id="signup-last-name"
-                        type="text"
-                        placeholder="Cruz"
-                        autocomplete="family-name"
-                        required>
-
-
-                    <label class="field-label">
-                        Student ID <span>*</span>
-                    </label>
-
-                    <input
-                        class="text-input"
-                        id="signup-student-id"
-                        type="text"
-                        placeholder="Enter your TIP Student ID"
-                        autocomplete="off"
-                        minlength="5"
-                        maxlength="20"
-                        required>
-
-                    <p class="input-help">
-                        Enter the student ID assigned to you by TIP.
-                    </p>
-
-
-                    <div class="form-section-heading account-heading">
-                        Account Information
-                    </div>
-
-
-                    <label class="field-label">
-                        Institutional Email <span>*</span>
-                    </label>
-
-                    <div class="input-with-icon">
-
-                        <span class="icon">✉</span>
-
-                        <input
-                            id="signup-email"
-                            class="text-input"
-                            type="email"
-                            placeholder="you@tip.edu.ph"
-                            autocomplete="email"
-                            required>
-
-                    </div>
-
-
-                    <label class="field-label">
-                        Password <span>*</span>
-                    </label>
-
-                    <div class="input-with-icon">
-
-                        <span class="icon">🔒</span>
-
-                        <input
-                            id="signup-password"
-                            class="text-input"
-                            type="password"
-                            placeholder="Create a password"
-                            autocomplete="new-password"
-                            minlength="6"
-                            required>
-
-                    </div>
-
-
-                    <label class="field-label">
-                        Confirm Password <span>*</span>
-                    </label>
-
-                    <div class="input-with-icon">
-
-                        <span class="icon">🔒</span>
-
-                        <input
-                            id="signup-password2"
-                            class="text-input"
-                            type="password"
-                            placeholder="Confirm your password"
-                            autocomplete="new-password"
-                            required>
-
-                    </div>
-
-
-                    <div class="form-section-heading">
-                        Student Information
-                    </div>
-
-
-                    <label class="field-label">
-                        Course / Department <span>*</span>
-                    </label>
-
-                    <input
-                        id="signup-course"
-                        class="text-input"
-                        type="text"
-                        placeholder="e.g. BSIT"
-                        required>
-
-
-                    <label class="field-label">
-                        Campus <span>*</span>
-                    </label>
-
-                    <select
-                        id="signup-campus"
-                        class="text-input"
-                        required>
-
-                        <option value="">
-                            Select your campus
-                        </option>
-
-                        <option value="Manila">
-                            Manila
-                        </option>
-
-                        <option value="Quezon City">
-                            Quezon City
-                        </option>
-
-                    </select>
-
-
-                    <label class="terms-check">
-
-                        <input
-                            type="checkbox"
-                            id="signup-terms"
-                            required>
-
-                        <span>
-                            I confirm that the information provided is accurate, that I am a TIP student, and that I agree to the
-                            <button type="button" class="terms-link" id="open-terms-btn">Terms and Conditions</button>.
-                        </span>
-
-                    </label>
-
-
-                    <button
-                        type="submit"
-                        class="btn btn-block btn-black">
-                        Create Account
-                    </button>
-
-
-                    <p class="fineprint">
-                        All fields marked with * are required.
-                    </p>
-
-                </form>
-                <!-- SIGN UP EMAIL VERIFICATION -->
-
-<div id="signup-verification-box" class="hidden">
-
-    <h3>Verify Your Email</h3>
-
-    <p>
-        We sent a 6-digit verification code to your TIP email.
-        Please enter it below to complete your registration.
-    </p>
-
-    <form id="signup-verification-form">
-
-        <label
-            class="field-label"
-            for="signup-verification-code">
-
-            Verification Code <span>*</span>
-
-        </label>
-
-        <div class="input-with-icon">
-
-            <span class="icon">✓</span>
-
-            <input
-                type="text"
-                id="signup-verification-code"
-                placeholder="Enter 6-digit code"
-                inputmode="numeric"
-                autocomplete="one-time-code"
-                maxlength="6"
-                required>
-
-        </div>
-
-        <div class="verification-actions">
-            <button
-                type="submit"
-                class="btn btn-primary">
-
-                Verify Code
-
-            </button>
-
-            <button
-                type="button"
-                id="signup-back-to-login-btn"
-                class="btn btn-secondary">
-
-                Back to Login
-
-            </button>
-        </div>
-
-    </form>
-
-</div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =========================
-         BROWSE
-    ========================= -->
-    <section class="page" id="page-browse">
-
-        <div class="breadcrumb">
-            MARKETPLACE / BROWSE & SEARCH
-        </div>
-
-
-        <div class="card">
-
-            <div class="topbar">
-
-                <div class="pill-badge">
-                    MARKETPLACE
-                </div>
-
-                <div class="searchbar">
-
-                    <span class="search-icon">⌕</span>
-
-                    <input
-                        type="text"
-                        id="browse-search-input"
-                        placeholder="Search for books, courses, tools...">
-
-                </div>
-
-                <button class="filter-toggle-btn" id="toggle-filters-btn" type="button" aria-controls="listing-filters" aria-expanded="false">
-                    <span aria-hidden="true">⚙</span>
-                    Filters
-                </button>
-
-            </div>
-
-
-            <hr class="divider">
-
-
-            <div class="browse-layout">
-
-                <aside class="filter-panel is-collapsed" id="listing-filters">
-
-                    <div class="filter-header">
-                        <div>
-                            <span class="filter-eyebrow">
-                                DISCOVER
-                            </span>
-
-                            <h3 class="filter-title">
+                            <!-- ...existing code... -->
+                            <h3 class="filter-title" id="listing-filter-title">
                                 Filter Listings
                             </h3>
-                        </div>
-
-                        <span class="filter-icon">
-                            ☷
-                        </span>
                     </div>
 
-
-                    <label class="field-label">
-                        Campus
-                    </label>
-
-                    <select
-                        class="filter-input"
-                        id="filter-campus">
-
-                        <option value="">Any</option>
-                        <option>Manila</option>
-                        <option>Quezon City</option>
-
-                    </select>
+                    <span class="filter-icon">
+                        ☷
+                    </span>
+                </div>
 
 
-                    <label class="field-label">
-                        Department
-                    </label>
+                <label class="field-label">
+                    Campus
+                </label>
 
-                    <select
-                        class="filter-input"
-                        id="filter-department">
+                <select class="filter-input" id="filter-campus">
 
-                        <option value="">Any</option>
-                        <option>BSIT</option>
-                        <option>BSCpE</option>
-                        <option>BSCE</option>
-                        <option>BSBA</option>
-                        <option>Other</option>
+                    <option value="">Any</option>
+                    <option>Manila</option>
+                    <option>Quezon City</option>
 
-                    </select>
+                </select>
 
 
-                    <label class="field-label">
-                        Course Code
-                    </label>
+                <label class="field-label">
+                    Department
+                </label>
 
-                    <input
-                        class="filter-input"
-                        id="filter-coursecode"
-                        type="text"
-                        placeholder="e.g. IT21S2">
+                <select class="filter-input" id="filter-department">
 
+                    <option value="">Any</option>
+                    <option>BSIT</option>
+                    <option>BSCpE</option>
+                    <option>BSCE</option>
+                    <option>BSBA</option>
+                    <option>Other</option>
 
-                    <label class="field-label">
-                        Category
-                    </label>
-
-                    <select
-                        class="filter-input"
-                        id="filter-category">
-
-                        <option value="">Any</option>
-                        <option>Books</option>
-                        <option>Electronics</option>
-                        <option>Laboratory</option>
-                        <option>Uniforms</option>
-                        <option>Other</option>
-
-                    </select>
+                </select>
 
 
-                    <label class="field-label">
-                        Condition
-                    </label>
+                <label class="field-label">
+                    Course Code
+                </label>
 
-                    <select
-                        class="filter-input"
-                        id="filter-condition">
-
-                        <option value="">Any</option>
-                        <option>New</option>
-                        <option>Used - Good</option>
-                        <option>Used - Fair</option>
-
-                    </select>
+                <input class="filter-input" id="filter-coursecode" type="text" placeholder="e.g. IT21S2">
 
 
-                    <label class="field-label">
-                        Price Range
-                    </label>
+                <label class="field-label">
+                    Category
+                </label>
 
-                    <div class="price-range-row">
+                <select class="filter-input" id="filter-category">
 
-                        <input
-                            class="filter-input"
-                            id="filter-min"
-                            type="number"
-                            min="0"
-                            placeholder="Min">
+                    <option value="">Any</option>
+                    <option>Books</option>
+                    <option>Electronics</option>
+                    <option>Laboratory</option>
+                    <option>Uniforms</option>
+                    <option>Other</option>
 
-                        <input
-                            class="filter-input"
-                            id="filter-max"
-                            type="number"
-                            min="0"
-                            placeholder="Max">
-
-                    </div>
+                </select>
 
 
-                    <label class="field-label">
-                        Sort
-                    </label>
+                <label class="field-label">
+                    Condition
+                </label>
 
-                    <select
-                        class="filter-input"
-                        id="filter-sort">
+                <select class="filter-input" id="filter-condition">
 
-                        <option value="newest">
-                            Newest
-                        </option>
+                    <option value="">Any</option>
+                    <option>New</option>
+                    <option>Used - Good</option>
+                    <option>Used - Fair</option>
 
-                        <option value="price-low">
-                            Price: Low to High
-                        </option>
-
-                        <option value="price-high">
-                            Price: High to Low
-                        </option>
-
-                        <option value="title">
-                            Title: A-Z
-                        </option>
-
-                    </select>
+                </select>
 
 
-                    <button
-                        class="btn btn-yellow btn-block"
-                        id="apply-filter-btn">
-                        Apply Filter
-                    </button>
+                <label class="field-label">
+                    Price Range
+                </label>
 
-                    <button
-                        class="btn btn-gray btn-block filter-reset-btn"
-                        id="reset-filter-btn">
-                        Reset Filters
-                    </button>
+                <div class="price-range-row">
+
+                    <input class="filter-input" id="filter-min" type="number" min="0" placeholder="Min">
+
+                    <input class="filter-input" id="filter-max" type="number" min="0" placeholder="Max">
+
+                </div>
+
+
+                <label class="field-label">
+                    Sort
+                </label>
+
+                <select class="filter-input" id="filter-sort">
+
+                    <option value="newest">
+                        Newest
+                    </option>
+
+                    <option value="price-low">
+                        Price: Low to High
+                    </option>
+
+                    <option value="price-high">
+                        Price: High to Low
+                    </option>
+
+                    <option value="title">
+                        Title: A-Z
+                    </option>
+
+                </select>
+
+
+                <button class="btn btn-yellow btn-block" id="apply-filter-btn">
+                    Apply Filter
+                </button>
+
+                <button class="btn btn-gray btn-block filter-reset-btn" id="reset-filter-btn">
+                    Reset Filters
+                </button>
 
                 </aside>
 
@@ -1232,16 +1090,14 @@
                     </div>
 
 
-                    <div
-                        class="item-grid highlight-grid"
-                        id="browse-grid">
+                    <div class="item-grid highlight-grid" id="browse-grid">
                     </div>
 
                 </div>
 
-            </div>
+    </div>
 
-        </div>
+    </div>
 
     </section>
 
@@ -1302,9 +1158,7 @@
                     LISTING
                 </div>
 
-                <button
-                    class="btn btn-pill-gray right-btn"
-                    data-goto="browse">
+                <button class="btn btn-pill-gray right-btn" data-goto="browse">
                     ← Back to Browse
                 </button>
 
@@ -1314,9 +1168,7 @@
             <hr class="divider">
 
 
-            <div
-                id="listing-detail-empty"
-                class="empty-state large-empty hidden">
+            <div id="listing-detail-empty" class="empty-state large-empty hidden">
 
                 <div class="empty-icon">
                     ◌
@@ -1330,33 +1182,23 @@
                     Choose a listing from Browse / Search first.
                 </p>
 
-                <button
-                    class="btn btn-yellow"
-                    data-goto="browse">
+                <button class="btn btn-yellow" data-goto="browse">
                     Browse Listings
                 </button>
 
             </div>
 
 
-            <div
-                class="listing-layout hidden"
-                id="listing-detail-content">
+            <div class="listing-layout hidden" id="listing-detail-content">
 
                 <div class="listing-media">
 
                     <div class="listing-photo-main">
 
-                        <img
-                            id="detail-image"
-                            src=""
-                            alt="Listing photo">
-
+                        <img id="detail-image" src="" alt="Listing">
                     </div>
 
-                    <div
-                        class="listing-thumbs"
-                        id="listing-thumbs">
+                    <div class="listing-thumbs" id="listing-thumbs">
                     </div>
 
                 </div>
@@ -1364,42 +1206,27 @@
 
                 <div class="listing-info">
 
-                    <div
-                        class="tag-row"
-                        id="detail-tags">
+                    <div class="tag-row" id="detail-tags">
                     </div>
 
-                    <h2
-                        id="detail-title"
-                        class="detail-title">
-                    </h2>
+                    <h2 id="detail-title" class="detail-title">Listing details</h2>
 
-                    <div
-                        class="listing-price"
-                        id="detail-price">
+                    <div class="listing-price" id="detail-price">
                     </div>
 
 
-                    <div
-                        class="seller-box"
-                        id="detail-seller-box">
+                    <div class="seller-box" id="detail-seller-box">
 
-                        <div
-                            class="avatar"
-                            id="detail-seller-avatar">
+                        <div class="avatar" id="detail-seller-avatar">
                             👤
                         </div>
 
                         <div class="seller-meta">
 
-                            <div
-                                class="seller-name"
-                                id="detail-seller-name">
+                            <div class="seller-name" id="detail-seller-name">
                             </div>
 
-                            <div
-                                class="seller-active"
-                                id="detail-seller-active">
+                            <div class="seller-active" id="detail-seller-active">
                             </div>
 
                             <div class="stars" id="detail-seller-rating">
@@ -1418,9 +1245,7 @@
                         Description
                     </h3>
 
-                    <p
-                        class="desc-text"
-                        id="detail-description">
+                    <p class="desc-text" id="detail-description">
                     </p>
 
 
@@ -1446,34 +1271,23 @@
 
                     <div class="btn-row">
 
-                        <button
-                            class="btn btn-yellow"
-                            id="message-seller-btn">
+                        <button class="btn btn-yellow" id="message-seller-btn">
                             Message Seller
                         </button>
 
-                        <button
-                            class="btn btn-gray"
-                            id="save-item-btn">
+                        <button class="btn btn-gray" id="save-item-btn">
                             Save Item
                         </button>
 
-                        <button
-                            class="btn btn-yellow hidden"
-                            id="mark-sold-btn">
+                        <button class="btn btn-yellow hidden" id="mark-sold-btn">
                             Mark as Sold
                         </button>
 
-                        <button
-                            class="btn btn-outline hidden"
-                            id="delete-listing-btn">
+                        <button class="btn btn-outline hidden" id="delete-listing-btn">
                             Delete Listing
                         </button>
 
-                        <button
-                            class="btn btn-outline"
-                            id="report-listing-btn"
-                            type="button">
+                        <button class="btn btn-outline" id="report-listing-btn" type="button">
                             Report Listing
                         </button>
 
@@ -1494,7 +1308,8 @@
                         <label for="listing-report-description">Details (optional)</label>
                         <textarea id="listing-report-description" maxlength="1000" rows="4"></textarea>
                         <div class="btn-row">
-                            <button class="btn btn-black" type="submit" id="submit-listing-report-btn">Submit Report</button>
+                            <button class="btn btn-black" type="submit" id="submit-listing-report-btn">Submit
+                                Report</button>
                             <button class="btn btn-gray" type="button" id="cancel-listing-report-btn">Cancel</button>
                         </div>
                     </form>
@@ -1527,9 +1342,7 @@
                     SELL AN ITEM
                 </div>
 
-                <button
-                    class="btn btn-pill-gray right-btn"
-                    id="cancel-create-btn">
+                <button class="btn btn-pill-gray right-btn" id="cancel-create-btn">
                     Cancel
                 </button>
 
@@ -1539,9 +1352,7 @@
             <hr class="divider">
 
 
-            <div
-                id="create-login-warning"
-                class="notice-box hidden">
+            <div id="create-login-warning" class="notice-box hidden">
 
                 <strong>
                     You need to log in first.
@@ -1551,18 +1362,14 @@
                     Sign in to your TIP account before creating a listing.
                 </p>
 
-                <button
-                    class="btn btn-black"
-                    data-goto="login">
+                <button class="btn btn-black" data-goto="login">
                     Go to Log In
                 </button>
 
             </div>
 
 
-            <form
-                class="create-layout"
-                id="create-listing-form">
+            <form class="create-layout" id="create-listing-form">
 
                 <div class="photos-col">
 
@@ -1574,11 +1381,7 @@
 
                         <label class="photo-slot">
 
-                            <input
-                                type="file"
-                                accept="image/*"
-                                class="photo-input"
-                                hidden>
+                            <input type="file" accept="image/*" class="photo-input" hidden>
 
                             <span class="plus">+</span>
 
@@ -1587,11 +1390,7 @@
 
                         <label class="photo-slot">
 
-                            <input
-                                type="file"
-                                accept="image/*"
-                                class="photo-input"
-                                hidden>
+                            <input type="file" accept="image/*" class="photo-input" hidden>
 
                             <span class="plus">+</span>
 
@@ -1600,11 +1399,7 @@
 
                         <label class="photo-slot">
 
-                            <input
-                                type="file"
-                                accept="image/*"
-                                class="photo-input"
-                                hidden>
+                            <input type="file" accept="image/*" class="photo-input" hidden>
 
                             <span class="plus">+</span>
 
@@ -1646,12 +1441,8 @@
                         Title <span>*</span>
                     </label>
 
-                    <input
-                        class="text-input"
-                        id="create-title"
-                        type="text"
-                        placeholder="e.g. Data Structures Textbook 2nd Ed."
-                        required>
+                    <input class="text-input" id="create-title" type="text"
+                        placeholder="e.g. Data Structures Textbook 2nd Ed." required>
 
 
                     <div class="field-row">
@@ -1662,11 +1453,7 @@
                                 Course Code
                             </label>
 
-                            <input
-                                class="text-input"
-                                id="create-coursecode"
-                                type="text"
-                                placeholder="e.g. IT21S2">
+                            <input class="text-input" id="create-coursecode" type="text" placeholder="e.g. IT21S2">
 
                         </div>
 
@@ -1677,11 +1464,7 @@
                                 Department
                             </label>
 
-                            <input
-                                class="text-input"
-                                id="create-department"
-                                type="text"
-                                placeholder="e.g. BSIT">
+                            <input class="text-input" id="create-department" type="text" placeholder="e.g. BSIT">
 
                         </div>
 
@@ -1696,10 +1479,7 @@
                                 Category <span>*</span>
                             </label>
 
-                            <select
-                                class="text-input"
-                                id="create-category"
-                                required>
+                            <select class="text-input" id="create-category" required>
 
                                 <option value="">
                                     Select category
@@ -1718,23 +1498,15 @@
 
                         <div class="field-col">
 
-                            <label class="field-label">
+                            <label class="field-label" for="create-condition">
                                 Condition <span>*</span>
                             </label>
 
-                            <select
-                                class="text-input"
-                                id="create-condition"
-                                required>
-
-                                <option value="">
-                                    Select condition
-                                </option>
-
+                            <select class="text-input" id="create-condition" required>
+                                <option value="">Select condition</option>
                                 <option>New</option>
                                 <option>Used - Good</option>
                                 <option>Used - Fair</option>
-
                             </select>
 
                         </div>
@@ -1742,74 +1514,78 @@
 
                         <div class="field-col">
 
-                            <label class="field-label">
-                                Price (₱) <span>*</span>
+                            <label class="field-label" for="create-condition">
+                                Condition <span>*</span>
                             </label>
 
-                            <input
-                                class="text-input"
-                                id="create-price"
-                                type="number"
-                                min="1"
-                                placeholder="e.g. 250"
-                                required>
+                            <select class="text-input" id="create-condition" required>
+                                <option value="">Select condition</option>
+                                <option>New</option>
+                                <option>Used - Good</option>
+                                <option>Used - Fair</option>
+                            </select>
 
                         </div>
 
-                    </div>
 
+                        <option>New</option>
+                        <option>Used - Good</option>
+                        <option>Used - Fair</option>
+                        </select>
 
-                    <label class="field-label">
-                        Description <span>*</span>
-                    </label>
+                        <label class="field-label" for="create-price">
+                            Price (₱) <span>*</span>
+                        </label>
 
-                    <textarea
-                        class="text-input textarea"
-                        id="create-description"
-                        placeholder="Add details, highlights, included materials, defects, etc."
-                        required></textarea>
-
-
-                    <label class="field-label">
-                        Campus <span>*</span>
-                    </label>
-
-                    <select
-                        class="text-input"
-                        id="create-campus"
-                        required>
-
-                        <option value="Manila">
-                            Manila
-                        </option>
-
-                        <option value="Quezon City">
-                            Quezon City
-                        </option>
-
-                    </select>
-
-
-                    <div class="btn-row create-submit-actions">
-
-                        <button
-                            type="submit"
-                            class="btn btn-yellow">
-                            Publish Listing
-                        </button>
-
-                        <button
-                            type="button"
-                            class="btn btn-gray"
-                            id="save-draft-btn">
-                            Save as Draft
-                        </button>
+                        <input class="text-input" id="create-price" type="number" min="1" placeholder="e.g. 250"
+                            required>
 
                     </div>
 
                 </div>
 
-            </form>
+
+
+                <label class="field-label" for="create-description">
+                    Description <span>*</span>
+                </label>
+
+                <textarea class="text-input textarea" id="create-description"
+                    placeholder="Add details, highlights, included materials, defects, etc." required></textarea>
+
+
+                <label class="field-label" for="create-campus">
+                    Campus <span>*</span>
+                </label>
+
+                <select class="text-input" id="create-campus" required>
+
+                    <option value="Manila">
+                        Manila
+                    </option>
+
+                    <option value="Quezon City">
+                        Quezon City
+                    </option>
+
+                </select>
+
+
+                <div class="btn-row create-submit-actions">
+
+                    <button type="submit" class="btn btn-yellow">
+                        Publish Listing
+                    </button>
+
+                    <button type="button" class="btn btn-gray" id="save-draft-btn">
+                        Save as Draft
+                    </button>
+
+                </div>
+
+        </div>
+
+        </form>
 
         </div>
 
@@ -1837,15 +1613,11 @@
 
                 <div class="profile-top-actions right-btn">
 
-                    <button
-                        class="btn btn-pill-gray hidden"
-                        id="logout-btn">
+                    <button class="btn btn-pill-gray hidden" id="logout-btn">
                         Log Out
                     </button>
 
-                    <button
-                        class="btn btn-pill-gray"
-                        data-goto="browse">
+                    <button class="btn btn-pill-gray" data-goto="browse">
                         Back to Browse
                     </button>
 
@@ -1857,9 +1629,7 @@
             <hr class="divider">
 
 
-            <div
-                id="profile-login-warning"
-                class="notice-box hidden">
+            <div id="profile-login-warning" class="notice-box hidden">
 
                 <strong>
                     No user is currently logged in.
@@ -1869,67 +1639,49 @@
                     Log in or create an account to see a real profile.
                 </p>
 
-                <button
-                    class="btn btn-black"
-                    data-goto="login">
+                <button class="btn btn-black" data-goto="login">
                     Go to Log In
                 </button>
 
             </div>
 
 
-            <div
-                id="profile-content"
-                class="hidden">
+            <div id="profile-content" class="hidden">
 
                 <div class="profile-header">
 
                     <div class="profile-avatar-wrap">
                         <div class="avatar large profile-avatar" id="profile-avatar">
-                            👤
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <circle cx="12" cy="8" r="3.5"></circle>
+                                <path d="M5.5 20c.5-3.7 2.7-5.5 6.5-5.5s6 1.8 6.5 5.5"></path>
+                            </svg>
                         </div>
                         <label class="change-photo-label" for="profile-photo-input">
                             Change photo
                         </label>
-                        <input
-                            type="file"
-                            id="profile-photo-input"
-                            accept="image/*"
-                            hidden>
+                        <input type="file" id="profile-photo-input" accept="image/*" hidden>
                     </div>
 
                     <div class="profile-meta">
 
-                        <h2
-                            class="profile-name"
-                            id="profile-name">
-                        </h2>
+                        <h2 class="profile-name" id="profile-name">Your profile</h2>
 
-                        <p
-                            class="profile-role"
-                            id="profile-role">
+                        <p class="profile-role" id="profile-role">
                         </p>
 
-                        <p
-                            class="profile-course"
-                            id="profile-course">
+                        <p class="profile-course" id="profile-course">
                         </p>
 
                         <div class="profile-tags">
 
-                            <span
-                                class="tag"
-                                id="profile-campus">
+                            <span class="tag" id="profile-campus">
                             </span>
 
-                            <span
-                                class="tag"
-                                id="profile-student-id">
+                            <span class="tag" id="profile-student-id">
                             </span>
 
-                            <span
-                                class="tag"
-                                id="profile-member-since">
+                            <span class="tag" id="profile-member-since">
                             </span>
 
                             <span class="tag" id="profile-seller-rating">
@@ -1977,76 +1729,57 @@
                                 <span aria-hidden="true">★</span>
                             </label>
                         </fieldset>
-                        <button class="btn btn-yellow" type="submit" id="submit-profile-rating-btn">Submit Rating</button>
+                        <button class="btn btn-yellow" type="submit" id="submit-profile-rating-btn">Submit
+                            Rating</button>
                     </form>
                 </section>
 
 
                 <div class="profile-tabs">
 
-                    <button
-                        class="ptab active"
-                        data-tab="listings">
+                    <button class="ptab active" data-tab="listings">
                         My Listings
                     </button>
 
-                    <button
-                        class="ptab"
-                        data-tab="history">
+                    <button class="ptab" data-tab="history">
                         Purchase History
                     </button>
 
-                    <button
-                        class="ptab"
-                        data-tab="sold">
+                    <button class="ptab" data-tab="sold">
                         Sold Items
                     </button>
 
-                    <button
-                        class="ptab"
-                        data-tab="settings">
+                    <button class="ptab" data-tab="settings">
                         Settings
                     </button>
 
                 </div>
 
 
-                <div
-                    class="profile-panel"
-                    id="panel-listings">
+                <div class="profile-panel" id="panel-listings">
 
-                    <div
-                        class="item-grid four-col"
-                        id="profile-listings-grid">
+                    <div class="item-grid four-col" id="profile-listings-grid">
                     </div>
 
                 </div>
 
 
-                <div
-                    class="profile-panel hidden"
-                    id="panel-sold">
+                <div class="profile-panel hidden" id="panel-sold">
 
-                    <div
-                        class="item-grid four-col"
-                        id="profile-sold-grid">
+                    <div class="item-grid four-col" id="profile-sold-grid">
                     </div>
 
                 </div>
 
 
-                <div
-                    class="profile-panel hidden"
-                    id="panel-history">
+                <div class="profile-panel hidden" id="panel-history">
 
                     <div id="purchase-history-list" class="purchase-history-list"></div>
 
                 </div>
 
 
-                <div
-                    class="profile-panel hidden"
-                    id="panel-settings">
+                <div class="profile-panel hidden" id="panel-settings">
 
                     <div class="settings-grid">
 
@@ -2066,7 +1799,8 @@
                                 <option value="Manila">Manila</option>
                                 <option value="Quezon City">Quezon City</option>
                             </select>
-                            <button class="btn btn-yellow" type="submit" id="save-profile-btn">Save Profile</button>
+                            <button class="btn btn-yellow" type="submit" id="save-profile-btn">Save
+                                Profile</button>
                         </form>
 
                         <form class="settings-card" id="password-update-form">
@@ -2086,8 +1820,10 @@
                             <span class="results-eyebrow">NOTIFICATIONS</span>
                             <h3>Notification settings</h3>
                             <p>Choose which browser notifications you would like to receive.</p>
-                            <label class="setting-check"><input type="checkbox" id="notify-messages"> New messages</label>
-                            <label class="setting-check"><input type="checkbox" id="notify-listings"> Listing activity</label>
+                            <label class="setting-check"><input type="checkbox" id="notify-messages"> New
+                                messages</label>
+                            <label class="setting-check"><input type="checkbox" id="notify-listings"> Listing
+                                activity</label>
                             <button class="btn btn-gray" type="submit">Save Notifications</button>
                         </form>
 
@@ -2095,36 +1831,35 @@
                             <span class="results-eyebrow">PRIVACY</span>
                             <h3>Privacy settings</h3>
                             <p>Control which profile details other TIPians can see.</p>
-                            <label class="setting-check"><input type="checkbox" id="privacy-photo"> Show my profile photo</label>
-                            <label class="setting-check"><input type="checkbox" id="privacy-course"> Show my course</label>
+                            <label class="setting-check"><input type="checkbox" id="privacy-photo"> Show my
+                                profile photo</label>
+                            <label class="setting-check"><input type="checkbox" id="privacy-course"> Show my
+                                course</label>
                             <button class="btn btn-gray" type="submit">Save Privacy</button>
                         </form>
 
                         <!-- DELETE ACCOUNT -->
 
-<div class="settings-card delete-account-card">
+                        <div class="settings-card delete-account-card">
 
-    <span class="results-eyebrow">
-        DANGER ZONE
-    </span>
+                            <span class="results-eyebrow">
+                                DANGER ZONE
+                            </span>
 
-    <h3>Delete Account</h3>
+                            <h3>Delete Account</h3>
 
-    <p>
-        Permanently delete your ReSource account and its account data.
-        This action cannot be undone.
-    </p>
+                            <p>
+                                Permanently delete your ReSource account and its account data.
+                                This action cannot be undone.
+                            </p>
 
-    <button
-        type="button"
-        class="btn btn-outline"
-        id="delete-account-btn">
+                            <button type="button" class="btn btn-outline" id="delete-account-btn">
 
-        Delete My Account
+                                Delete My Account
 
-    </button>
+                            </button>
 
-</div>
+                        </div>
 
                     </div>
 
@@ -2156,9 +1891,7 @@
                     MESSAGES
                 </div>
 
-                <button
-                    class="btn btn-pill-gray right-btn"
-                    data-goto="dashboard">
+                <button class="btn btn-pill-gray right-btn" data-goto="dashboard">
                     Cancel
                 </button>
 
@@ -2168,9 +1901,7 @@
             <hr class="divider">
 
 
-            <div
-                id="message-login-warning"
-                class="notice-box hidden">
+            <div id="message-login-warning" class="notice-box hidden">
 
                 <strong>
                     You need to log in first.
@@ -2180,31 +1911,25 @@
                     Messaging only works for accounts created in this browser.
                 </p>
 
-                <button
-                    class="btn btn-black"
-                    data-goto="login">
+                <button class="btn btn-black" data-goto="login">
                     Go to Log In
                 </button>
 
             </div>
 
 
-            <div
-                class="messaging-layout"
-                id="messaging-content">
+            <div class="messaging-layout" id="messaging-content">
 
-                <aside class="conversation-list">
+                <input type="text" id="conversation-search" placeholder="Search conversations"
+                    aria-label="Search conversations">
 
-                    <div class="convo-search">
+                <div class="convo-search">
 
-                        <input
-                            type="text"
-                            id="conversation-search"
-                            placeholder="🔍 Search conversations">
+                    <input type="text" id="conversation-search" placeholder="Search conversations">
 
-                    </div>
+                </div>
 
-                    <div id="conversation-items"></div>
+                <div id="conversation-items"></div>
 
                 </aside>
 
@@ -2213,23 +1938,17 @@
 
                     <div class="chat-header">
 
-                        <div
-                            class="avatar"
-                            id="chat-partner-avatar">
-                            👤
+                        <div class="avatar" id="chat-partner-avatar">
+
                         </div>
 
                         <div>
 
-                            <div
-                                class="chat-name"
-                                id="chat-partner-name">
+                            <div class="chat-name" id="chat-partner-name">
                                 Select a conversation
                             </div>
 
-                            <div
-                                class="chat-status"
-                                id="chat-partner-status">
+                            <div class="chat-status" id="chat-partner-status">
                             </div>
 
                         </div>
@@ -2237,9 +1956,7 @@
                     </div>
 
 
-                    <div
-                        class="chat-body"
-                        id="chat-body">
+                    <div class="chat-body" id="chat-body">
 
                         <div class="empty-state">
                             Select a conversation to start messaging.
@@ -2248,27 +1965,15 @@
                     </div>
 
 
-                    <form
-                        class="chat-input-row"
-                        id="chat-form">
+                    <form class="chat-input-row" id="chat-form">
 
-                        <button
-                            type="button"
-                            class="icon-btn"
-                            id="attach-image-btn"
-                            title="Attach image">
+                        <button type="button" class="icon-btn" id="attach-image-btn" title="Attach image">
                             🖼
                         </button>
 
-                        <input
-                            type="text"
-                            id="chat-input"
-                            placeholder="Type a message..."
-                            autocomplete="off">
+                        <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
 
-                        <button
-                            type="submit"
-                            class="btn btn-yellow">
+                        <button type="submit" class="btn btn-yellow">
                             Send
                         </button>
 
@@ -2282,150 +1987,141 @@
 
     </section>
 
-</main>
+    </main>
 
 
-</div>
+    </div>
 
-<!-- =========================
+    <!-- =========================
      FOOTER
 ========================= -->
 
-<footer class="site-footer">
+    <footer class="site-footer">
 
 
-<div class="footer-main">
+        <div class="footer-main">
 
-    <div class="footer-brand">
+            <div class="footer-brand">
 
-        <div class="footer-logo">
-            <span>RE</span>SOURCE
+                <div class="footer-logo">
+                    <span>RE</span>SOURCE
+                </div>
+
+                <p>
+                    A web-based campus marketplace designed
+                    to help TIP students buy, sell, exchange,
+                    and connect with fellow TIPians.
+                </p>
+
+                <div class="footer-campus-badge">
+                    TIP STUDENT COMMUNITY
+                </div>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>
+                    Marketplace
+                </h3>
+
+                <button data-goto="dashboard">
+                    Home
+                </button>
+
+                <button data-goto="browse">
+                    Browse Listings
+                </button>
+
+                <button data-goto="create">
+                    Sell an Item
+                </button>
+
+                <button data-goto="messaging">
+                    Messages
+                </button>
+
+            </div>
+
+
+            <div class="footer-column">
+
+                <h3>
+                    Account
+                </h3>
+
+                <button data-goto="login">
+                    Log In
+                </button>
+
+                <button data-goto="login" data-auth-tab="signup">
+                    Create Account
+                </button>
+
+                <button data-goto="profile">
+                    My Profile
+                </button>
+
+            </div>
+
+
+
+            <div class="footer-bottom">
+
+                <span>
+                    © 2026 ReSource. All rights reserved.
+                </span>
+
+                <span>
+                    Made for TIPians • A Secure Student Marketplace
+                </span>
+
+            </div>
+
+
+    </footer>
+
+    <div class="terms-modal hidden" id="terms-modal" role="dialog" aria-modal="true" aria-labelledby="terms-title">
+        <div class="terms-modal-card">
+            <div class="terms-modal-header">
+                <h2 id="terms-title">ReSource Terms and Conditions</h2>
+                <button type="button" class="terms-close-btn" id="close-terms-btn"
+                    aria-label="Close terms and conditions">×</button>
+            </div>
+            <div class="terms-modal-body">
+                <p>By creating an account, you confirm that you are a currently enrolled TIP student and that the
+                    information you provide is accurate.</p>
+                <p>Use ReSource only for lawful, campus-related buying, selling, exchanging, and communication. Listings
+                    must be truthful and must not contain prohibited, unsafe, or misleading items or content.</p>
+                <p>Users are responsible for communicating respectfully, verifying listing details, and arranging
+                    transactions safely. ReSource is a student marketplace and does not guarantee the quality,
+                    availability, or condition of items offered by users.</p>
+                <p>Accounts may be restricted for misuse, false information, harassment, scams, or violations of these
+                    terms.</p>
+            </div>
+            <button type="button" class="btn btn-black terms-done-btn" id="terms-done-btn">I Understand</button>
         </div>
+    </div>
 
-        <p>
-            A web-based campus marketplace designed
-            to help TIP students buy, sell, exchange,
-            and connect with fellow TIPians.
-        </p>
+    <div class="image-lightbox hidden" id="image-lightbox" role="dialog" aria-modal="true" aria-label="Image preview">
+        <div class="image-lightbox-content">
+            <button type="button" class="image-lightbox-close" id="image-lightbox-close"
+                aria-label="Close image preview">
 
-        <div class="footer-campus-badge">
-            TIP STUDENT COMMUNITY
+            </button>
+            <img id="image-lightbox-image" src="" alt="">
+            <p id="image-lightbox-caption"></p>
         </div>
-
     </div>
 
+    <input type="file" id="hidden-attach-input" accept="image/*" hidden>
 
-    <div class="footer-column">
-
-        <h3>
-            Marketplace
-        </h3>
-
-        <button data-goto="dashboard">
-            Home
-        </button>
-
-        <button data-goto="browse">
-            Browse Listings
-        </button>
-
-        <button data-goto="create">
-            Sell an Item
-        </button>
-
-        <button data-goto="messaging">
-            Messages
-        </button>
-
+    <div id="toast-container" class="toast-container">
     </div>
 
-
-    <div class="footer-column">
-
-        <h3>
-            Account
-        </h3>
-
-        <button data-goto="login">
-            Log In
-        </button>
-
-        <button
-            data-goto="login"
-            data-auth-tab="signup">
-            Create Account
-        </button>
-
-        <button data-goto="profile">
-            My Profile
-        </button>
-
-    </div>
-
-
-
-<div class="footer-bottom">
-
-    <span>
-        © 2026 ReSource. All rights reserved.
-    </span>
-
-    <span>
-        Made for TIPians • A Secure Student Marketplace
-    </span>
-
-</div>
-
-
-</footer>
-
-<div class="terms-modal hidden" id="terms-modal" role="dialog" aria-modal="true" aria-labelledby="terms-title">
-    <div class="terms-modal-card">
-        <div class="terms-modal-header">
-            <h2 id="terms-title">ReSource Terms and Conditions</h2>
-            <button type="button" class="terms-close-btn" id="close-terms-btn" aria-label="Close terms and conditions">×</button>
-        </div>
-        <div class="terms-modal-body">
-            <p>By creating an account, you confirm that you are a currently enrolled TIP student and that the information you provide is accurate.</p>
-            <p>Use ReSource only for lawful, campus-related buying, selling, exchanging, and communication. Listings must be truthful and must not contain prohibited, unsafe, or misleading items or content.</p>
-            <p>Users are responsible for communicating respectfully, verifying listing details, and arranging transactions safely. ReSource is a student marketplace and does not guarantee the quality, availability, or condition of items offered by users.</p>
-            <p>Accounts may be restricted for misuse, false information, harassment, scams, or violations of these terms.</p>
-        </div>
-        <button type="button" class="btn btn-black terms-done-btn" id="terms-done-btn">I Understand</button>
-    </div>
-</div>
-
-<div
-    class="image-lightbox hidden"
-    id="image-lightbox"
-    role="dialog"
-    aria-modal="true"
-    aria-label="Image preview">
-    <div class="image-lightbox-content">
-        <button
-            type="button"
-            class="image-lightbox-close"
-            id="image-lightbox-close"
-            aria-label="Close image preview">
-            
-        </button>
-        <img id="image-lightbox-image" src="" alt="">
-        <p id="image-lightbox-caption"></p>
-    </div>
-</div>
-
-<input
- type="file"
- id="hidden-attach-input"
- accept="image/*"
- hidden>
-
-<div
-    id="toast-container"
-    class="toast-container">
-</div>
-
-<script src="script.js?v=<?= filemtime(__DIR__ . '/script.js') ?>"></script>
+    <script src="script.js?v=<?= filemtime(__DIR__ . '/script.js') ?>"></script>
 
 </body>
+
 </html>
