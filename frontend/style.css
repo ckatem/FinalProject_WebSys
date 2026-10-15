@@ -129,7 +129,7 @@ PRELOADER
 }
 
 .loader-line {
-    width: 80px; 
+    width: 80px;
     height: 4px;
 
     margin: 14px auto 8px;
@@ -486,31 +486,14 @@ SIDEBAR
         transform .18s ease;
 }
 
-/* Navigation icons */
-.nav-item .nav-icon {
+.nav-item span {
     width: 20px;
-    min-width: 20px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+
+    text-align: center;
+
     font-size: 16px;
+
     color: #888;
-}
-
-.nav-item .nav-icon i {
-    display: inline-block;
-    font-size: 18px;
-    line-height: 1;
-    color: #1d2b42;
-}
-
-/* Active navigation icon */
-.nav-item.active .nav-icon {
-    color: var(--black);
-}
-
-.nav-item.active .nav-icon i {
-    color: var(--black);
 }
 
 .nav-item:hover {
@@ -1046,18 +1029,11 @@ BUTTONS
 }
 
 .btn-dark,
-.btn-black,
-.btn-primary {
+.btn-black {
     background:
         var(--black);
 
     color: white;
-}
-
-.btn-secondary {
-    background: #ececec;
-    color: var(--black);
-    border: 1px solid #d7d7d7;
 }
 
 .btn-outline {
@@ -1474,31 +1450,6 @@ EMPTY STATES
 AUTH
 ========================= */
 
-#page-login {
-    position: relative;
-    padding-top: 0;
-}
-
-#page-login::before {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 34px;
-    background: rgba(246, 168, 180, .72);
-    border-bottom: 1px solid rgba(0, 0, 0, .06);
-    margin-bottom: 18px;
-}
-
-#page-login::after {
-    content: "";
-    display: block;
-    width: 100%;
-    height: 34px;
-    background: rgba(218, 218, 218, .8);
-    border-top: 1px solid rgba(0, 0, 0, .08);
-    margin-top: 18px;
-}
-
 .split-card {
     display: flex;
 
@@ -1507,10 +1458,6 @@ AUTH
     padding: 0;
 
     overflow: hidden;
-
-    max-width: 1280px;
-    width: min(100%, 1280px);
-    margin: 0 auto;
 }
 
 .split-left,
@@ -1705,12 +1652,71 @@ AUTH
     background: white;
 
     overflow-y: auto;
-    align-items: center;
 }
 
-#page-login .split-right > * {
+#login-verification-box {
     width: 100%;
-    max-width: 470px;
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#page-login.verification-only > .breadcrumb,
+#page-login.verification-only .split-right > :not(#login-verification-box) {
+    display: none;
+}
+
+body:has(#page-login.verification-only) .site-header,
+body:has(#page-login.verification-only) footer {
+    display: none;
+}
+
+#page-login.verification-only .split-card {
+    flex-direction: row;
+    min-height: 520px;
+    padding: 0;
+}
+
+#page-login.verification-only .split-right {
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 32px;
+}
+
+#login-verification-box h3 {
+    margin: 0 0 10px;
+    font-size: 21px;
+    line-height: 1.3;
+}
+
+#login-verification-box > p {
+    max-width: 56ch;
+    margin: 0 0 18px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+#verification-form .field-label {
+    margin: 0 0 8px;
+}
+
+#verification-form .input-with-icon {
+    min-height: 48px;
+    margin-bottom: 14px;
+}
+
+.verification-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.verification-actions .btn {
+    min-width: 145px;
+    min-height: 44px;
 }
 
 .brand-lockup-box {
@@ -1762,88 +1768,6 @@ AUTH
         #f2f2f2;
 
     border-radius: 999px;
-}
-
-#login-form,
-#signup-form,
-#login-verification-box,
-#signup-verification-box,
-#forgot-password-box,
-#reset-password-box {
-    width: 100%;
-    max-width: 420px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin: 0 auto;
-}
-
-#login-verification-box,
-#signup-verification-box,
-#forgot-password-box,
-#reset-password-box {
-    padding: 26px 24px 22px;
-    background: linear-gradient(180deg, #ffffff 0%, #faf8f4 100%);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 18px;
-    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.08);
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    width: min(100%, 470px);
-}
-
-#login-verification-box form,
-#signup-verification-box form,
-#forgot-password-box form,
-#reset-password-box form {
-    width: 100%;
-    text-align: left;
-}
-
-.verification-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 10px;
-}
-
-.verification-actions .btn {
-    flex: 1;
-    min-width: 0;
-}
-
-#login-verification-box h3,
-#signup-verification-box h3,
-#forgot-password-box h3,
-#reset-password-box h3 {
-    margin: 0;
-    font-size: 31px;
-    letter-spacing: -.5px;
-    color: var(--black);
-}
-
-#login-verification-box p,
-#signup-verification-box p,
-#forgot-password-box p,
-#reset-password-box p {
-    margin: 0;
-    color: #666;
-    font-size: 12px;
-    line-height: 1.7;
-}
-
-#login-verification-box .btn,
-#signup-verification-box .btn,
-#forgot-password-box .btn,
-#reset-password-box .btn {
-    width: auto;
-}
-
-#login-verification-box .btn-primary,
-#signup-verification-box .btn-primary,
-#forgot-password-box .btn-black,
-#reset-password-box .btn-black {
-    margin-top: 4px;
 }
 
 .toggle-btn {
@@ -2956,6 +2880,24 @@ PROFILE
         #1e7d1e;
 }
 
+.status.pending {
+    background: #fff4d3;
+    color: #9a6800;
+}
+
+.status.rejected {
+    background: #fcecec;
+    color: #a52a2a;
+}
+
+.listing-rejection-reason {
+    margin: 0;
+    padding: 0 10px 10px;
+    color: #a52a2a;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
 
 /* =========================
 MESSAGING
@@ -3595,6 +3537,15 @@ RESPONSIVE
         flex-direction: column;
     }
 
+    #page-login.verification-only .split-card {
+        flex-direction: row;
+    }
+
+    #page-login.verification-only .split-left {
+        border-right: 1px solid #ddd;
+        border-bottom: 0;
+    }
+
     .split-left {
         border-right: none;
 
@@ -3634,6 +3585,15 @@ RESPONSIVE
 
 
 @media (max-width: 700px) {
+
+    #page-login.verification-only .split-card {
+        flex-direction: column;
+    }
+
+    #page-login.verification-only .split-left {
+        border-right: 0;
+        border-bottom: 1px solid #ddd;
+    }
 
     .site-header {
         height: 68px;
@@ -3681,6 +3641,10 @@ RESPONSIVE
     .card {
         padding:
             18px;
+    }
+
+    #page-login.verification-only .split-card {
+        padding: 0;
     }
 
     .topbar {
@@ -3768,6 +3732,14 @@ RESPONSIVE
 
 @media (max-width: 480px) {
 
+    #page-login.verification-only .split-card {
+        min-height: 440px;
+    }
+
+    #page-login.verification-only .split-right {
+        padding: 36px 24px;
+    }
+
     .header-login-btn {
         display: none;
     }
@@ -3800,6 +3772,15 @@ RESPONSIVE
     .split-right {
         padding:
             35px 20px;
+    }
+
+    .verification-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .verification-actions .btn {
+        width: 100%;
     }
 
     .hero-visual {
@@ -5138,30 +5119,4 @@ body.image-viewer-open {
 
 .hidden {
     display: none !important;
-}
-
-@media (min-width: 701px) {
-    .menu-toggle-btn,
-    .sidebar-close-btn {
-        display: none;
-    }
-
-    .sidebar {
-        position: relative;
-        top: auto;
-        bottom: auto;
-        left: auto;
-        z-index: auto;
-        width: 230px;
-        overflow: hidden;
-        border-right: 1px solid rgba(0, 0, 0, .09);
-        box-shadow: none;
-        transform: none;
-        visibility: visible;
-        transition: none;
-    }
-
-    .sidebar-overlay {
-        display: none;
-    }
 }
