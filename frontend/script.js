@@ -123,6 +123,35 @@ function saveListings(listings) {
 writeStorage(STORAGE.listings, listings);
 }
 
+async function syncRemoteListings() {
+    try {
+        const response = await fetch("../backend/php/listings/get.php", {
+            headers: { Accept: "application/json" }
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success || !Array.isArray(result.listings)) return;
+
+        const remoteListings = result.listings.map(listing => ({
+            ...listing,
+            id: String(listing.id),
+            sellerId: String(listing.sellerId ?? listing.seller_id),
+            sellerName: listing.sellerName || listing.seller_name || "TIPian",
+            courseCode: listing.courseCode || listing.course_code || "",
+            condition: listing.condition || listing.item_condition || "",
+            price: Number(listing.price || 0),
+            image: mediaUrl(listing.image) || FALLBACK_IMAGE,
+            images: (listing.images || []).map(mediaUrl),
+            createdAt: listing.createdAt || listing.created_at,
+            status: listing.status || "active"
+        }));
+        const remoteIds = new Set(remoteListings.map(listing => listing.id));
+        const localListings = getListings().filter(listing => !remoteIds.has(String(listing.id)));
+
+        saveListings([...localListings, ...remoteListings]);
+        renderAll();
+    } catch {}
+}
+
 function sanitizeBlockedListings() {
 
 const blockedNames = new Set([
@@ -421,6 +450,10 @@ $$(".header-nav-link").forEach(item => {
 
 target.classList.add("active");
 
+const currentUrl = new URL(window.location.href);
+currentUrl.searchParams.set("page", pageKey);
+window.history.replaceState({}, "", currentUrl);
+
 
 const nav =
     $(`.nav-item[data-page="${pageKey}"]`);
@@ -456,8 +489,11 @@ if (pageKey === "create")
 if (pageKey === "profile")
     renderProfile();
 
-if (pageKey === "messaging")
+if (pageKey === "messaging") {
+    remoteMessagesLoaded = false;
+    refreshRemoteMessages(true);
     renderMessaging();
+}
 
 
 window.scrollTo({
@@ -468,20 +504,13 @@ window.scrollTo({
 
 }
 
-function showAuthenticatedDashboard() {
-    const dashboardUrl = new URL(window.location.href);
-    dashboardUrl.searchParams.set("page", "dashboard");
-    window.history.replaceState(null, "", dashboardUrl);
-    renderTopHeader();
-    goToPage("dashboard");
-}
-
 /* ==========================================================
 AUTHENTICATION
 ========================================================== */
 
 function switchAuthTab(tab) {
 
+$("#page-login").classList.remove("verification-only");
 
 const loginTab =
     $("#tab-login");
@@ -495,19 +524,6 @@ const loginForm =
 const signupForm =
     $("#signup-form");
 
-const loginVerificationBox =
-    $("#login-verification-box");
-
-const signupVerificationBox =
-    $("#signup-verification-box");
-
-if (loginVerificationBox) {
-    loginVerificationBox.classList.add("hidden");
-}
-
-if (signupVerificationBox) {
-    signupVerificationBox.classList.add("hidden");
-}
 
 if (tab === "signup") {
 
@@ -531,70 +547,6 @@ if (tab === "signup") {
 
 }
 
-
-}
-
-function showLoginVerificationState() {
-
-    const pageLogin = $("#page-login");
-    const loginForm = $("#login-form");
-    const loginVerificationBox = $("#login-verification-box");
-
-    if (pageLogin) {
-        pageLogin.classList.add("active");
-    }
-
-    if (loginForm) {
-        loginForm.classList.add("hidden");
-    }
-
-    if (loginVerificationBox) {
-        loginVerificationBox.classList.remove("hidden");
-    }
-
-    $("#signup-form")?.classList.add("hidden");
-    $("#signup-verification-box")?.classList.add("hidden");
-    $("#forgot-password-box")?.classList.add("hidden");
-    $("#reset-password-box")?.classList.add("hidden");
-
-    const verificationCode = $("#verification-code");
-
-    if (verificationCode) {
-        verificationCode.value = "";
-        verificationCode.focus();
-    }
-
-}
-
-function showSignupVerificationState() {
-
-    const pageLogin = $("#page-login");
-    const signupForm = $("#signup-form");
-    const signupVerificationBox = $("#signup-verification-box");
-
-    if (pageLogin) {
-        pageLogin.classList.add("active");
-    }
-
-    if (signupForm) {
-        signupForm.classList.add("hidden");
-    }
-
-    if (signupVerificationBox) {
-        signupVerificationBox.classList.remove("hidden");
-    }
-
-    $("#login-form")?.classList.add("hidden");
-    $("#login-verification-box")?.classList.add("hidden");
-    $("#forgot-password-box")?.classList.add("hidden");
-    $("#reset-password-box")?.classList.add("hidden");
-
-    const verificationCode = $("#signup-verification-code");
-
-    if (verificationCode) {
-        verificationCode.value = "";
-        verificationCode.focus();
-    }
 
 }
 
@@ -678,7 +630,7 @@ const score = Number(rating.score);
 return {
     score: Number.isFinite(score) && score > 0
         ? score.toFixed(1)
-        : "5.0",
+        : null,
     count: Math.max(0, Number(rating.count) || 0)
 };
 
@@ -688,6 +640,10 @@ function formatRating(user, role, compact = false) {
 
 const rating = getRatingSummary(user, role);
 const label = role === "seller" ? "Seller" : "Buyer";
+
+if (rating.score === null) {
+    return "No ratings yet";
+}
 
 return compact
     ? `★ ${rating.score} ${label}`
@@ -918,7 +874,7 @@ $("#welcome-sub").textContent =
 
 const listings =
     [...getListings()]
-        .filter(item => item.status !== "sold")
+        .filter(item => item.status === "active")
         .sort(
             (a, b) =>
                 new Date(b.createdAt) -
@@ -1188,7 +1144,7 @@ listings =
             searchable.includes(query);
 
 
-        return item.status !== "sold"
+        return item.status === "active"
 
             && matchesQuery
 
@@ -1354,7 +1310,7 @@ return getUserCart(user.id)
     }))
     .filter(({ entry, listing }) =>
         listing &&
-        listing.status !== "sold" &&
+        listing.status === "active" &&
         listing.sellerId !== user.id &&
         Number(entry.quantity) > 0
     );
@@ -1368,7 +1324,7 @@ if (!requireLogin()) return;
 const user = getCurrentUser();
 const listing = getListings().find(item => item.id === listingId);
 
-if (!listing || listing.status === "sold") {
+if (!listing || listing.status !== "active") {
     toast("This listing is no longer available.", "error");
     renderListingDetail();
     return;
@@ -1748,7 +1704,7 @@ content.classList.remove("hidden");
 const listings = new Map(getListings().map(listing => [listing.id, listing]));
 const rows = getUserSaved(user.id)
     .map(entry => ({ entry, listing: listings.get(entry.listingId) }))
-    .filter(({ listing }) => listing && listing.status !== "sold");
+    .filter(({ listing }) => listing && listing.status === "active");
 
 if (!rows.length) {
     grid.innerHTML = `
@@ -1813,7 +1769,7 @@ const listing = listings[index];
 if (!seller || !listing || listing.sellerId !== seller.id || listing.status === "sold") return;
 
 const buyerEmail = prompt(
-    "After the handoff, enter the buyer's TIP email to record this exchange and enable ratings:"
+    "After the handoff, enter the buyer's TIP email used in the listing conversation to record the exchange and enable ratings:"
 );
 
 if (buyerEmail === null) return;
@@ -1893,9 +1849,17 @@ purchases.push({
 saveListings(listings);
 savePurchases(purchases);
 renderAll();
-goToPage("profile");
-showProfileTab("sold");
-toast("Exchange recorded and added to the buyer's Purchase History.");
+if (databaseBacked) {
+    selectedConversationUserId = String(buyer.id);
+    selectedConversationListingId = String(listing.id);
+    remoteMessagesLoaded = false;
+    goToPage("messaging");
+    toast("Exchange recorded. The buyer can rate you in this conversation.");
+} else {
+    goToPage("profile");
+    showProfileTab("sold");
+    toast("Exchange recorded and added to the buyer's Purchase History.");
+}
 
 }
 
@@ -1952,6 +1916,9 @@ const isOwner =
 
 
 const isSold = listing.status === "sold";
+const isPending = listing.status === "draft";
+const isRejected = listing.status === "hidden";
+const isAvailable = listing.status === "active";
 
 
 const savedItem = currentUser
@@ -2046,9 +2013,31 @@ $("#detail-seller-avatar").innerHTML =
 $("#detail-seller-rating").textContent =
     formatRating(seller, "seller");
 
+const detailListingId = listing.id;
+fetch(`../backend/php/users/ratings.php?user_id=${encodeURIComponent(listing.sellerId)}`, {
+    headers: { Accept: "application/json" }
+})
+    .then(response => response.json())
+    .then(result => {
+        if (
+            !result.success ||
+            localStorage.getItem("resource_selected_listing") !== detailListingId
+        ) return;
+
+        const count = Number(result.rating_count) || 0;
+        $("#detail-seller-rating").textContent = count
+            ? `★ ${Number(result.average_rating).toFixed(1)} / 5 · ${count} ${count === 1 ? "rating" : "ratings"}`
+            : "No ratings yet";
+    })
+    .catch(() => {});
+
 
 $("#detail-seller-active").textContent =
-    isSold
+    isRejected
+        ? `Rejected by admin. Reason: ${listing.rejection_reason || "No reason provided."}`
+        : isPending
+        ? "Awaiting admin approval"
+        : isSold
 
         ? "This item has been sold"
 
@@ -2061,7 +2050,11 @@ $("#detail-seller-active").textContent =
 
 
 $("#save-item-btn").textContent =
-    isSold
+    isRejected
+        ? "Rejected"
+        : isPending
+        ? "Pending Review"
+        : isSold
         ? "Sold"
         : isOwner
             ? "Your Listing"
@@ -2072,19 +2065,19 @@ $("#save-item-btn").textContent =
 
 $("#save-item-btn").disabled =
     !!isOwner ||
-    isSold;
+    !isAvailable;
 
 
 $("#mark-sold-btn")
     .classList.toggle(
         "hidden",
-        !isOwner || isSold
+        !isOwner || !isAvailable
     );
 
 
 $("#mark-sold-btn").disabled =
     !isOwner ||
-    isSold;
+    !isAvailable;
 
 
 $("#delete-listing-btn")
@@ -2101,7 +2094,7 @@ $("#delete-listing-btn")
 
 $("#message-seller-btn").disabled =
     !!isOwner ||
-    isSold;
+    !isAvailable;
 
 
 const images =
@@ -2516,21 +2509,29 @@ async function renderProfileRatings(profileUserId, isOwnProfile) {
 
         const eligiblePurchases = result.eligible_purchases || [];
         const canRate = eligiblePurchases.length > 0;
+        form.reset();
+        $("#profile-rating-stars").dataset.rating = "0";
         form.classList.toggle("hidden", isOwnProfile);
         eligibilityMessage.classList.toggle("hidden", canRate || isOwnProfile);
         eligibilityMessage.textContent = canRate
             ? ""
             : "After you complete the handoff, ask the seller to mark the listing sold and enter your TIP email. This records the exchange; payment happens outside ReSource.";
-        $$("select, input[type=radio], button", form).forEach(control => {
+        $$("select, button", form).forEach(control => {
             control.disabled = !canRate;
         });
-        $("#profile-rating-stars").dataset.rating = "0";
+        $$("input[type=radio]", form).forEach(control => {
+            control.disabled = false;
+        });
         $("#rating-purchase-select").innerHTML = eligiblePurchases.length
             ? '<option value="" selected disabled>Choose a recorded exchange</option>' +
                 eligiblePurchases.map(purchase =>
                     `<option value="${Number(purchase.id)}">${escapeHTML(purchase.title)} · ${escapeHTML(formatDate(purchase.purchased_at))}</option>`
                 ).join("")
             : '<option value="">No exchange recorded yet</option>';
+        const requestedPurchaseId = localStorage.getItem("resource_rating_purchase");
+        if (eligiblePurchases.some(purchase => String(purchase.id) === requestedPurchaseId)) {
+            $("#rating-purchase-select").value = requestedPurchaseId;
+        }
 
     } catch (error) {
         summary.textContent = "Ratings are temporarily unavailable.";
@@ -2634,11 +2635,17 @@ listings.forEach(listing => {
                 ${peso(listing.price)}
             </span>
 
-            <span class="status active">
-                Active
+            <span class="status ${listing.status === "draft" ? "pending" : listing.status === "hidden" ? "rejected" : escapeHTML(listing.status || "active")}">
+                ${listing.status === "draft" ? "Pending review" : listing.status === "hidden" ? "Rejected" : "Active"}
             </span>
 
         </div>
+
+        ${listing.status === "hidden" && listing.rejection_reason ? `
+            <p class="listing-rejection-reason">
+                Reason: ${escapeHTML(listing.rejection_reason)}
+            </p>
+        ` : ""}
 
     `;
 
@@ -2802,6 +2809,75 @@ MESSAGING
 
 let selectedConversationUserId =
 null;
+let selectedConversationListingId = null;
+
+let remoteMessagesLoaded = false;
+let remoteMessagesLoading = false;
+let remoteMessagesRefreshRequested = false;
+
+async function refreshRemoteMessages(force = false) {
+    if (!getCurrentUser() || (remoteMessagesLoaded && !force)) return;
+    if (remoteMessagesLoading) {
+        remoteMessagesRefreshRequested ||= force;
+        return;
+    }
+
+    remoteMessagesLoading = true;
+    try {
+        const response = await fetch("../backend/php/messages/conversations.php", {
+            headers: { Accept: "application/json" }
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success || !Array.isArray(result.users)) return;
+
+        const remoteUsers = result.users.map(user => ({
+            id: String(user.id),
+            firstName: user.first_name || "",
+            middleName: user.middle_name || "",
+            lastName: user.last_name || "",
+            course: user.course || "",
+            campus: user.campus || "",
+            profilePhoto: mediaUrl(user.profile_photo || "")
+        }));
+        const usersById = new Map(getUsers().map(user => [String(user.id), user]));
+        remoteUsers.forEach(user => {
+            usersById.set(user.id, { ...usersById.get(user.id), ...user });
+        });
+        saveUsers([...usersById.values()]);
+
+        const messagesByPartner = await Promise.all(remoteUsers.map(async partner => {
+            const messageResponse = await fetch(
+                `../backend/php/messages/get.php?partner_id=${encodeURIComponent(partner.id)}`,
+                { headers: { Accept: "application/json" } }
+            );
+            const messageResult = await messageResponse.json();
+            if (!messageResponse.ok || !messageResult.success) return [];
+
+            return (messageResult.messages || []).map(message => ({
+                id: `server_${message.id}`,
+                serverMessageId: String(message.id),
+                senderId: String(message.sender_id),
+                receiverId: String(message.receiver_id),
+                listingId: message.listing_id ? String(message.listing_id) : null,
+                text: message.message,
+                createdAt: message.created_at
+            }));
+        }));
+
+        const localMessages = getMessages().filter(message => !message.serverMessageId);
+        saveMessages([...localMessages, ...messagesByPartner.flat()]);
+    } catch {
+    } finally {
+        remoteMessagesLoading = false;
+        remoteMessagesLoaded = true;
+        renderMessaging();
+        if (remoteMessagesRefreshRequested) {
+            remoteMessagesRefreshRequested = false;
+            remoteMessagesLoaded = false;
+            refreshRemoteMessages(true);
+        }
+    }
+}
 
 function getConversationKey(
 userA,
@@ -2817,6 +2893,17 @@ return [
     .join("__");
 
 
+}
+
+function getConversationListingId(partnerId) {
+    const currentId = getCurrentUserId();
+    return getMessages()
+        .filter(message =>
+            ((String(message.senderId) === String(currentId) && String(message.receiverId) === String(partnerId)) ||
+                (String(message.receiverId) === String(currentId) && String(message.senderId) === String(partnerId))) &&
+            message.listingId
+        )
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0]?.listingId || null;
 }
 
 function getConversationParticipants() {
@@ -3014,6 +3101,12 @@ if (!filtered.length) {
         const last =
             messages[messages.length - 1];
 
+        const lastPreview = /^\[\[RESOURCE_RATE_SELLER:\d+\]\]$/.test(last?.text || "")
+            ? String(last.receiverId) === String(current.id)
+                ? "Your exchange is complete. Rate the seller."
+                : "Exchange recorded."
+            : last?.text || "Start a conversation";
+
 
         const item =
             document.createElement("div");
@@ -3044,8 +3137,7 @@ if (!filtered.length) {
 
                 <div class="convo-preview">
                     ${escapeHTML(
-                        last?.text ||
-                        "Start a conversation"
+                        lastPreview
                     )}
                 </div>
 
@@ -3060,6 +3152,7 @@ if (!filtered.length) {
 
                 selectedConversationUserId =
                     partner.id;
+                selectedConversationListingId = getConversationListingId(partner.id);
 
                 renderMessaging();
 
@@ -3086,6 +3179,10 @@ renderChat(
     currentPartner ||
     null
 );
+
+if (!remoteMessagesLoaded && !remoteMessagesLoading) {
+    refreshRemoteMessages();
+}
 
 
 }
@@ -3126,10 +3223,15 @@ $("#chat-partner-name")
     .textContent =
     getUserDisplayName(partner);
 
+const conversationListing = getListings().find(
+    item => String(item.id) === String(selectedConversationListingId)
+);
 
 $("#chat-partner-status")
     .textContent =
-    "TIPian";
+    conversationListing
+        ? `Discussing: ${conversationListing.title}`
+        : "TIPian";
 
 
 const messages =
@@ -3211,8 +3313,22 @@ if (!messages.length) {
                     : "left"
             }`;
 
+        const ratingPrompt = message.text.match(/^\[\[RESOURCE_RATE_SELLER:(\d+)\]\]$/);
+        const isBuyerPrompt = ratingPrompt &&
+            String(message.receiverId) === String(current.id) &&
+            String(message.senderId) === String(partner.id);
 
-        row.innerHTML = `
+        row.innerHTML = ratingPrompt
+            ? `
+                <div class="msg-bubble ${mine ? "yellow" : "gray"}">
+                    ${isBuyerPrompt
+                        ? `Your exchange is complete. How was your purchase from ${escapeHTML(getUserDisplayName(partner))}?
+                            <button type="button" class="btn btn-yellow" data-rate-seller="${escapeHTML(partner.id)}" data-rate-buyer="${escapeHTML(current.id)}" data-rate-purchase="${ratingPrompt[1]}">Rate seller</button>`
+                        : "Exchange recorded."}
+                </div>
+                <div class="msg-time">${formatTime(message.createdAt)}</div>
+            `
+            : `
 
             <div
                 class="msg-bubble ${
@@ -3251,7 +3367,7 @@ if (!messages.length) {
 
 }
 
-function openConversationWith(userId) {
+function openConversationWith(userId, listingId = null) {
 
 
 if (!requireLogin()) return;
@@ -3274,6 +3390,7 @@ if (
 
 selectedConversationUserId =
     userId;
+selectedConversationListingId = listingId || getConversationListingId(userId);
 
 
 goToPage("messaging");
@@ -3321,9 +3438,15 @@ document.addEventListener(
     sanitizeBlockedListings();
     renderAll();
     const requestedPage = new URLSearchParams(window.location.search).get("page");
-    if (["dashboard", "browse", "saved", "listing", "create", "messaging", "profile"].includes(requestedPage)) {
+    const availablePages = ["login", "dashboard", "browse", "saved", "listing", "create", "messaging", "profile"];
+    if (availablePages.includes(requestedPage)) {
         goToPage(requestedPage);
+    } else if (getCurrentUser()) {
+        goToPage("dashboard");
+    } else {
+        goToPage("login");
     }
+    syncRemoteListings();
 
     /* SIDEBAR NAVIGATION */
 
@@ -3523,6 +3646,11 @@ document.addEventListener(
                 switchAuthTab("signup")
         );
 
+    $("#back-to-login-btn").addEventListener("click", () => {
+        $("#login-verification-box").classList.add("hidden");
+        switchAuthTab("login");
+    });
+
 
     /* TERMS AND CONDITIONS */
 
@@ -3693,7 +3821,14 @@ document.addEventListener(
 
    if (result.requires_2fa) {
 
-    showLoginVerificationState();
+    $("#login-form").classList.add("hidden");
+
+    $("#login-verification-box").classList.remove("hidden");
+    $("#page-login").classList.add("verification-only");
+
+    $("#verification-code").value = "";
+
+    $("#verification-code").focus();
 
     toast(
         "Verification code is being sent to your TIP email."
@@ -3775,7 +3910,7 @@ if (result.user) {
 
     } else {
 
-        showAuthenticatedDashboard();
+        goToPage("dashboard");
 
     }
 
@@ -3972,7 +4107,14 @@ if (result.user) {
 
     if (result.requires_2fa) {
 
-        showSignupVerificationState();
+        $("#signup-form").classList.add("hidden");
+
+        $("#signup-verification-box")
+            .classList.remove("hidden");
+
+        $("#signup-verification-code").value = "";
+
+        $("#signup-verification-code").focus();
 
         toast(
             "Verification code is being sent to your TIP email."
@@ -3996,25 +4138,9 @@ if (result.user) {
         $("#reset-request-email").focus();
     });
 
-    $("#back-to-login-btn").addEventListener("click", () => {
-        $("#login-verification-box").classList.add("hidden");
-        $("#login-form").classList.remove("hidden");
-        $("#page-login").classList.add("active");
-        switchAuthTab("login");
-    });
-
-    $("#signup-back-to-login-btn").addEventListener("click", () => {
-        $("#signup-verification-box").classList.add("hidden");
-        $("#signup-form").classList.add("hidden");
-        $("#login-form").classList.remove("hidden");
-        $("#page-login").classList.add("active");
-        switchAuthTab("login");
-    });
-
     $("#back-to-login-from-reset-btn").addEventListener("click", () => {
         $("#forgot-password-box").classList.add("hidden");
         $("#login-form").classList.remove("hidden");
-        $("#page-login").classList.add("active");
     });
 
     $("#back-to-reset-request-btn").addEventListener("click", () => {
@@ -4209,7 +4335,8 @@ if (result.user) {
 
 
                 openConversationWith(
-                    listing.sellerId
+                    listing.sellerId,
+                    listing.id
                 );
 
             }
@@ -4553,7 +4680,7 @@ if (result.user) {
                             ? result.images.slice(0, 3).map(mediaUrl)
                             : [FALLBACK_IMAGE],
 
-                    status: "active",
+                    status: result.status || "draft",
 
                     createdAt:
                         new Date()
@@ -4576,14 +4703,8 @@ if (result.user) {
                 );
 
 
-                localStorage.setItem(
-                    "resource_selected_listing",
-                    listing.id
-                );
-
-
                 toast(
-                    "Listing published successfully!"
+                    "Listing submitted for admin approval."
                 );
 
 
@@ -4591,7 +4712,8 @@ if (result.user) {
 
                 renderAll();
 
-                goToPage("listing");
+                goToPage("profile");
+                showProfileTab("listings");
 
             }
         );
@@ -4815,6 +4937,7 @@ if (result.user) {
 
             event.target.reset();
             $("#profile-rating-stars").dataset.rating = "0";
+            localStorage.removeItem("resource_rating_purchase");
             await renderProfileRatings(revieweeId, false);
             toast(result.message || "Rating submitted.");
         } catch (error) {
@@ -4962,11 +5085,20 @@ if (result.user) {
             renderMessaging
         );
 
+    $("#chat-body").addEventListener("click", event => {
+        const rateButton = event.target.closest("[data-rate-seller]");
+        if (!rateButton || rateButton.dataset.rateBuyer !== getCurrentUserId()) return;
+
+        localStorage.setItem("resource_profile_user", rateButton.dataset.rateSeller);
+        localStorage.setItem("resource_rating_purchase", rateButton.dataset.ratePurchase);
+        goToPage("profile");
+    });
+
 
     $("#chat-form")
         .addEventListener(
             "submit",
-            event => {
+            async event => {
 
                 event.preventDefault();
 
@@ -5000,6 +5132,32 @@ if (result.user) {
 
                 if (!text) return;
 
+                let serverMessageId = null;
+                const databaseConversation = /^\d+$/.test(String(current.id)) &&
+                    /^\d+$/.test(String(selectedConversationUserId));
+                if (databaseConversation) {
+                    try {
+                        const response = await fetch("../backend/php/messages/send.php", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                            body: new URLSearchParams({
+                                receiver_id: selectedConversationUserId,
+                                listing_id: selectedConversationListingId || "",
+                                message: text
+                            })
+                        });
+                        const result = await response.json();
+                        if (!response.ok || !result.success) {
+                            toast(result.message || "Unable to send the message.", "error");
+                            return;
+                        }
+                        serverMessageId = String(result.message_id);
+                    } catch {
+                        toast("The server is unavailable. Please try again.", "error");
+                        return;
+                    }
+                }
+
 
                 const messages =
                     getMessages();
@@ -5008,7 +5166,9 @@ if (result.user) {
                 messages.push({
 
                     id:
-                        createId("message"),
+                        serverMessageId ? `server_${serverMessageId}` : createId("message"),
+
+                    serverMessageId,
 
                     conversationId:
                         getConversationKey(
@@ -5021,6 +5181,9 @@ if (result.user) {
 
                     receiverId:
                         selectedConversationUserId,
+
+                    listingId:
+                        selectedConversationListingId,
 
                     text,
 
@@ -5039,7 +5202,12 @@ if (result.user) {
                 input.value = "";
 
 
-                renderMessaging();
+                if (serverMessageId) {
+                    remoteMessagesLoaded = false;
+                    await refreshRemoteMessages(true);
+                } else {
+                    renderMessaging();
+                }
 
 
                 $("#chat-body")
@@ -5411,7 +5579,7 @@ $("#verification-form").addEventListener("submit", async event => {
 
     } else {
 
-        showAuthenticatedDashboard();
+        goToPage("dashboard");
 
     }
 
@@ -5600,7 +5768,7 @@ $("#signup-verification-form").addEventListener("submit", async event => {
        GO TO DASHBOARD
        ========================= */
 
-    showAuthenticatedDashboard();
+    goToPage("dashboard");
 
 });
 
