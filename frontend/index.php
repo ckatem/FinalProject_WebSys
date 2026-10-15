@@ -12,6 +12,13 @@
         content="ReSource is a campus marketplace for TIP students to buy, sell, save, and connect.">
     <meta name="theme-color" content="#f6b429">
 
+    <link rel="stylesheet"
+        href="https://cdn-uicons.flaticon.com/uicons-solid-rounded/css/uicons-solid-rounded.css">
+    <link rel="stylesheet"
+        href="https://cdn-uicons.flaticon.com/uicons-solid-straight/css/uicons-solid-straight.css">
+    <link rel="stylesheet"
+        href="https://cdn-uicons.flaticon.com/uicons-bold-rounded/css/uicons-bold-rounded.css">
+
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Merriweather:wght@300;400;700&display=swap"
         rel="stylesheet">
@@ -84,12 +91,7 @@
             </button>
 
             <button class="header-profile-btn header-control-btn" id="top-profile-btn" type="button">
-                <span class="profile-button-avatar" aria-hidden="true">
-                    <svg viewBox="0 0 24 24" focusable="false">
-                        <circle cx="12" cy="8" r="3.5"></circle>
-                        <path d="M5.5 20c.5-3.7 2.7-5.5 6.5-5.5s6 1.8 6.5 5.5"></path>
-                    </svg>
-                </span>
+                <span class="profile-button-avatar" aria-hidden="true">👤</span>
                 <span>Profile</span>
             </button>
 
@@ -126,29 +128,35 @@
             <nav class="nav">
 
                 <a href="#" class="nav-item" data-page="dashboard">
-                    Homepage / Dashboard
+                    <i class="fi fi-sr-home nav-home-icon" aria-hidden="true"></i>
+                    <span class="dashboard-nav-label">Homepage / Dashboard</span>
                 </a>
 
 
                 <a href="#" class="nav-item" data-page="browse">
-                    Browse / Search
+                    <i class="fi fi-br-search nav-search-icon" aria-hidden="true"></i>
+                    <span class="browse-nav-label">Browse / Search</span>
                 </a>
 
                 <a href="#" class="nav-item" data-page="saved">
-                    Saved Items
+                    <i class="fi fi-sr-bookmark nav-saved-icon" aria-hidden="true"></i>
+                    <span class="saved-nav-label">Saved Items</span>
                     <span class="nav-count hidden" id="nav-saved-count">0</span>
                 </a>
 
                 <a href="#" class="nav-item" data-page="listing">
-                    Listings
+                    <i class="fi fi-sr-list-dropdown nav-listing-icon" aria-hidden="true"></i>
+                    <span class="listing-nav-label">Listings</span>
                 </a>
 
                 <a href="#" class="nav-item" data-page="create">
-                    Create Listing
+                    <i class="fi fi-sr-multiple fi-sr-layer-plus nav-create-icon" aria-hidden="true"></i>
+                    <span class="create-nav-label">Create Listing</span>
                 </a>
 
                 <a href="#" class="nav-item" data-page="messaging">
-                    Messaging
+                    <i class="fi fi-ss-comment-dots nav-messaging-icon" aria-hidden="true"></i>
+                    <span class="messaging-nav-label">Messaging</span>
                 </a>
 
                 <a href="admin-dashboard.php#reports" class="nav-item hidden" id="admin-reports-nav"
@@ -292,7 +300,9 @@
 
                         <div class="category-item" data-category="Books" data-goto="browse">
 
-                            <div class="cat-icon">📖</div>
+                            <div class="cat-icon">
+                                <i class="fi fi-ss-book-alt" aria-hidden="true"></i>
+                            </div>
 
                             <div class="cat-text">
                                 <div class="cat-name">Books</div>
@@ -308,7 +318,9 @@
 
                         <div class="category-item" data-category="Electronics" data-goto="browse">
 
-                            <div class="cat-icon">💻</div>
+                            <div class="cat-icon">
+                                <i class="fi fi-sr-computer-speaker" aria-hidden="true"></i>
+                            </div>
 
                             <div class="cat-text">
                                 <div class="cat-name">Electronics</div>
@@ -324,7 +336,9 @@
 
                         <div class="category-item" data-category="Laboratory" data-goto="browse">
 
-                            <div class="cat-icon">🔧</div>
+                            <div class="cat-icon">
+                                <i class="fi fi-sr-tools fi-sr-tool-box" aria-hidden="true"></i>
+                            </div>
 
                             <div class="cat-text">
                                 <div class="cat-name">Laboratory</div>
@@ -340,7 +354,9 @@
 
                         <div class="category-item" data-category="Uniforms" data-goto="browse">
 
-                            <div class="cat-icon">👕</div>
+                            <div class="cat-icon">
+                                <i class="fi fi-sr-vest" aria-hidden="true"></i>
+                            </div>
 
                             <div class="cat-text">
                                 <div class="cat-name">Uniforms</div>
@@ -487,34 +503,33 @@
                                 </select>
                             </div>
 
-                            <label class="field-label" for="login-email">
+                            <label class="field-label">
                                 Institutional Email <span>*</span>
                             </label>
 
                             <div class="input-with-icon">
-                                <span class="icon" aria-hidden="true">✉</span>
+                                <span class="icon"></span>
+
                                 <input type="email" id="login-email" placeholder="you@tip.edu.ph" autocomplete="email"
                                     required>
                             </div>
 
 
-                            <label class="field-label" for="login-role">Role <span>*</span></label>
-                            <div class="input-with-icon">
-                                <span class="icon" aria-hidden="true">◇</span>
-                                <select id="login-role" required>
-                                    <option value="student">Student</option>
-                                    <option value="admin">Administrator</option>
-                                </select>
-                            </div>
-
-                            <!-- ...existing code... -->
-
-                            <label class="field-label" for="login-password">
+                            <label class="field-label">
                                 Password <span>*</span>
                             </label>
+
                             <div class="input-with-icon">
-                                <!-- ...existing code... -->
-                                <input type="password" id="login-password" autocomplete="current-password" required>
+
+                                <span class="icon"></span>
+
+                                <input type="password" id="login-password" placeholder="Enter your password"
+                                    autocomplete="current-password" required>
+
+                                <button type="button" class="icon-toggle" id="toggle-password">
+                                    👁
+                                </button>
+
                             </div>
 
 
@@ -551,7 +566,7 @@
                                 </label>
 
                                 <div class="input-with-icon">
-                                    <span class="icon">✓</span>
+                                    <span class="icon"></span>
 
                                     <input type="text" id="verification-code" placeholder="Enter 6-digit code"
                                         inputmode="numeric" autocomplete="one-time-code" maxlength="6" required>
@@ -585,7 +600,7 @@
                                 </label>
 
                                 <div class="input-with-icon">
-                                    <span class="icon" aria-hidden="true">✉</span>
+                                    <span class="icon" aria-hidden="true"></span>
                                     <input type="email" id="reset-request-email" placeholder="you@tip.edu.ph"
                                         autocomplete="email" required>
                                 </div>
@@ -685,141 +700,137 @@
                                         Middle Name <span class="optional-label">(Optional)</span>
                                     </label>
 
-                                    <label class="field-label" for="signup-first-name">
-                                        First Name <span>*</span>
-                                    </label>
-                                    <input class="text-input" id="signup-first-name" type="text" placeholder="Juan"
-                                        autocomplete="given-name" required>
+                                    <input class="text-input" id="signup-middle-name" type="text" placeholder="Dela"
+                                        autocomplete="additional-name">
 
-                                    <div class="field-col">
-                                        <label class="field-label" for="signup-middle-name">
-                                            Middle Name <span class="optional-label">(Optional)</span>
-                                        </label>
-                                        <input class="text-input" id="signup-middle-name" type="text" placeholder="Dela"
-                                            autocomplete="additional-name">
-                                    </div>
+                                </div>
+
+                            </div>
 
 
-                                    <label class="field-label" for="signup-last-name">
-                                        Last Name <span>*</span>
-                                    </label>
-                                    <input class="text-input" id="signup-last-name" type="text" placeholder="Cruz"
-                                        autocomplete="family-name" required>
+                            <label class="field-label">
+                                Last Name <span>*</span>
+                            </label>
 
-                                    <label class="field-label" for="signup-student-id">
-                                        Student ID <span>*</span>
-                                    </label>
-                                    <input class="text-input" id="signup-student-id" type="text"
-                                        placeholder="Enter your TIP Student ID" autocomplete="off" minlength="5"
-                                        maxlength="20" required>
-
-                                    <p class="input-help">
-                                        Enter the student ID assigned to you by TIP.
-                                    </p>
+                            <input class="text-input" id="signup-last-name" type="text" placeholder="Cruz"
+                                autocomplete="family-name" required>
 
 
-                                    <div class="form-section-heading account-heading">
-                                        Account Information
-                                    </div>
+                            <label class="field-label">
+                                Student ID <span>*</span>
+                            </label>
+
+                            <input class="text-input" id="signup-student-id" type="text"
+                                placeholder="Enter your TIP Student ID" autocomplete="off" minlength="5" maxlength="20"
+                                required>
+
+                            <p class="input-help">
+                                Enter the student ID assigned to you by TIP.
+                            </p>
 
 
-                                    <label class="field-label">
-                                        Institutional Email <span>*</span>
-                                    </label>
-
-                                    <div class="input-with-icon">
-
-                                        <span class="icon">✉</span>
-
-                                        <input id="signup-email" class="text-input" type="email"
-                                            placeholder="you@tip.edu.ph" autocomplete="email" required>
-
-                                    </div>
+                            <div class="form-section-heading account-heading">
+                                Account Information
+                            </div>
 
 
-                                    <label class="field-label" for="signup-email">
-                                        Institutional Email <span>*</span>
-                                    </label>
+                            <label class="field-label">
+                                Institutional Email <span>*</span>
+                            </label>
 
-                                    <div class="input-with-icon">
-                                        <span class="icon" aria-hidden="true">✉</span>
-                                        <input id="signup-email" class="text-input" type="email"
-                                            placeholder="you@tip.edu.ph" autocomplete="email" required>
-                                    </div>
+                            <div class="input-with-icon">
 
+                                <span class="icon"></span>
 
-                                    <label class="field-label">
-                                        Confirm Password <span>*</span>
-                                    </label>
+                                <input id="signup-email" class="text-input" type="email" placeholder="you@tip.edu.ph"
+                                    autocomplete="email" required>
 
-                                    <div class="input-with-icon">
-
-                                        <span class="icon">🔒</span>
-
-                                        <input id="signup-password2" class="text-input" type="password"
-                                            placeholder="Confirm your password" autocomplete="new-password" required>
-
-                                    </div>
+                            </div>
 
 
-                                    <div class="form-section-heading">
-                                        Student Information
-                                    </div>
+                            <label class="field-label">
+                                Password <span>*</span>
+                            </label>
+
+                            <div class="input-with-icon">
+
+                                <span class="icon"></span>
+
+                                <input id="signup-password" class="text-input" type="password"
+                                    placeholder="Create a password" autocomplete="new-password" minlength="6" required>
+
+                            </div>
 
 
-                                    <label class="field-label">
-                                        Course / Department <span>*</span>
-                                    </label>
+                            <label class="field-label">
+                                Confirm Password <span>*</span>
+                            </label>
 
-                                    <input id="signup-course" class="text-input" type="text" placeholder="e.g. BSIT"
-                                        required>
+                            <div class="input-with-icon">
 
+                                <span class="icon"></span>
 
-                                    <label class="field-label">
-                                        Campus <span>*</span>
-                                    </label>
+                                <input id="signup-password2" class="text-input" type="password"
+                                    placeholder="Confirm your password" autocomplete="new-password" required>
 
-                                    <select id="signup-campus" class="text-input" required>
-
-                                        <option value="">
-                                            Select your campus
-                                        </option>
-
-                                        <option value="Manila">
-                                            Manila
-                                        </option>
-
-                                        <option value="Quezon City">
-                                            Quezon City
-                                        </option>
-
-                                    </select>
+                            </div>
 
 
-                                    <label class="terms-check">
-
-                                        <input type="checkbox" id="signup-terms" required>
-
-                                        <span>
-                                            I confirm that the information provided is accurate, that I am a TIP
-                                            student,
-                                            and
-                                            that I agree to the
-                                            <button type="button" class="terms-link" id="open-terms-btn">Terms and
-                                                Conditions</button>.
-                                        </span>
-
-                                    </label>
+                            <div class="form-section-heading">
+                                Student Information
+                            </div>
 
 
-                                    <button type="submit" class="btn btn-block btn-black">
-                                        Create Account
-                                    </button>
+                            <label class="field-label">
+                                Course / Department <span>*</span>
+                            </label>
+
+                            <input id="signup-course" class="text-input" type="text" placeholder="e.g. BSIT" required>
 
 
-                                    <p class="fineprint">
-                                        All fields marked with * are required.
-                                    </p>
+                            <label class="field-label">
+                                Campus <span>*</span>
+                            </label>
+
+                            <select id="signup-campus" class="text-input" required>
+
+                                <option value="">
+                                    Select your campus
+                                </option>
+
+                                <option value="Manila">
+                                    Manila
+                                </option>
+
+                                <option value="Quezon City">
+                                    Quezon City
+                                </option>
+
+                            </select>
+
+
+                            <label class="terms-check">
+
+                                <input type="checkbox" id="signup-terms" required>
+
+                                <span>
+                                    I confirm that the information provided is accurate, that I am a TIP student, and
+                                    that I agree to the
+                                    <button type="button" class="terms-link" id="open-terms-btn">Terms and
+                                        Conditions</button>.
+                                </span>
+
+                            </label>
+
+
+                            <button type="submit" class="btn btn-block btn-black">
+                                Create Account
+                            </button>
+
+
+                            <p class="fineprint">
+                                All fields marked with * are required.
+                            </p>
 
                         </form>
                         <!-- SIGN UP EMAIL VERIFICATION -->
@@ -850,21 +861,19 @@
 
                                 </div>
 
-                                <div class="verification-actions">
-                                    <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary">
 
-                                        Verify Code
+                                    Verify Code
 
-                                    </button>
-
-                                    <button type="button" id="signup-back-to-login-btn" class="btn btn-secondary">
-
-                                        Back to Login
-
-                                    </button>
-                                </div>
+                                </button>
 
                             </form>
+
+                            <button type="button" id="signup-back-to-login-btn" class="btn btn-secondary">
+
+                                Back to Login
+
+                            </button>
 
                         </div>
 
@@ -918,1051 +927,1058 @@
                     <div class="browse-layout">
 
                         <aside class="filter-panel is-collapsed" id="listing-filters"
-                            aria-labelledby="listing-filter-title">
+                            aria-labelledby="filter-panel-title">
 
+                            <div class="filter-header">
+                                <div>
+                                    <span class="filter-eyebrow">DISCOVER</span>
+                                    <h3 class="filter-title" id="filter-panel-title">
+                                        Filter Listings
+                                    </h3>
+                                </div>
+                                <!-- ...existing code... -->
+                            </div>
                             <!-- ...existing code... -->
-                            <h3 class="filter-title" id="listing-filter-title">
-                                Filter Listings
-                            </h3>
-                    </div>
+                        </aside>
+                        <div class="filter-header">
+                            <div>
+                                <span class="filter-eyebrow">
+                                    DISCOVER
+                                </span>
 
-                    <span class="filter-icon">
-                        ☷
-                    </span>
-                </div>
+                                <h3 class="filter-title">
+                                    Filter Listings
+                                </h3>
+                            </div>
 
-
-                <label class="field-label">
-                    Campus
-                </label>
-
-                <select class="filter-input" id="filter-campus">
-
-                    <option value="">Any</option>
-                    <option>Manila</option>
-                    <option>Quezon City</option>
-
-                </select>
-
-
-                <label class="field-label">
-                    Department
-                </label>
-
-                <select class="filter-input" id="filter-department">
-
-                    <option value="">Any</option>
-                    <option>BSIT</option>
-                    <option>BSCpE</option>
-                    <option>BSCE</option>
-                    <option>BSBA</option>
-                    <option>Other</option>
-
-                </select>
-
-
-                <label class="field-label">
-                    Course Code
-                </label>
-
-                <input class="filter-input" id="filter-coursecode" type="text" placeholder="e.g. IT21S2">
-
-
-                <label class="field-label">
-                    Category
-                </label>
-
-                <select class="filter-input" id="filter-category">
-
-                    <option value="">Any</option>
-                    <option>Books</option>
-                    <option>Electronics</option>
-                    <option>Laboratory</option>
-                    <option>Uniforms</option>
-                    <option>Other</option>
-
-                </select>
-
-
-                <label class="field-label">
-                    Condition
-                </label>
-
-                <select class="filter-input" id="filter-condition">
-
-                    <option value="">Any</option>
-                    <option>New</option>
-                    <option>Used - Good</option>
-                    <option>Used - Fair</option>
-
-                </select>
-
-
-                <label class="field-label">
-                    Price Range
-                </label>
-
-                <div class="price-range-row">
-
-                    <input class="filter-input" id="filter-min" type="number" min="0" placeholder="Min">
-
-                    <input class="filter-input" id="filter-max" type="number" min="0" placeholder="Max">
-
-                </div>
-
-
-                <label class="field-label">
-                    Sort
-                </label>
-
-                <select class="filter-input" id="filter-sort">
-
-                    <option value="newest">
-                        Newest
-                    </option>
-
-                    <option value="price-low">
-                        Price: Low to High
-                    </option>
-
-                    <option value="price-high">
-                        Price: High to Low
-                    </option>
-
-                    <option value="title">
-                        Title: A-Z
-                    </option>
-
-                </select>
-
-
-                <button class="btn btn-yellow btn-block" id="apply-filter-btn">
-                    Apply Filter
-                </button>
-
-                <button class="btn btn-gray btn-block filter-reset-btn" id="reset-filter-btn">
-                    Reset Filters
-                </button>
-
-                </aside>
-
-
-                <div class="results-panel">
-
-                    <div class="results-header">
-
-                        <div>
-                            <span class="results-eyebrow">
-                                CAMPUS MARKETPLACE
+                            <span class="filter-icon">
+                                ☷
                             </span>
+                        </div>
 
-                            <p class="results-count">
-                                <span id="results-count-num">0</span>
-                                Listings found
-                            </p>
+
+                        <label class="field-label">
+                            Campus
+                        </label>
+
+                        <select class="filter-input" id="filter-campus">
+
+                            <option value="">Any</option>
+                            <option>Manila</option>
+                            <option>Quezon City</option>
+
+                        </select>
+
+
+                        <label class="field-label">
+                            Department
+                        </label>
+
+                        <select class="filter-input" id="filter-department">
+
+                            <option value="">Any</option>
+                            <option>BSIT</option>
+                            <option>BSCpE</option>
+                            <option>BSCE</option>
+                            <option>BSBA</option>
+                            <option>Other</option>
+
+                        </select>
+
+
+                        <label class="field-label">
+                            Course Code
+                        </label>
+
+                        <input class="filter-input" id="filter-coursecode" type="text" placeholder="e.g. IT21S2">
+
+
+                        <label class="field-label">
+                            Category
+                        </label>
+
+                        <select class="filter-input" id="filter-category">
+
+                            <option value="">Any</option>
+                            <option>Books</option>
+                            <option>Electronics</option>
+                            <option>Laboratory</option>
+                            <option>Uniforms</option>
+                            <option>Other</option>
+
+                        </select>
+
+
+                        <label class="field-label">
+                            Condition
+                        </label>
+
+                        <select class="filter-input" id="filter-condition">
+
+                            <option value="">Any</option>
+                            <option>New</option>
+                            <option>Used - Good</option>
+                            <option>Used - Fair</option>
+
+                        </select>
+
+
+                        <label class="field-label">
+                            Price Range
+                        </label>
+
+                        <div class="price-range-row">
+
+                            <input class="filter-input" id="filter-min" type="number" min="0" placeholder="Min">
+
+                            <input class="filter-input" id="filter-max" type="number" min="0" placeholder="Max">
+
+                        </div>
+
+
+                        <label class="field-label">
+                            Sort
+                        </label>
+
+                        <select class="filter-input" id="filter-sort">
+
+                            <option value="newest">
+                                Newest
+                            </option>
+
+                            <option value="price-low">
+                                Price: Low to High
+                            </option>
+
+                            <option value="price-high">
+                                Price: High to Low
+                            </option>
+
+                            <option value="title">
+                                Title: A-Z
+                            </option>
+
+                        </select>
+
+
+                        <button class="btn btn-yellow btn-block" id="apply-filter-btn">
+                            Apply Filter
+                        </button>
+
+                        <button class="btn btn-gray btn-block filter-reset-btn" id="reset-filter-btn">
+                            Reset Filters
+                        </button>
+
+                        </aside>
+
+
+                        <div class="results-panel">
+
+                            <div class="results-header">
+
+                                <div>
+                                    <span class="results-eyebrow">
+                                        CAMPUS MARKETPLACE
+                                    </span>
+
+                                    <p class="results-count">
+                                        <span id="results-count-num">0</span>
+                                        Listings found
+                                    </p>
+                                </div>
+
+                            </div>
+
+
+                            <div class="item-grid highlight-grid" id="browse-grid">
+                            </div>
+
                         </div>
 
                     </div>
 
-
-                    <div class="item-grid highlight-grid" id="browse-grid">
-                    </div>
-
                 </div>
 
-    </div>
-
-    </div>
-
-    </section>
+            </section>
 
 
 
-    <!-- =========================
+            <!-- =========================
          SAVED ITEMS
     ========================= -->
-    <section class="page" id="page-saved">
+            <section class="page" id="page-saved">
 
-        <div class="breadcrumb">
-            MARKETPLACE / SAVED ITEMS
-        </div>
+                <div class="breadcrumb">
+                    MARKETPLACE / SAVED ITEMS
+                </div>
 
-        <div class="card">
+                <div class="card">
 
-            <div class="topbar">
-                <div class="pill-badge">SAVED ITEMS</div>
+                    <div class="topbar">
+                        <div class="pill-badge">SAVED ITEMS</div>
 
-                <button class="btn btn-pill-gray right-btn" data-goto="browse">
-                    ← Continue Browsing
-                </button>
-            </div>
+                        <button class="btn btn-pill-gray right-btn" data-goto="browse">
+                            ← Continue Browsing
+                        </button>
+                    </div>
 
-            <hr class="divider">
+                    <hr class="divider">
 
-            <div id="saved-login-warning" class="notice-box hidden">
-                <strong>Log in to see your saved items.</strong>
-                <p>Saved listings are available only in this browser.</p>
-                <button class="btn btn-black" data-goto="login">Go to Log In</button>
-            </div>
+                    <div id="saved-login-warning" class="notice-box hidden">
+                        <strong>Log in to see your saved items.</strong>
+                        <p>Saved listings are available only in this browser.</p>
+                        <button class="btn btn-black" data-goto="login">Go to Log In</button>
+                    </div>
 
-            <div id="saved-content" class="hidden">
-                <p class="saved-intro">Keep listings here to revisit them later.</p>
-                <div class="item-grid four-col saved-items-grid" id="saved-items-grid"></div>
-            </div>
+                    <div id="saved-content" class="hidden">
+                        <p class="saved-intro">Keep listings here to revisit them later.</p>
+                        <div class="item-grid four-col saved-items-grid" id="saved-items-grid"></div>
+                    </div>
 
-        </div>
+                </div>
 
-    </section>
+            </section>
 
 
-    <!-- =========================
+            <!-- =========================
          LISTINGS
     ========================= -->
-    <section class="page" id="page-listing">
+            <section class="page" id="page-listing">
 
-        <div class="breadcrumb">
-            MARKETPLACE / LISTINGS
-        </div>
-
-
-        <div class="card">
-
-            <div class="topbar">
-
-                <div class="pill-badge">
-                    LISTING
-                </div>
-
-                <button class="btn btn-pill-gray right-btn" data-goto="browse">
-                    ← Back to Browse
-                </button>
-
-            </div>
-
-
-            <hr class="divider">
-
-
-            <div id="listing-detail-empty" class="empty-state large-empty hidden">
-
-                <div class="empty-icon">
-                    ◌
-                </div>
-
-                <h3>
-                    No listing selected
-                </h3>
-
-                <p>
-                    Choose a listing from Browse / Search first.
-                </p>
-
-                <button class="btn btn-yellow" data-goto="browse">
-                    Browse Listings
-                </button>
-
-            </div>
-
-
-            <div class="listing-layout hidden" id="listing-detail-content">
-
-                <div class="listing-media">
-
-                    <div class="listing-photo-main">
-
-                        <img id="detail-image" src="" alt="Listing">
-                    </div>
-
-                    <div class="listing-thumbs" id="listing-thumbs">
-                    </div>
-
+                <div class="breadcrumb">
+                    MARKETPLACE / LISTINGS
                 </div>
 
 
-                <div class="listing-info">
+                <div class="card">
 
-                    <div class="tag-row" id="detail-tags">
-                    </div>
+                    <div class="topbar">
 
-                    <h2 id="detail-title" class="detail-title">Listing details</h2>
-
-                    <div class="listing-price" id="detail-price">
-                    </div>
-
-
-                    <div class="seller-box" id="detail-seller-box">
-
-                        <div class="avatar" id="detail-seller-avatar">
-                            👤
+                        <div class="pill-badge">
+                            LISTING
                         </div>
 
-                        <div class="seller-meta">
+                        <button class="btn btn-pill-gray right-btn" data-goto="browse">
+                            ← Back to Browse
+                        </button>
 
-                            <div class="seller-name" id="detail-seller-name">
+                    </div>
+
+
+                    <hr class="divider">
+
+
+                    <div id="listing-detail-empty" class="empty-state large-empty hidden">
+
+                        <div class="empty-icon">
+                            ◌
+                        </div>
+
+                        <h3>
+                            No listing selected
+                        </h3>
+
+                        <p>
+                            Choose a listing from Browse / Search first.
+                        </p>
+
+                        <button class="btn btn-yellow" data-goto="browse">
+                            Browse Listings
+                        </button>
+
+                    </div>
+
+
+                    <div class="listing-layout hidden" id="listing-detail-content">
+
+                        <div class="listing-media">
+
+                            <div class="listing-photo-main">
+
+                                <img id="detail-image" src="" alt="Listing photo">
+
                             </div>
 
-                            <div class="seller-active" id="detail-seller-active">
-                            </div>
-
-                            <div class="stars" id="detail-seller-rating">
+                            <div class="listing-thumbs" id="listing-thumbs">
                             </div>
 
                         </div>
 
-                        <span class="seller-arrow">
-                            →
-                        </span>
+
+                        <div class="listing-info">
+
+                            <div class="tag-row" id="detail-tags">
+                            </div>
+
+                            <h2 id="detail-title" class="detail-title">Listing details</h2>
+
+                            <div class="listing-price" id="detail-price">
+                            </div>
+
+
+                            <div class="seller-box" id="detail-seller-box">
+
+                                <div class="avatar" id="detail-seller-avatar">
+                                    👤
+                                </div>
+
+                                <div class="seller-meta">
+
+                                    <div class="seller-name" id="detail-seller-name">
+                                    </div>
+
+                                    <div class="seller-active" id="detail-seller-active">
+                                    </div>
+
+                                    <div class="stars" id="detail-seller-rating">
+                                    </div>
+
+                                </div>
+
+                                <span class="seller-arrow">
+                                    →
+                                </span>
+
+                            </div>
+
+
+                            <h3 class="desc-title">
+                                Description
+                            </h3>
+
+                            <p class="desc-text" id="detail-description">
+                            </p>
+
+
+                            <div class="listing-meta-grid">
+
+                                <div>
+                                    <strong>Campus</strong>
+                                    <span id="detail-campus"></span>
+                                </div>
+
+                                <div>
+                                    <strong>Course</strong>
+                                    <span id="detail-course"></span>
+                                </div>
+
+                                <div>
+                                    <strong>Posted</strong>
+                                    <span id="detail-date"></span>
+                                </div>
+
+                            </div>
+
+
+                            <div class="btn-row">
+
+                                <button class="btn btn-yellow" id="message-seller-btn">
+                                    Message Seller
+                                </button>
+
+                                <button class="btn btn-gray" id="save-item-btn">
+                                    Save Item
+                                </button>
+
+                                <button class="btn btn-yellow hidden" id="mark-sold-btn">
+                                    Mark as Sold
+                                </button>
+
+                                <button class="btn btn-outline hidden" id="delete-listing-btn">
+                                    Delete Listing
+                                </button>
+
+                                <button class="btn btn-outline" id="report-listing-btn" type="button">
+                                    Report Listing
+                                </button>
+
+                            </div>
+
+                            <form id="report-listing-form" class="settings-card hidden">
+                                <h3>Report this listing</h3>
+                                <label for="listing-report-reason">Reason</label>
+                                <select id="listing-report-reason" required>
+                                    <option value="">Choose a reason</option>
+                                    <option>Prohibited item</option>
+                                    <option>Fraud or scam</option>
+                                    <option>Misleading or inaccurate listing</option>
+                                    <option>Harassment or hateful content</option>
+                                    <option>Spam or duplicate listing</option>
+                                    <option>Other platform-rule violation</option>
+                                </select>
+                                <label for="listing-report-description">Details (optional)</label>
+                                <textarea id="listing-report-description" maxlength="1000" rows="4"></textarea>
+                                <div class="btn-row">
+                                    <button class="btn btn-black" type="submit" id="submit-listing-report-btn">Submit
+                                        Report</button>
+                                    <button class="btn btn-gray" type="button"
+                                        id="cancel-listing-report-btn">Cancel</button>
+                                </div>
+                            </form>
+
+                        </div>
 
                     </div>
-
-
-                    <h3 class="desc-title">
-                        Description
-                    </h3>
-
-                    <p class="desc-text" id="detail-description">
-                    </p>
-
-
-                    <div class="listing-meta-grid">
-
-                        <div>
-                            <strong>Campus</strong>
-                            <span id="detail-campus"></span>
-                        </div>
-
-                        <div>
-                            <strong>Course</strong>
-                            <span id="detail-course"></span>
-                        </div>
-
-                        <div>
-                            <strong>Posted</strong>
-                            <span id="detail-date"></span>
-                        </div>
-
-                    </div>
-
-
-                    <div class="btn-row">
-
-                        <button class="btn btn-yellow" id="message-seller-btn">
-                            Message Seller
-                        </button>
-
-                        <button class="btn btn-gray" id="save-item-btn">
-                            Save Item
-                        </button>
-
-                        <button class="btn btn-yellow hidden" id="mark-sold-btn">
-                            Mark as Sold
-                        </button>
-
-                        <button class="btn btn-outline hidden" id="delete-listing-btn">
-                            Delete Listing
-                        </button>
-
-                        <button class="btn btn-outline" id="report-listing-btn" type="button">
-                            Report Listing
-                        </button>
-
-                    </div>
-
-                    <form id="report-listing-form" class="settings-card hidden">
-                        <h3>Report this listing</h3>
-                        <label for="listing-report-reason">Reason</label>
-                        <select id="listing-report-reason" required>
-                            <option value="">Choose a reason</option>
-                            <option>Prohibited item</option>
-                            <option>Fraud or scam</option>
-                            <option>Misleading or inaccurate listing</option>
-                            <option>Harassment or hateful content</option>
-                            <option>Spam or duplicate listing</option>
-                            <option>Other platform-rule violation</option>
-                        </select>
-                        <label for="listing-report-description">Details (optional)</label>
-                        <textarea id="listing-report-description" maxlength="1000" rows="4"></textarea>
-                        <div class="btn-row">
-                            <button class="btn btn-black" type="submit" id="submit-listing-report-btn">Submit
-                                Report</button>
-                            <button class="btn btn-gray" type="button" id="cancel-listing-report-btn">Cancel</button>
-                        </div>
-                    </form>
 
                 </div>
 
-            </div>
-
-        </div>
-
-    </section>
+            </section>
 
 
 
-    <!-- =========================
+            <!-- =========================
          CREATE LISTING
     ========================= -->
-    <section class="page" id="page-create">
+            <section class="page" id="page-create">
 
-        <div class="breadcrumb">
-            SELL / CREATE LISTING
-        </div>
-
-
-        <div class="card">
-
-            <div class="topbar">
-
-                <div class="pill-badge">
-                    SELL AN ITEM
+                <div class="breadcrumb">
+                    SELL / CREATE LISTING
                 </div>
 
-                <button class="btn btn-pill-gray right-btn" id="cancel-create-btn">
-                    Cancel
-                </button>
 
-            </div>
+                <div class="card">
 
+                    <div class="topbar">
 
-            <hr class="divider">
+                        <div class="pill-badge">
+                            SELL AN ITEM
+                        </div>
 
-
-            <div id="create-login-warning" class="notice-box hidden">
-
-                <strong>
-                    You need to log in first.
-                </strong>
-
-                <p>
-                    Sign in to your TIP account before creating a listing.
-                </p>
-
-                <button class="btn btn-black" data-goto="login">
-                    Go to Log In
-                </button>
-
-            </div>
-
-
-            <form class="create-layout" id="create-listing-form">
-
-                <div class="photos-col">
-
-                    <label class="field-label">
-                        Photos
-                    </label>
-
-                    <div class="photo-upload-row">
-
-                        <label class="photo-slot">
-
-                            <input type="file" accept="image/*" class="photo-input" hidden>
-
-                            <span class="plus">+</span>
-
-                        </label>
-
-
-                        <label class="photo-slot">
-
-                            <input type="file" accept="image/*" class="photo-input" hidden>
-
-                            <span class="plus">+</span>
-
-                        </label>
-
-
-                        <label class="photo-slot">
-
-                            <input type="file" accept="image/*" class="photo-input" hidden>
-
-                            <span class="plus">+</span>
-
-                        </label>
+                        <button class="btn btn-pill-gray right-btn" id="cancel-create-btn">
+                            Cancel
+                        </button>
 
                     </div>
 
 
-                    <p class="upload-help">
-                        Add up to 3 clear photos of the item.
-                        Images are saved securely with your listing.
-                    </p>
+                    <hr class="divider">
 
 
-                    <div class="selling-tip">
+                    <div id="create-login-warning" class="notice-box hidden">
 
                         <strong>
-                            Selling tip
+                            You need to log in first.
                         </strong>
 
                         <p>
-                            Clear photos, accurate descriptions,
-                            and fair prices help your listing get noticed.
+                            Sign in to your TIP account before creating a listing.
                         </p>
 
-                    </div>
+                        <button class="btn btn-black" data-goto="login">
+                            Go to Log In
+                        </button>
 
-                </div>
-
-
-                <div class="fields-col">
-
-                    <div class="form-section-heading">
-                        Item Information
                     </div>
 
 
-                    <label class="field-label">
-                        Title <span>*</span>
-                    </label>
+                    <form class="create-layout" id="create-listing-form">
 
-                    <input class="text-input" id="create-title" type="text"
-                        placeholder="e.g. Data Structures Textbook 2nd Ed." required>
-
-
-                    <div class="field-row">
-
-                        <div class="field-col">
+                        <div class="photos-col">
 
                             <label class="field-label">
-                                Course Code
+                                Photos
                             </label>
 
-                            <input class="text-input" id="create-coursecode" type="text" placeholder="e.g. IT21S2">
+                            <div class="photo-upload-row">
 
-                        </div>
+                                <label class="photo-slot">
 
+                                    <input type="file" accept="image/*" class="photo-input" hidden>
 
-                        <div class="field-col">
+                                    <span class="plus">+</span>
 
-                            <label class="field-label">
-                                Department
-                            </label>
+                                </label>
 
-                            <input class="text-input" id="create-department" type="text" placeholder="e.g. BSIT">
 
-                        </div>
+                                <label class="photo-slot">
 
-                    </div>
+                                    <input type="file" accept="image/*" class="photo-input" hidden>
 
+                                    <span class="plus">+</span>
 
-                    <div class="field-row">
+                                </label>
 
-                        <div class="field-col">
 
-                            <label class="field-label">
-                                Category <span>*</span>
-                            </label>
+                                <label class="photo-slot">
 
-                            <select class="text-input" id="create-category" required>
+                                    <input type="file" accept="image/*" class="photo-input" hidden>
 
-                                <option value="">
-                                    Select category
-                                </option>
+                                    <span class="plus">+</span>
 
-                                <option>Books</option>
-                                <option>Electronics</option>
-                                <option>Laboratory</option>
-                                <option>Uniforms</option>
-                                <option>Other</option>
+                                </label>
 
-                            </select>
+                            </div>
 
-                        </div>
 
-
-                        <div class="field-col">
-
-                            <label class="field-label" for="create-condition">
-                                Condition <span>*</span>
-                            </label>
-
-                            <select class="text-input" id="create-condition" required>
-                                <option value="">Select condition</option>
-                                <option>New</option>
-                                <option>Used - Good</option>
-                                <option>Used - Fair</option>
-                            </select>
-
-                        </div>
-
-
-                        <div class="field-col">
-
-                            <label class="field-label" for="create-condition">
-                                Condition <span>*</span>
-                            </label>
-
-                            <select class="text-input" id="create-condition" required>
-                                <option value="">Select condition</option>
-                                <option>New</option>
-                                <option>Used - Good</option>
-                                <option>Used - Fair</option>
-                            </select>
-
-                        </div>
-
-
-                        <option>New</option>
-                        <option>Used - Good</option>
-                        <option>Used - Fair</option>
-                        </select>
-
-                        <label class="field-label" for="create-price">
-                            Price (₱) <span>*</span>
-                        </label>
-
-                        <input class="text-input" id="create-price" type="number" min="1" placeholder="e.g. 250"
-                            required>
-
-                    </div>
-
-                </div>
-
-
-
-                <label class="field-label" for="create-description">
-                    Description <span>*</span>
-                </label>
-
-                <textarea class="text-input textarea" id="create-description"
-                    placeholder="Add details, highlights, included materials, defects, etc." required></textarea>
-
-
-                <label class="field-label" for="create-campus">
-                    Campus <span>*</span>
-                </label>
-
-                <select class="text-input" id="create-campus" required>
-
-                    <option value="Manila">
-                        Manila
-                    </option>
-
-                    <option value="Quezon City">
-                        Quezon City
-                    </option>
-
-                </select>
-
-
-                <div class="btn-row create-submit-actions">
-
-                    <button type="submit" class="btn btn-yellow">
-                        Publish Listing
-                    </button>
-
-                    <button type="button" class="btn btn-gray" id="save-draft-btn">
-                        Save as Draft
-                    </button>
-
-                </div>
-
-        </div>
-
-        </form>
-
-        </div>
-
-    </section>
-
-
-
-    <!-- =========================
-         PROFILE
-    ========================= -->
-    <section class="page" id="page-profile">
-
-        <div class="breadcrumb">
-            ACCOUNT / USER PROFILE
-        </div>
-
-
-        <div class="card">
-
-            <div class="topbar">
-
-                <div class="pill-badge">
-                    PROFILE
-                </div>
-
-                <div class="profile-top-actions right-btn">
-
-                    <button class="btn btn-pill-gray hidden" id="logout-btn">
-                        Log Out
-                    </button>
-
-                    <button class="btn btn-pill-gray" data-goto="browse">
-                        Back to Browse
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <hr class="divider">
-
-
-            <div id="profile-login-warning" class="notice-box hidden">
-
-                <strong>
-                    No user is currently logged in.
-                </strong>
-
-                <p>
-                    Log in or create an account to see a real profile.
-                </p>
-
-                <button class="btn btn-black" data-goto="login">
-                    Go to Log In
-                </button>
-
-            </div>
-
-
-            <div id="profile-content" class="hidden">
-
-                <div class="profile-header">
-
-                    <div class="profile-avatar-wrap">
-                        <div class="avatar large profile-avatar" id="profile-avatar">
-                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-                                <circle cx="12" cy="8" r="3.5"></circle>
-                                <path d="M5.5 20c.5-3.7 2.7-5.5 6.5-5.5s6 1.8 6.5 5.5"></path>
-                            </svg>
-                        </div>
-                        <label class="change-photo-label" for="profile-photo-input">
-                            Change photo
-                        </label>
-                        <input type="file" id="profile-photo-input" accept="image/*" hidden>
-                    </div>
-
-                    <div class="profile-meta">
-
-                        <h2 class="profile-name" id="profile-name">Your profile</h2>
-
-                        <p class="profile-role" id="profile-role">
-                        </p>
-
-                        <p class="profile-course" id="profile-course">
-                        </p>
-
-                        <div class="profile-tags">
-
-                            <span class="tag" id="profile-campus">
-                            </span>
-
-                            <span class="tag" id="profile-student-id">
-                            </span>
-
-                            <span class="tag" id="profile-member-since">
-                            </span>
-
-                            <span class="tag" id="profile-seller-rating">
-                            </span>
-
-                            <span class="tag" id="profile-buyer-rating">
-                            </span>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-                <section class="profile-ratings" id="profile-ratings-section">
-                    <div class="profile-ratings-header">
-                        <h3>User Ratings</h3>
-                        <p id="profile-rating-summary">Loading ratings...</p>
-                    </div>
-                    <form id="profile-rating-form" class="settings-card profile-rating-form hidden">
-                        <h4>Rate this user</h4>
-                        <p id="rating-eligibility-message" class="rating-eligibility-message hidden"></p>
-                        <label for="rating-purchase-select">Recorded exchange</label>
-                        <select id="rating-purchase-select" required></select>
-                        <fieldset id="profile-rating-stars" class="rating-stars" data-rating="0">
-                            <legend>Rating</legend>
-                            <label title="1 star">
-                                <input type="radio" name="profile-rating-value" value="1" aria-label="1 star" required>
-                                <span aria-hidden="true">★</span>
-                            </label>
-                            <label title="2 stars">
-                                <input type="radio" name="profile-rating-value" value="2" aria-label="2 stars" required>
-                                <span aria-hidden="true">★</span>
-                            </label>
-                            <label title="3 stars">
-                                <input type="radio" name="profile-rating-value" value="3" aria-label="3 stars" required>
-                                <span aria-hidden="true">★</span>
-                            </label>
-                            <label title="4 stars">
-                                <input type="radio" name="profile-rating-value" value="4" aria-label="4 stars" required>
-                                <span aria-hidden="true">★</span>
-                            </label>
-                            <label title="5 stars">
-                                <input type="radio" name="profile-rating-value" value="5" aria-label="5 stars" required>
-                                <span aria-hidden="true">★</span>
-                            </label>
-                        </fieldset>
-                        <button class="btn btn-yellow" type="submit" id="submit-profile-rating-btn">Submit
-                            Rating</button>
-                    </form>
-                </section>
-
-
-                <div class="profile-tabs">
-
-                    <button class="ptab active" data-tab="listings">
-                        My Listings
-                    </button>
-
-                    <button class="ptab" data-tab="history">
-                        Purchase History
-                    </button>
-
-                    <button class="ptab" data-tab="sold">
-                        Sold Items
-                    </button>
-
-                    <button class="ptab" data-tab="settings">
-                        Settings
-                    </button>
-
-                </div>
-
-
-                <div class="profile-panel" id="panel-listings">
-
-                    <div class="item-grid four-col" id="profile-listings-grid">
-                    </div>
-
-                </div>
-
-
-                <div class="profile-panel hidden" id="panel-sold">
-
-                    <div class="item-grid four-col" id="profile-sold-grid">
-                    </div>
-
-                </div>
-
-
-                <div class="profile-panel hidden" id="panel-history">
-
-                    <div id="purchase-history-list" class="purchase-history-list"></div>
-
-                </div>
-
-
-                <div class="profile-panel hidden" id="panel-settings">
-
-                    <div class="settings-grid">
-
-                        <form class="settings-card" id="profile-update-form">
-                            <span class="results-eyebrow">PROFILE DETAILS</span>
-                            <h3>Edit your profile</h3>
-                            <label for="profile-first-name-input">First name</label>
-                            <input type="text" id="profile-first-name-input" maxlength="80" required>
-                            <label for="profile-middle-name-input">Middle name (optional)</label>
-                            <input type="text" id="profile-middle-name-input" maxlength="80">
-                            <label for="profile-last-name-input">Last name</label>
-                            <input type="text" id="profile-last-name-input" maxlength="80" required>
-                            <label for="profile-course-input">Course / Program</label>
-                            <input type="text" id="profile-course-input" maxlength="100" required>
-                            <label for="profile-campus-input">Campus</label>
-                            <select id="profile-campus-input" required>
-                                <option value="Manila">Manila</option>
-                                <option value="Quezon City">Quezon City</option>
-                            </select>
-                            <button class="btn btn-yellow" type="submit" id="save-profile-btn">Save
-                                Profile</button>
-                        </form>
-
-                        <form class="settings-card" id="password-update-form">
-                            <span class="results-eyebrow">ACCOUNT SECURITY</span>
-                            <h3>Change password</h3>
-                            <p>Use at least 6 characters for your new password.</p>
-                            <label for="current-password-input">Current password</label>
-                            <input type="password" id="current-password-input" autocomplete="current-password">
-                            <label for="new-password-input">New password</label>
-                            <input type="password" id="new-password-input" autocomplete="new-password">
-                            <label for="confirm-password-input">Confirm new password</label>
-                            <input type="password" id="confirm-password-input" autocomplete="new-password">
-                            <button class="btn btn-black" type="submit">Update Password</button>
-                        </form>
-
-                        <form class="settings-card" id="notification-settings-form">
-                            <span class="results-eyebrow">NOTIFICATIONS</span>
-                            <h3>Notification settings</h3>
-                            <p>Choose which browser notifications you would like to receive.</p>
-                            <label class="setting-check"><input type="checkbox" id="notify-messages"> New
-                                messages</label>
-                            <label class="setting-check"><input type="checkbox" id="notify-listings"> Listing
-                                activity</label>
-                            <button class="btn btn-gray" type="submit">Save Notifications</button>
-                        </form>
-
-                        <form class="settings-card" id="privacy-settings-form">
-                            <span class="results-eyebrow">PRIVACY</span>
-                            <h3>Privacy settings</h3>
-                            <p>Control which profile details other TIPians can see.</p>
-                            <label class="setting-check"><input type="checkbox" id="privacy-photo"> Show my
-                                profile photo</label>
-                            <label class="setting-check"><input type="checkbox" id="privacy-course"> Show my
-                                course</label>
-                            <button class="btn btn-gray" type="submit">Save Privacy</button>
-                        </form>
-
-                        <!-- DELETE ACCOUNT -->
-
-                        <div class="settings-card delete-account-card">
-
-                            <span class="results-eyebrow">
-                                DANGER ZONE
-                            </span>
-
-                            <h3>Delete Account</h3>
-
-                            <p>
-                                Permanently delete your ReSource account and its account data.
-                                This action cannot be undone.
+                            <p class="upload-help">
+                                Add up to 3 clear photos of the item.
+                                Images are saved securely with your listing.
                             </p>
 
-                            <button type="button" class="btn btn-outline" id="delete-account-btn">
 
-                                Delete My Account
+                            <div class="selling-tip">
 
+                                <strong>
+                                    Selling tip
+                                </strong>
+
+                                <p>
+                                    Clear photos, accurate descriptions,
+                                    and fair prices help your listing get noticed.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="fields-col">
+
+                            <div class="form-section-heading">
+                                Item Information
+                            </div>
+
+
+                            <label class="field-label">
+                                Title <span>*</span>
+                            </label>
+
+                            <input class="text-input" id="create-title" type="text"
+                                placeholder="e.g. Data Structures Textbook 2nd Ed." required>
+
+
+                            <div class="field-row">
+
+                                <div class="field-col">
+
+                                    <label class="field-label">
+                                        Course Code
+                                    </label>
+
+                                    <input class="text-input" id="create-coursecode" type="text"
+                                        placeholder="e.g. CIT201">
+
+                                </div>
+
+
+                                <div class="field-col">
+
+                                    <label class="field-label">
+                                        Department
+                                    </label>
+
+                                    <input class="text-input" id="create-department" type="text"
+                                        placeholder="e.g. BSIT">
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="field-row">
+
+                                <div class="field-col">
+
+                                    <label class="field-label">
+                                        Category <span>*</span>
+                                    </label>
+
+                                    <select class="text-input" id="create-category" required>
+
+                                        <option value="">
+                                            Select category
+                                        </option>
+
+                                        <option>Books</option>
+                                        <option>Electronics</option>
+                                        <option>Laboratory</option>
+                                        <option>Uniforms</option>
+                                        <option>Other</option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="field-col">
+
+                                    <label class="field-label">
+                                        Condition <span>*</span>
+                                    </label>
+
+                                    <select class="text-input" id="create-condition" required>
+
+                                        <option value="">
+                                            Select condition
+                                        </option>
+
+                                        <option>New</option>
+                                        <option>Used - Good</option>
+                                        <option>Used - Fair</option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div class="field-col">
+
+                                    <label class="field-label">
+                                        Price (₱) <span>*</span>
+                                    </label>
+
+                                    <input class="text-input" id="create-price" type="number" min="1"
+                                        placeholder="e.g. 250" required>
+
+                                </div>
+
+                            </div>
+
+
+                            <label class="field-label">
+                                Description <span>*</span>
+                            </label>
+
+                            <textarea class="text-input textarea" id="create-description"
+                                placeholder="Add details, highlights, included materials, defects, etc."
+                                required></textarea>
+
+
+                            <label class="field-label">
+                                Campus <span>*</span>
+                            </label>
+
+                            <select class="text-input" id="create-campus" required>
+
+                                <option value="Manila">
+                                    Manila
+                                </option>
+
+                                <option value="Quezon City">
+                                    Quezon City
+                                </option>
+
+                            </select>
+
+
+                            <div class="btn-row create-submit-actions">
+
+                                <button type="submit" class="btn btn-yellow">
+                                    Publish Listing
+                                </button>
+
+                                <button type="button" class="btn btn-gray" id="save-draft-btn">
+                                    Save as Draft
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =========================
+         PROFILE
+    ========================= -->
+            <section class="page" id="page-profile">
+
+                <div class="breadcrumb">
+                    ACCOUNT / USER PROFILE
+                </div>
+
+
+                <div class="card">
+
+                    <div class="topbar">
+
+                        <div class="pill-badge">
+                            PROFILE
+                        </div>
+
+                        <div class="profile-top-actions right-btn">
+
+                            <button class="btn btn-pill-gray hidden" id="logout-btn">
+                                Log Out
+                            </button>
+
+                            <button class="btn btn-pill-gray" data-goto="browse">
+                                Back to Browse
                             </button>
 
                         </div>
 
                     </div>
 
+
+                    <hr class="divider">
+
+
+                    <div id="profile-login-warning" class="notice-box hidden">
+
+                        <strong>
+                            No user is currently logged in.
+                        </strong>
+
+                        <p>
+                            Log in or create an account to see a real profile.
+                        </p>
+
+                        <button class="btn btn-black" data-goto="login">
+                            Go to Log In
+                        </button>
+
+                    </div>
+
+
+                    <div id="profile-content" class="hidden">
+
+                        <div class="profile-header">
+
+                            <div class="profile-avatar-wrap">
+                                <div class="avatar large profile-avatar" id="profile-avatar">
+                                    👤
+                                </div>
+                                <label class="change-photo-label" for="profile-photo-input">
+                                    Change photo
+                                </label>
+                                <input type="file" id="profile-photo-input" accept="image/*" hidden>
+                            </div>
+
+                            <div class="profile-meta">
+
+                                <h2 class="profile-name" id="profile-name">User Profile</h2>
+                                </h2>
+
+                                <p class="profile-role" id="profile-role">
+                                </p>
+
+                                <p class="profile-course" id="profile-course">
+                                </p>
+
+                                <div class="profile-tags">
+
+                                    <span class="tag" id="profile-campus">
+                                    </span>
+
+                                    <span class="tag" id="profile-student-id">
+                                    </span>
+
+                                    <span class="tag" id="profile-member-since">
+                                    </span>
+
+                                    <span class="tag" id="profile-seller-rating">
+                                    </span>
+
+                                    <span class="tag" id="profile-buyer-rating">
+                                    </span>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <section class="profile-ratings" id="profile-ratings-section">
+                            <div class="profile-ratings-header">
+                                <h3>User Ratings</h3>
+                                <p id="profile-rating-summary">Loading ratings...</p>
+                            </div>
+                            <form id="profile-rating-form" class="settings-card profile-rating-form hidden">
+                                <h4>Rate this user</h4>
+                                <p id="rating-eligibility-message" class="rating-eligibility-message hidden"></p>
+                                <label for="rating-purchase-select">Recorded exchange</label>
+                                <select id="rating-purchase-select" required></select>
+                                <fieldset id="profile-rating-stars" class="rating-stars" data-rating="0">
+                                    <legend>Rating</legend>
+                                    <label title="1 star">
+                                        <input type="radio" name="profile-rating-value" value="1" aria-label="1 star"
+                                            required>
+                                        <span aria-hidden="true">★</span>
+                                    </label>
+                                    <label title="2 stars">
+                                        <input type="radio" name="profile-rating-value" value="2" aria-label="2 stars"
+                                            required>
+                                        <span aria-hidden="true">★</span>
+                                    </label>
+                                    <label title="3 stars">
+                                        <input type="radio" name="profile-rating-value" value="3" aria-label="3 stars"
+                                            required>
+                                        <span aria-hidden="true">★</span>
+                                    </label>
+                                    <label title="4 stars">
+                                        <input type="radio" name="profile-rating-value" value="4" aria-label="4 stars"
+                                            required>
+                                        <span aria-hidden="true">★</span>
+                                    </label>
+                                    <label title="5 stars">
+                                        <input type="radio" name="profile-rating-value" value="5" aria-label="5 stars"
+                                            required>
+                                        <span aria-hidden="true">★</span>
+                                    </label>
+                                </fieldset>
+                                <button class="btn btn-yellow" type="submit" id="submit-profile-rating-btn">Submit
+                                    Rating</button>
+                            </form>
+                        </section>
+
+
+                        <div class="profile-tabs">
+
+                            <button class="ptab active" data-tab="listings">
+                                My Listings
+                            </button>
+
+                            <button class="ptab" data-tab="history">
+                                Purchase History
+                            </button>
+
+                            <button class="ptab" data-tab="sold">
+                                Sold Items
+                            </button>
+
+                            <button class="ptab" data-tab="settings">
+                                Settings
+                            </button>
+
+                        </div>
+
+
+                        <div class="profile-panel" id="panel-listings">
+
+                            <div class="item-grid four-col" id="profile-listings-grid">
+                            </div>
+
+                        </div>
+
+
+                        <div class="profile-panel hidden" id="panel-sold">
+
+                            <div class="item-grid four-col" id="profile-sold-grid">
+                            </div>
+
+                        </div>
+
+
+                        <div class="profile-panel hidden" id="panel-history">
+
+                            <div id="purchase-history-list" class="purchase-history-list"></div>
+
+                        </div>
+
+
+                        <div class="profile-panel hidden" id="panel-settings">
+
+                            <div class="settings-grid">
+
+                                <form class="settings-card" id="profile-update-form">
+                                    <span class="results-eyebrow">PROFILE DETAILS</span>
+                                    <h3>Edit your profile</h3>
+                                    <label for="profile-first-name-input">First name</label>
+                                    <input type="text" id="profile-first-name-input" maxlength="80" required>
+                                    <label for="profile-middle-name-input">Middle name (optional)</label>
+                                    <input type="text" id="profile-middle-name-input" maxlength="80">
+                                    <label for="profile-last-name-input">Last name</label>
+                                    <input type="text" id="profile-last-name-input" maxlength="80" required>
+                                    <label for="profile-course-input">Course / Program</label>
+                                    <input type="text" id="profile-course-input" maxlength="100" required>
+                                    <label for="profile-campus-input">Campus</label>
+                                    <select id="profile-campus-input" required>
+                                        <option value="Manila">Manila</option>
+                                        <option value="Quezon City">Quezon City</option>
+                                    </select>
+                                    <button class="btn btn-yellow" type="submit" id="save-profile-btn">Save
+                                        Profile</button>
+                                </form>
+
+                                <form class="settings-card" id="password-update-form">
+                                    <span class="results-eyebrow">ACCOUNT SECURITY</span>
+                                    <h3>Change password</h3>
+                                    <p>Use at least 6 characters for your new password.</p>
+                                    <label for="current-password-input">Current password</label>
+                                    <input type="password" id="current-password-input" autocomplete="current-password">
+                                    <label for="new-password-input">New password</label>
+                                    <input type="password" id="new-password-input" autocomplete="new-password">
+                                    <label for="confirm-password-input">Confirm new password</label>
+                                    <input type="password" id="confirm-password-input" autocomplete="new-password">
+                                    <button class="btn btn-black" type="submit">Update Password</button>
+                                </form>
+
+                                <form class="settings-card" id="notification-settings-form">
+                                    <span class="results-eyebrow">NOTIFICATIONS</span>
+                                    <h3>Notification settings</h3>
+                                    <p>Choose which browser notifications you would like to receive.</p>
+                                    <label class="setting-check"><input type="checkbox" id="notify-messages"> New
+                                        messages</label>
+                                    <label class="setting-check"><input type="checkbox" id="notify-listings"> Listing
+                                        activity</label>
+                                    <button class="btn btn-gray" type="submit">Save Notifications</button>
+                                </form>
+
+                                <form class="settings-card" id="privacy-settings-form">
+                                    <span class="results-eyebrow">PRIVACY</span>
+                                    <h3>Privacy settings</h3>
+                                    <p>Control which profile details other TIPians can see.</p>
+                                    <label class="setting-check"><input type="checkbox" id="privacy-photo"> Show my
+                                        profile photo</label>
+                                    <label class="setting-check"><input type="checkbox" id="privacy-course"> Show my
+                                        course</label>
+                                    <button class="btn btn-gray" type="submit">Save Privacy</button>
+                                </form>
+
+                                <!-- DELETE ACCOUNT -->
+
+                                <div class="settings-card delete-account-card">
+
+                                    <span class="results-eyebrow">
+                                        DANGER ZONE
+                                    </span>
+
+                                    <h3>Delete Account</h3>
+
+                                    <p>
+                                        Permanently delete your ReSource account and its account data.
+                                        This action cannot be undone.
+                                    </p>
+
+                                    <button type="button" class="btn btn-outline" id="delete-account-btn">
+
+                                        Delete My Account
+
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-            </div>
-
-        </div>
-
-    </section>
+            </section>
 
 
 
-    <!-- =========================
+            <!-- =========================
          MESSAGING
     ========================= -->
-    <section class="page" id="page-messaging">
+            <section class="page" id="page-messaging">
 
-        <div class="breadcrumb">
-            COMMUNITY / MESSAGING
-        </div>
-
-
-        <div class="card">
-
-            <div class="topbar">
-
-                <div class="pill-badge">
-                    MESSAGES
+                <div class="breadcrumb">
+                    COMMUNITY / MESSAGING
                 </div>
 
-                <button class="btn btn-pill-gray right-btn" data-goto="dashboard">
-                    Cancel
-                </button>
 
-            </div>
+                <div class="card">
 
+                    <div class="topbar">
 
-            <hr class="divider">
+                        <div class="pill-badge">
+                            MESSAGES
+                        </div>
 
+                        <button class="btn btn-pill-gray right-btn" data-goto="dashboard">
+                            Cancel
+                        </button>
 
-            <div id="message-login-warning" class="notice-box hidden">
-
-                <strong>
-                    You need to log in first.
-                </strong>
-
-                <p>
-                    Messaging only works for accounts created in this browser.
-                </p>
-
-                <button class="btn btn-black" data-goto="login">
-                    Go to Log In
-                </button>
-
-            </div>
+                    </div>
 
 
-            <div class="messaging-layout" id="messaging-content">
-
-                <input type="text" id="conversation-search" placeholder="Search conversations"
-                    aria-label="Search conversations">
-
-                <div class="convo-search">
-
-                    <input type="text" id="conversation-search" placeholder="Search conversations">
-
-                </div>
-
-                <div id="conversation-items"></div>
-
-                </aside>
+                    <hr class="divider">
 
 
-                <div class="chat-panel">
+                    <div id="message-login-warning" class="notice-box hidden">
 
-                    <div class="chat-header">
+                        <strong>
+                            You need to log in first.
+                        </strong>
 
-                        <div class="avatar" id="chat-partner-avatar">
+                        <p>
+                            Messaging only works for accounts created in this browser.
+                        </p>
+
+                        <button class="btn btn-black" data-goto="login">
+                            Go to Log In
+                        </button>
+
+                    </div>
+
+
+                    <div class="messaging-layout" id="messaging-content">
+
+                        <aside class="conversation-list" aria-label="Conversations"></aside>
+                        <div class="convo-search">
+
+                            <input type="text" id="conversation-search" placeholder="🔍 Search conversations">
 
                         </div>
 
-                        <div>
+                        <div id="conversation-items"></div>
 
-                            <div class="chat-name" id="chat-partner-name">
-                                Select a conversation
+                        </aside>
+
+
+                        <div class="chat-panel">
+
+                            <div class="chat-header">
+
+                                <div class="avatar" id="chat-partner-avatar">
+                                    👤
+                                </div>
+
+                                <div>
+
+                                    <div class="chat-name" id="chat-partner-name">
+                                        Select a conversation
+                                    </div>
+
+                                    <div class="chat-status" id="chat-partner-status">
+                                    </div>
+
+                                </div>
+
                             </div>
 
-                            <div class="chat-status" id="chat-partner-status">
+
+                            <div class="chat-body" id="chat-body">
+
+                                <div class="empty-state">
+                                    Select a conversation to start messaging.
+                                </div>
+
                             </div>
+
+
+                            <form class="chat-input-row" id="chat-form">
+
+                                <button type="button" class="icon-btn" id="attach-image-btn" title="Attach image">
+                                    🖼
+                                </button>
+
+                                <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
+
+                                <button type="submit" class="btn btn-yellow">
+                                    Send
+                                </button>
+
+                            </form>
 
                         </div>
 
                     </div>
 
-
-                    <div class="chat-body" id="chat-body">
-
-                        <div class="empty-state">
-                            Select a conversation to start messaging.
-                        </div>
-
-                    </div>
-
-
-                    <form class="chat-input-row" id="chat-form">
-
-                        <button type="button" class="icon-btn" id="attach-image-btn" title="Attach image">
-                            🖼
-                        </button>
-
-                        <input type="text" id="chat-input" placeholder="Type a message..." autocomplete="off">
-
-                        <button type="submit" class="btn btn-yellow">
-                            Send
-                        </button>
-
-                    </form>
-
                 </div>
 
-            </div>
+            </section>
 
-        </div>
-
-    </section>
-
-    </main>
+        </main>
 
 
     </div>
